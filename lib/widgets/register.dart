@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pillager/services/services.dart';
 
-class SignIn extends StatefulWidget {
-  final Function toggleSignInForm;
+class Register extends StatefulWidget {
 
-  const SignIn({Key? key, required this.toggleSignInForm}) : super(key: key);
+  final Function toggleSignInForm;
+  
+  const Register({Key? key, required this.toggleSignInForm}) : super(key: key);
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
+  String firstName = '';
+  String lastName = '';
   String email = '';
   String password = '';
+  String confirmPassword = '';
   final _formKey = GlobalKey<FormState>();
   final AuthService _auth = AuthService();
 
@@ -27,7 +31,7 @@ class _SignInState extends State<SignIn> {
           padding: EdgeInsets.symmetric(vertical: size.height * 0.05),
           child: Align(
             child: Text(
-              'Welcome Back',
+              'Create an Account',
               style: TextStyle(
                 color: Colors.blueGrey,
                 fontSize: size.height * 0.025,
@@ -39,6 +43,22 @@ class _SignInState extends State<SignIn> {
           key: _formKey,
           child: Column(
             children: [
+              TextFormField(
+                initialValue: '',
+                onChanged: (val) {
+                  setState(() => firstName = val);
+                },
+                decoration: InputDecoration(hintText: "first name"),
+              ),
+              SizedBox(height: size.height * .05),
+              TextFormField(
+                initialValue: '',
+                onChanged: (val) {
+                  setState(() => lastName = val);
+                },
+                decoration: InputDecoration(hintText: "last name"),
+              ),
+              SizedBox(height: size.height * .05),
               TextFormField(
                 initialValue: '',
                 onChanged: (val) {
@@ -54,6 +74,14 @@ class _SignInState extends State<SignIn> {
                 },
                 decoration: InputDecoration(hintText: "password"),
               ),
+              SizedBox(height: size.height * .05),
+              TextFormField(
+                initialValue: '',
+                onChanged: (val) {
+                  setState(() => confirmPassword = val);
+                },
+                decoration: InputDecoration(hintText: "confirm password"),
+              ),
               SizedBox(height: size.height * .1),
               ElevatedButton(
                 style: ButtonStyle(
@@ -61,11 +89,11 @@ class _SignInState extends State<SignIn> {
                       MaterialStateProperty.all<Color?>(Colors.blueGrey[400]),
                 ),
                 child: Text(
-                  'Sign in',
+                  'Submit',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
-                  _auth.signIn(email, password);
+                  _auth.registerWithEmailAndPassword(email, password);
                 },
               ),
             ],
@@ -76,7 +104,7 @@ class _SignInState extends State<SignIn> {
           text: TextSpan(
             children: [
               TextSpan(
-                text: "Don't have an account yet? ",
+                text: "Already have an account? ",
                 style: TextStyle(
                   color: Colors.blueGrey[900],
                   fontSize: size.height * 0.018,
@@ -86,7 +114,7 @@ class _SignInState extends State<SignIn> {
                 child: InkWell(
                   onTap: () => widget.toggleSignInForm(),
                   child: Text(
-                    "Register",
+                    "Login",
                     style: TextStyle(
                       color: Colors.blueGrey[400],
                       fontSize: size.height * 0.018,

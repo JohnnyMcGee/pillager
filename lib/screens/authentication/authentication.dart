@@ -9,9 +9,15 @@ class Authentication extends StatefulWidget {
 }
 
 class _AuthenticationState extends State<Authentication> {
+
+  bool showSignIn = true;
+
+  void toggleSignInForm() {
+    setState(() {showSignIn = !showSignIn;});
+  }
+  
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
@@ -19,7 +25,7 @@ class _AuthenticationState extends State<Authentication> {
         title: Text('Pillager'),
         elevation: 0.0,
       ),
-      body: SignIn(),
+      body: showSignIn? SignIn(toggleSignInForm: toggleSignInForm) : Register(toggleSignInForm: toggleSignInForm),
     );
   }
 }
