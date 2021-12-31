@@ -47,3 +47,4 @@ app.*.map.json
 
 # App files
 **/fb-config.js
+**/config.dart

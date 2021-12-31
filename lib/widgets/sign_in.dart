@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pillager/services/services.dart';
+
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -11,6 +14,7 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
   final _formKey = GlobalKey<FormState>();
+  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,7 @@ class _SignInState extends State<SignIn> {
                         style: TextStyle(color: Colors.white),
                       ),
                       onPressed: () async {
-                        print("$email, $password");
+                        _auth.signIn(email, password);
                       },
                     ),
             ],

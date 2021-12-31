@@ -11,6 +11,7 @@ class AuthService {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       User? user = result.user;
+      print("Signed in!");
       return user;
     } catch (e) {
       print(e.toString());
@@ -23,7 +24,7 @@ class AuthService {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       User user = result.user as User;
-
+      print(user);
       return user;
 
     } catch (e) {
