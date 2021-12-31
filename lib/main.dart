@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pillager - Management Solutions for the Modern Viking',
-      home: const Home(),
+      home: const Authentication(),
     );
   }
 }
