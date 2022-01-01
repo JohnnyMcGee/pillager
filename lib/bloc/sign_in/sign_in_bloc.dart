@@ -8,38 +8,23 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   SignInBloc({required this.auth}) : super(SignInInitial()) {
     assert(auth != null);
+    on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
+    on<SignInSuccess>((event, emit) => emit(LoggedIn(user: event.user)));
+    on<SignInFailure>((event, emit) {print(event.message); emit(LoggedOut());});
   }
 
-  @override
-  Stream<SignInState> mapEventToState(SignInEvent event) async* {
-    if (event is SignInEmailButtonPressed) {
-      yield* signInEmailAttempt(event.email, event.password);
-    } else if (event is SignInSuccess) {
-      yield* mapSignInSuccessToState(event.user);
-    } else if (event is SignInFailure) {
-      yield* mapSignInFailureToState(event.message);
-    }
-  }
+  void _onSignInEmailButtonPressed(SignInEmailButtonPressed event, Emitter<SignInState> emit) async {
+    print("Event handled!");
+    
+    emit(SignInLoading());
 
-  Stream<SignInState> signInEmailAttempt(String email, String password) async* {
-    yield SignInLoading();
-
-    User? user = await auth.signIn(email, password);
+    User? user = await auth.signIn(event.email, event.password);
     if (user != null) {
       add(SignInSuccess(user: user));
     } else {
       add(SignInFailure(
           message: 'Invalid email or password. Please try again.'));
     }
-  }
-
-  Stream<SignInState> mapSignInSuccessToState(User user) async* {
-    yield LoggedIn(user: user);
-  }
-
-  Stream<SignInState> mapSignInFailureToState(String message) async* {
-    print(message);
-    yield LoggedOut();
   }
 
 }
