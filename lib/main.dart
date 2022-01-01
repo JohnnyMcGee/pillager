@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:firebase_core/firebase_core.dart';
-import './screens/screens.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import './app.dart';
+import './bloc/bloc.dart';
 import './config.dart';
+import './services/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,18 +15,10 @@ void main() async {
     options: options,
   );
 
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Pillager - Management Solutions for the Modern Viking',
-      home: const Authentication(),
-    );
-  }
+  runApp(BlocProvider(
+    create: (context) => SignInBloc(
+      auth: AuthService(),
+    ),
+    child: const PillagerApp(),
+  ));
 }

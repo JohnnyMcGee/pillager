@@ -9,8 +9,8 @@ abstract class AuthenticationState extends Equatable {
 
 }
 
-class AuthenticationUninitialized extends AuthenticationState {
+class Unauthenticated extends AuthenticationState {
 
-  AuthenticationUninitialized();
+  Unauthenticated();
 }
 

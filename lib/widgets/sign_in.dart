@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pillager/bloc/bloc.dart';
+
 import 'package:pillager/services/services.dart';
 
 class SignIn extends StatefulWidget {
@@ -64,7 +67,8 @@ class _SignInState extends State<SignIn> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
-                  _auth.signIn(email, password);
+                  context.read<SignInBloc>().add(SignInEmailButtonPressed(
+                      email: email, password: password));
                 },
               ),
             ],

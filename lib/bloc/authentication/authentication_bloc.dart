@@ -4,16 +4,11 @@ import './authentication.dart';
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
 
-  AuthenticationBloc() : super(AuthenticationUninitialized());
+  AuthenticationBloc() : super(Unauthenticated());
 
   @override
   Stream<AuthenticationState> mapEventToState(AuthenticationEvent event) async* {
-    if (event is AppStarted) {
-      yield* _appStarted();
-    }
+
   }
 
-  Stream<AuthenticationState> _appStarted() async* {
-    
-  }
 }
