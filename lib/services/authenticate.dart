@@ -9,7 +9,8 @@ class AuthService {
 
   Future<User?> signIn(String email, String password) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
       print("Signed in!");
       return user;
@@ -19,14 +20,21 @@ class AuthService {
     }
   }
 
-  // register wwith email & password
-  Future registerWithEmailAndPassword(String email, String password) async {
-    try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      User user = result.user as User;
-      print(user);
-      return user;
+  Future<User?> userUpdateDisplayName(
+      User? user, String firstName, String lastName) async {
+    String displayName = "$firstName $lastName";
+    await user?.updateDisplayName(displayName);
+    User? currentUser = await _auth.currentUser;
+    return currentUser;
+  }
 
+  // register wwith email & password
+  Future registerWithEmailAndPassword(
+      String email, String password, String firstName, String lastName) async {
+    try {
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      return userUpdateDisplayName(result.user, firstName, lastName);
     } catch (e) {
       print(e.toString());
       return null;
@@ -42,5 +50,4 @@ class AuthService {
       return e;
     }
   }
-  
 }

@@ -35,7 +35,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     emit(SignInLoading());
 
     User? user =
-        await auth.registerWithEmailAndPassword(event.email, event.password);
+        await auth.registerWithEmailAndPassword(event.email, event.password, event.firstName, event.lastName);
     if (user != null) {
       add(SignInSuccess(user: user));
     } else {
