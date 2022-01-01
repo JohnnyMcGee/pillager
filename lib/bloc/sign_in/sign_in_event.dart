@@ -14,6 +14,23 @@ class SignInEmailButtonPressed extends SignInEvent {
 
 }
 
+class RegisterEmailButtonPressed extends SignInEvent {
+  String firstName;
+  String lastName;
+  String email;
+  String password;
+  String confirmPassword;
+
+  RegisterEmailButtonPressed({
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.password,
+    required this.confirmPassword,
+    });
+
+}
+
 class SignInSuccess extends SignInEvent {
   User user;
 

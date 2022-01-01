@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/services/services.dart';
 
 class Register extends StatefulWidget {
-
   final Function toggleSignInForm;
-  
+
   const Register({Key? key, required this.toggleSignInForm}) : super(key: key);
 
   @override
@@ -92,7 +95,12 @@ class _RegisterState extends State<Register> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () async {
-                  _auth.registerWithEmailAndPassword(email, password);
+                  context.read<SignInBloc>().add(RegisterEmailButtonPressed(
+                      firstName: firstName,
+                      lastName: lastName,
+                      email: email,
+                      password: password,
+                      confirmPassword: confirmPassword));
                 },
               ),
             ],

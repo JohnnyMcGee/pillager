@@ -9,6 +9,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   SignInBloc({required this.auth}) : super(SignInInitial()) {
     assert(auth != null);
     on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
+    on<RegisterEmailButtonPressed>(_onRegisterEmailButtonPressed);
     on<SignInSuccess>((event, emit) => emit(LoggedIn(user: event.user)));
     on<SignInFailure>((event, emit) {print(event.message); emit(LoggedOut());});
   }
@@ -25,6 +26,19 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       add(SignInFailure(
           message: 'Invalid email or password. Please try again.'));
     }
+  }
+
+  void _onRegisterEmailButtonPressed(RegisterEmailButtonPressed event, Emitter<SignInState> emit) async {
+    emit(SignInLoading());
+
+    User? user = await auth.registerWithEmailAndPassword(event.email, event.password);
+    if (user != null) {
+      add(SignInSuccess(user: user));
+    } else {
+      add(SignInFailure(
+          message: 'Unable to create account. Please try again.'));
+    }
+    
   }
 
 }
