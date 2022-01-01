@@ -31,6 +31,10 @@ class RegisterEmailButtonPressed extends SignInEvent {
 
 }
 
+class SignOutButtonPressed extends SignInEvent {}
+
+class SignOutSuccess extends SignInEvent {}
+
 class SignInSuccess extends SignInEvent {
   User user;
 

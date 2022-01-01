@@ -10,6 +10,8 @@ class SignInInitial extends SignInState {}
 
 class SignInLoading extends SignInState {}
 
+class SignOutLoading extends SignInState {}
+
 class LoggedIn extends SignInState {
   User user;
 

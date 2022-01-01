@@ -10,13 +10,15 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     assert(auth != null);
     on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
     on<RegisterEmailButtonPressed>(_onRegisterEmailButtonPressed);
+    on<SignOutButtonPressed>(_onSignOutButtonPressed);
     on<SignInSuccess>((event, emit) => emit(LoggedIn(user: event.user)));
-    on<SignInFailure>((event, emit) {print(event.message); emit(LoggedOut());});
+    on<SignInFailure>(_onSignInFailure);
   }
 
-  void _onSignInEmailButtonPressed(SignInEmailButtonPressed event, Emitter<SignInState> emit) async {
+  void _onSignInEmailButtonPressed(
+      SignInEmailButtonPressed event, Emitter<SignInState> emit) async {
     print("Event handled!");
-    
+
     emit(SignInLoading());
 
     User? user = await auth.signIn(event.email, event.password);
@@ -28,17 +30,28 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     }
   }
 
-  void _onRegisterEmailButtonPressed(RegisterEmailButtonPressed event, Emitter<SignInState> emit) async {
+  void _onRegisterEmailButtonPressed(
+      RegisterEmailButtonPressed event, Emitter<SignInState> emit) async {
     emit(SignInLoading());
 
-    User? user = await auth.registerWithEmailAndPassword(event.email, event.password);
+    User? user =
+        await auth.registerWithEmailAndPassword(event.email, event.password);
     if (user != null) {
       add(SignInSuccess(user: user));
     } else {
       add(SignInFailure(
           message: 'Unable to create account. Please try again.'));
     }
-    
   }
 
+  Future<void> _onSignOutButtonPressed(
+      SignOutButtonPressed event, Emitter emit) async {
+    await auth.signOut();
+    emit(LoggedOut());
+    }
+
+  Future<void>? _onSignInFailure(SignInFailure event, Emitter emit) {
+      print(event.message);
+      emit(LoggedOut());
+  }
 }
