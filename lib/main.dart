@@ -15,10 +15,20 @@ void main() async {
     options: options,
   );
 
-  runApp(BlocProvider(
-    create: (context) => SignInBloc(
-      auth: AuthService(),
-    ),
-    child: const PillagerApp(),
+  runApp(MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (context) => SignInBloc(
+          auth: AuthService(),
+        ),
+        child: const PillagerApp(),
+      ),
+      BlocProvider(
+        create: (context) => DatabaseBloc(
+          store: DatabaseService(),
+        ),
+      )
+    ],
+    child: PillagerApp(),
   ));
 }

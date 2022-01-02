@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pillager/models/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pillager/bloc/bloc.dart';
 
 class ExpandableDataTable extends StatefulWidget {
   const ExpandableDataTable({Key? key}) : super(key: key);
@@ -14,6 +16,8 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    // List<Raid> raids = context.read<DatabaseBloc>().state.raids;
+    print("Raid view build!");
 
     return Column(
       children: [
@@ -49,7 +53,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                         DataColumn(label: Text('# Of Ships')),
                         DataColumn(label: Text('Arrival Date')),
                       ],
-                      rows: raids.map(dataRowFromRaid).toList(),
+                      rows: rowsFromRaids(context.read<DatabaseBloc>().state.raids),
                     ),
                   ),
                 ),
@@ -70,14 +74,9 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
   }
 }
 
-
-List<Raid> raids = [
-  Raid(location: "Wessex", numOfShips: 1, arrivalDate: "June 20, 500"),
-  Raid(location: "Wessex", numOfShips: 1, arrivalDate: "June 20, 500"),
-  Raid(location: "Wessex", numOfShips: 1, arrivalDate: "June 20, 500"),
-  Raid(location: "Wessex", numOfShips: 1, arrivalDate: "June 20, 500"),
-  Raid(location: "Wessex", numOfShips: 1, arrivalDate: "June 20, 500"),
-];
+List<DataRow> rowsFromRaids(List<Raid> raids) {
+  return raids.map(dataRowFromRaid).toList();
+}
 
 DataRow dataRowFromRaid(Raid raid) {
   return DataRow(
@@ -104,11 +103,15 @@ DataRow dataRowFromRaid(Raid raid) {
         Container(
           alignment: AlignmentDirectional.center,
           child: Text(
-            raid.arrivalDate,
+            raid.arrivalDate.toString(),
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
       ),
     ],
   );
+}
+
+String readableDate(DateTime dt) {
+  return "${dt.day}, ${dt.month}, ${dt.year}";
 }
