@@ -8,7 +8,7 @@ abstract class DatabaseEvent {
 class raidDataChange extends DatabaseEvent {
   List<Raid> data;
 
-  raidDataChange({required this.data}) {print("raidDataChange");}
+  raidDataChange({required this.data});
 
   @override
   List<Object> get props => [data];

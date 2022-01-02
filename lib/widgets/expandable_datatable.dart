@@ -17,7 +17,6 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     // List<Raid> raids = context.read<DatabaseBloc>().state.raids;
-    print("Raid view build!");
 
     return Column(
       children: [
@@ -41,20 +40,23 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                 child: SingleChildScrollView(
                   child: SizedBox(
                     width: double.infinity,
-                    child: DataTable(
-                      headingRowColor:
-                          MaterialStateProperty.all(Colors.blueGrey[400]),
-                      columnSpacing: size.width / 3,
-                      columns: [
-                        DataColumn(
-                            label: Container(
-                                alignment: AlignmentDirectional.center,
-                                child: Text('Location'))),
-                        DataColumn(label: Text('# Of Ships')),
-                        DataColumn(label: Text('Arrival Date')),
-                      ],
-                      rows: rowsFromRaids(context.read<DatabaseBloc>().state.raids),
-                    ),
+                    child: BlocBuilder<DatabaseBloc, DatabaseState>(
+                        builder: (context, state) {
+                      return DataTable(
+                        headingRowColor:
+                            MaterialStateProperty.all(Colors.blueGrey[400]),
+                        columnSpacing: size.width / 3,
+                        columns: [
+                          DataColumn(
+                              label: Container(
+                                  alignment: AlignmentDirectional.center,
+                                  child: Text('Location'))),
+                          DataColumn(label: Text('# Of Ships')),
+                          DataColumn(label: Text('Arrival Date')),
+                        ],
+                        rows: rowsFromRaids(state.raids),
+                      );
+                    }),
                   ),
                 ),
               ),
@@ -103,7 +105,7 @@ DataRow dataRowFromRaid(Raid raid) {
         Container(
           alignment: AlignmentDirectional.center,
           child: Text(
-            raid.arrivalDate.toString(),
+            readableDate(raid.arrivalDate),
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -113,5 +115,5 @@ DataRow dataRowFromRaid(Raid raid) {
 }
 
 String readableDate(DateTime dt) {
-  return "${dt.day}, ${dt.month}, ${dt.year}";
+  return "${dt.day}-${dt.month}-${dt.year}";
 }

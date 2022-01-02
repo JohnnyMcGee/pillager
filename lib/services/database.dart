@@ -8,7 +8,7 @@ class DatabaseService {
 
   // get raids stream
   Stream<List<Raid>> get raids {
-    return raidsCollection.snapshots().map((ss) {print('reload'); return _raidsFromSnapshot(ss);});
+    return raidsCollection.snapshots().map(_raidsFromSnapshot);
   }
 
   // add new raid
@@ -19,13 +19,6 @@ class DatabaseService {
 
   // list of raids from snapshot
   List<Raid> _raidsFromSnapshot(QuerySnapshot snapshot) {
-    // snapshot.docs.forEach((doc) {
-    //   print(doc.get('location'));
-    //   print(doc.get('numShips'));
-    //   print(doc.get('arrivalDate'));
-    //   print(doc.get('vikings'));
-    //   print(doc.get('loot'));
-    // });
     return snapshot.docs
         .map((doc) => Raid(
               location: doc.get('location'),

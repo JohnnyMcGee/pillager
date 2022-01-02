@@ -16,7 +16,6 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
   }
 
   void _onRaidDataChange(raidDataChange event, Emitter emit) {
-    event.data.forEach((raid) => print(raid.toString()));
     emit(DatabaseLoaded(raids: event.data));
   }
 
