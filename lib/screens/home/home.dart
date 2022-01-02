@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
+import 'package:pillager/widgets/expandable_datatable.dart.dart';
 
 
 class Home extends StatelessWidget {
@@ -47,7 +48,8 @@ class Home extends StatelessWidget {
                 ),
               ),
             ),
-          )
+          ),
+          ExpandableDataTable(),
         ],
       ),
     );
