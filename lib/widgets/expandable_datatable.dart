@@ -46,15 +46,15 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                         headingRowColor:
                             MaterialStateProperty.all(Colors.blueGrey[400]),
                         columnSpacing: size.width / 3,
+                        showCheckboxColumn: false,
                         columns: [
-                          DataColumn(
-                              label: Container(
-                                  alignment: AlignmentDirectional.center,
-                                  child: Text('Location'))),
+                          DataColumn(label: Text('Location')),
                           DataColumn(label: Text('# Of Ships')),
                           DataColumn(label: Text('Arrival Date')),
                         ],
-                        rows: rowsFromRaids(state.raids),
+                        rows: state.raids
+                            .map((raid) => RaidRow(data: raid))
+                            .toList(),
                       );
                     }),
                   ),
@@ -76,42 +76,32 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
   }
 }
 
-List<DataRow> rowsFromRaids(List<Raid> raids) {
-  return raids.map(dataRowFromRaid).toList();
+class RaidCell extends DataCell {
+  String data;
+  RaidCell({required this.data})
+      : super(
+          Container(
+            alignment: AlignmentDirectional.center,
+            child: Text(
+              data,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        );
 }
 
-DataRow dataRowFromRaid(Raid raid) {
-  return DataRow(
-    cells: [
-      DataCell(
-        Container(
-          alignment: AlignmentDirectional.center,
-          child: Text(
-            raid.location,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      DataCell(
-        Container(
-          alignment: AlignmentDirectional.center,
-          child: Text(
-            raid.numOfShips.toString(),
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      DataCell(
-        Container(
-          alignment: AlignmentDirectional.center,
-          child: Text(
-            readableDate(raid.arrivalDate),
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-    ],
-  );
+class RaidRow extends DataRow {
+  Raid data;
+
+  RaidRow({required this.data})
+      : super(
+          onSelectChanged: (x) => print("row selected: $x"),
+          cells: [
+            RaidCell(data: data.location),
+            RaidCell(data: data.numOfShips.toString()),
+            RaidCell(data: readableDate(data.arrivalDate)),
+          ],
+        );
 }
 
 String readableDate(DateTime dt) {
