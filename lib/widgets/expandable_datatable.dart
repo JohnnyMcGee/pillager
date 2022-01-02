@@ -18,6 +18,20 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     Size size = MediaQuery.of(context).size;
     // List<Raid> raids = context.read<DatabaseBloc>().state.raids;
 
+    void _showEditorPanel() {
+      showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Container(
+              padding: EdgeInsets.symmetric(
+                vertical: 20.0,
+                horizontal: 60.0,
+              ),
+              child: Text("Editor Panel"),
+            );
+          });
+    }
+
     return Column(
       children: [
         ExpansionPanelList(
@@ -53,7 +67,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                           DataColumn(label: Text('Arrival Date')),
                         ],
                         rows: state.raids
-                            .map((raid) => RaidRow(data: raid))
+                            .map((raid) => RaidRow(data: raid, onSelectChanged: (x) => _showEditorPanel()))
                             .toList(),
                       );
                     }),
@@ -93,9 +107,9 @@ class RaidCell extends DataCell {
 class RaidRow extends DataRow {
   Raid data;
 
-  RaidRow({required this.data})
+  RaidRow({required this.data, onSelectChanged})
       : super(
-          onSelectChanged: (x) => print("row selected: $x"),
+          onSelectChanged: onSelectChanged,
           cells: [
             RaidCell(data: data.location),
             RaidCell(data: data.numOfShips.toString()),

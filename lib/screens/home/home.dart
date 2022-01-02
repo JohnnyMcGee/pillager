@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/widgets/expandable_datatable.dart';
 
-
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -15,21 +14,21 @@ class Home extends StatelessWidget {
         title: Text('Pillager'),
         elevation: 0.0,
         actions: <Widget>[
-           TextButton.icon(
-              onPressed: () {
-                context.read<SignInBloc>().add(SignOutButtonPressed());
-              },
-              icon: Icon(
-                Icons.person,
+          TextButton.icon(
+            onPressed: () {
+              context.read<SignInBloc>().add(SignOutButtonPressed());
+            },
+            icon: Icon(
+              Icons.person,
+              color: Colors.blueGrey[400],
+            ),
+            label: Text(
+              'Sign Out',
+              style: TextStyle(
                 color: Colors.blueGrey[400],
               ),
-              label: Text(
-                'Sign Out',
-                style: TextStyle(
-                  color: Colors.blueGrey[400],
-                ),
-              ),
             ),
+          ),
         ],
       ),
       body: Column(
