@@ -9,9 +9,12 @@ class ExpandableDataTable extends StatefulWidget {
 
 class _ExpandableDataTableState extends State<ExpandableDataTable> {
   bool _expanded = true;
+  List<bool> selected = List<bool>.generate(100, (int index) => false);
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Column(
       children: [
         ExpansionPanelList(
@@ -29,17 +32,30 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                   ),
                 );
               },
-              body: ListTile(
-                tileColor: Colors.blueGrey[50],
-                title: Text(
-                  'Raids table goes here',
-                  style: TextStyle(
-                    color: Colors.blueGrey[900],
+              body: Container(
+                height: size.height / 3,
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: DataTable(
+                      headingRowColor:
+                          MaterialStateProperty.all(Colors.blueGrey[400]),
+                      columnSpacing: size.width / 3,
+                      columns: [
+                        DataColumn(
+                            label: Container(
+                                alignment: AlignmentDirectional.center,
+                                child: Text('Location'))),
+                        DataColumn(label: Text('# Of Ships')),
+                        DataColumn(label: Text('Arrival Date')),
+                      ],
+                      rows: List<DataRow>.generate(20, makeDataRow),
+                    ),
                   ),
                 ),
               ),
               isExpanded: _expanded,
-              canTapOnHeader: false,
+              canTapOnHeader: true,
             ),
           ],
           dividerColor: Colors.blueGrey[400],
@@ -52,4 +68,38 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
       ],
     );
   }
+}
+
+DataRow makeDataRow(someInt) {
+  return DataRow(
+    cells: [
+      DataCell(
+        Container(
+          alignment: AlignmentDirectional.center,
+          child: Text(
+            "Wessex",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      DataCell(
+        Container(
+          alignment: AlignmentDirectional.center,
+          child: Text(
+            "1",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      DataCell(
+        Container(
+          alignment: AlignmentDirectional.center,
+          child: Text(
+            "June 20, 900",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    ],
+  );
 }
