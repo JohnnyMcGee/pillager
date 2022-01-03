@@ -16,69 +16,111 @@ class _RaidFormState extends State<RaidForm> {
 
   // form values
   String? _location;
-  String? _numShips;
-  String? _arrivalDate;
+  int? _numShips;
+  DateTime? _arrivalDate;
+
+  Future<void> _selectDate(BuildContext context, DateTime initialDate) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(793),
+      lastDate: DateTime(2025),
+    );
+
+    if (picked != null && picked != _arrivalDate) {
+      setState(() {
+        _arrivalDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    return BlocBuilder<DatabaseBloc, DatabaseState>(
-        builder: (context, state) {
-          if (state is DatabaseLoaded) {
-            Raid raid = state.raids[0];
-            return Form(
-              key: _formKey,
-              child: Column(
+    return BlocBuilder<DatabaseBloc, DatabaseState>(builder: (context, state) {
+      if (state is DatabaseLoaded) {
+        Raid raid = state.raids[0];
+        return Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Text(
+                'Enter Raid Details',
+                style: TextStyle(fontSize: 18.0),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              TextFormField(
+                initialValue: _location ?? raid.location,
+                onChanged: (val) => setState(() => _location = val),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              DropdownButtonFormField(
+                value: _numShips ?? raid.numOfShips,
+                items: List.generate(100, (index) => index).map((number) {
+                  return DropdownMenuItem(
+                    value: number,
+                    child: Text(number.toString()),
+                  );
+                }).toList(),
+                onChanged: (val) =>
+                    setState(() => _numShips = val as int),
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Update your Armament',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextFormField(
-                    initialValue: _location ?? raid.location,
-                    onChanged: (val) => setState(() => _location = val),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextFormField(
-                    initialValue: _numShips ?? raid.numOfShips.toString(),
-                    onChanged: (val) => setState(() => _numShips = val),
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  TextFormField(
-                    initialValue: _arrivalDate ?? readableDate(raid.arrivalDate),
-                    onChanged: (val) => setState(() => _arrivalDate = val),
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color?>(
-                          Colors.blueGrey[900]),
+                    (_arrivalDate is DateTime)
+                        ? readableDate(_arrivalDate!)
+                        : readableDate(raid.arrivalDate),
+                    style: TextStyle(
+                      color: Colors.blueGrey[900],
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                    child: Text(
-                      'Save',
-                      style: TextStyle(color: Colors.white),
+                  ),
+                  IconButton(
+                    onPressed: () => _selectDate(
+                      context,
+                      (_arrivalDate is DateTime)
+                          ? _arrivalDate!
+                          : raid.arrivalDate,
                     ),
-                    onPressed: () async {
-                        print('''
+                    icon: Icon(Icons.calendar_today),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 30.0,
+              ),
+              ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color?>(Colors.blueGrey[900]),
+                  ),
+                  child: Text(
+                    'Save',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    print('''
                         $_location,
                         $_numShips,
                         $_arrivalDate
                         ''');
-                        Navigator.pop(context);
-                      }
-                  ),
-                ],
-              ),
-            );
-          } else {
-            return Text("Loading");
-          }
-        });
+                    Navigator.pop(context);
+                  }),
+            ],
+          ),
+        );
+      } else {
+        return Text("Loading");
+      }
+    });
   }
 }
