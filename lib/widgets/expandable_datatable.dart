@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pillager/models/models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
+import 'package:pillager/widgets/raid_form.dart';
 
 class ExpandableDataTable extends StatefulWidget {
   const ExpandableDataTable({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                 vertical: 20.0,
                 horizontal: 60.0,
               ),
-              child: Text("Editor Panel"),
+              child: RaidForm(),
             );
           });
     }

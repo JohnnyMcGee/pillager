@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pillager/bloc/bloc.dart';
+import 'package:pillager/models/models.dart';
+import 'package:pillager/widgets/expandable_datatable.dart';
 
-class SettingsForm extends StatefulWidget {
-  const SettingsForm({Key? key}) : super(key: key);
+class RaidForm extends StatefulWidget {
+  const RaidForm({Key? key}) : super(key: key);
 
   @override
-  _SettingsFormState createState() => _SettingsFormState();
+  _RaidFormState createState() => _RaidFormState();
 }
 
-class _SettingsFormState extends State<SettingsForm> {
+class _RaidFormState extends State<RaidForm> {
   final _formKey = GlobalKey<FormState>();
-  final List<String> armTypes = ['sword', 'axe', 'bow', 'twin katana'];
 
   // form values
-  String? _currentName;
-  String? _currentArmType;
-  int? _currentSize;
+  String? _location;
+  String? _numShips;
+  String? _arrivalDate;
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<MyUser?>(context);
 
-    return StreamBuilder<MyUserData>(
-        stream: DatabaseService(uid: user?.uid).userData,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            MyUserData? userData = snapshot.data;
+    return BlocBuilder<DatabaseBloc, DatabaseState>(
+        builder: (context, state) {
+          if (state is DatabaseLoaded) {
+            Raid raid = state.raids[0];
             return Form(
               key: _formKey,
               child: Column(
@@ -37,22 +38,22 @@ class _SettingsFormState extends State<SettingsForm> {
                     height: 20.0,
                   ),
                   TextFormField(
-                    initialValue: _currentName ?? userData?.name,
-                    onChanged: (val) => setState(() => _currentName = val),
+                    initialValue: _location ?? raid.location,
+                    onChanged: (val) => setState(() => _location = val),
                   ),
                   SizedBox(
                     height: 20.0,
                   ),
                   TextFormField(
-                    initialValue: _currentName ?? userData?.name,
-                    onChanged: (val) => setState(() => _currentName = val),
+                    initialValue: _numShips ?? raid.numOfShips.toString(),
+                    onChanged: (val) => setState(() => _numShips = val),
                   ),
                   SizedBox(
                     height: 20.0,
                   ),
                   TextFormField(
-                    initialValue: _currentName ?? userData?.name,
-                    onChanged: (val) => setState(() => _currentName = val),
+                    initialValue: _arrivalDate ?? readableDate(raid.arrivalDate),
+                    onChanged: (val) => setState(() => _arrivalDate = val),
                   ),
                   ElevatedButton(
                     style: ButtonStyle(
@@ -60,20 +61,23 @@ class _SettingsFormState extends State<SettingsForm> {
                           Colors.blueGrey[900]),
                     ),
                     child: Text(
-                      'Update',
+                      'Save',
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () async {
-                        print();
+                        print('''
+                        $_location,
+                        $_numShips,
+                        $_arrivalDate
+                        ''');
                         Navigator.pop(context);
                       }
-                    },
                   ),
                 ],
               ),
             );
           } else {
-            return Loading();
+            return Text("Loading");
           }
         });
   }
