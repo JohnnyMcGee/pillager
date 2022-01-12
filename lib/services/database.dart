@@ -21,6 +21,7 @@ class DatabaseService {
   List<Raid> _raidsFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs
         .map((doc) => Raid(
+              docId: doc.id,
               location: doc.get('location'),
               numOfShips: doc.get('numShips'),
               arrivalDate: doc.get('arrivalDate').toDate(),
