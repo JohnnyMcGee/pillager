@@ -12,11 +12,17 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
     store.raids.listen((data) {add(raidDataChange(data: data));});
 
     on<raidDataChange>(_onRaidDataChange);
+    on<RaidEditorSaveButtonPressed>(_onraidEditorSaveButtonPressed);
     
   }
 
   void _onRaidDataChange(raidDataChange event, Emitter emit) {
     emit(DatabaseLoaded(raids: event.data));
+  }
+
+  void _onraidEditorSaveButtonPressed(RaidEditorSaveButtonPressed event, Emitter emit) {
+    // store.updateRaid(event.data);
+    emit(DatabaseUpdating(raids: state.raids));
   }
 
 

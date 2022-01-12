@@ -5,7 +5,9 @@ import 'package:pillager/models/models.dart';
 import 'package:pillager/widgets/expandable_datatable.dart';
 
 class RaidForm extends StatefulWidget {
-  const RaidForm({Key? key}) : super(key: key);
+  Raid raid;
+
+  RaidForm({Key? key, required this.raid}) : super(key: key);
 
   @override
   _RaidFormState createState() => _RaidFormState();
@@ -108,11 +110,12 @@ class _RaidFormState extends State<RaidForm> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () async {
-                    print('''
-                        $_location,
-                        $_numShips,
-                        $_arrivalDate
-                        ''');
+                    final Raid updatedRaid = widget.raid.copyWith(
+                      location: _location,
+                      numOfShips: _numShips,
+                      arrivalDate: _arrivalDate,
+                    );
+                    print(updatedRaid.toString());
                     Navigator.pop(context);
                   }),
             ],

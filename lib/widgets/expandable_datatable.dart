@@ -19,7 +19,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     Size size = MediaQuery.of(context).size;
     // List<Raid> raids = context.read<DatabaseBloc>().state.raids;
 
-    void _showEditorPanel() {
+    void _showEditorPanel(Raid raidData) {
       showModalBottomSheet(
           context: context,
           builder: (context) {
@@ -28,7 +28,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                 vertical: 20.0,
                 horizontal: 60.0,
               ),
-              child: RaidForm(),
+              child: RaidForm(raid: raidData),
             );
           });
     }
@@ -68,7 +68,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                           DataColumn(label: Text('Arrival Date')),
                         ],
                         rows: state.raids
-                            .map((raid) => RaidRow(data: raid, onSelectChanged: (x) => _showEditorPanel()))
+                            .map((raid) => RaidRow(data: raid, onSelectChanged: (x) => _showEditorPanel(raid)))
                             .toList(),
                       );
                     }),

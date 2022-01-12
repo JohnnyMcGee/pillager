@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:pillager/models/models.dart';
 
 abstract class DatabaseState extends Equatable {
-  List<Raid> raids;
+  final List<Raid> raids;
 
-  DatabaseState({this.raids = const []});
+  const DatabaseState({this.raids = const []});
 
   @override
   List<Object> get props => [raids];
@@ -13,5 +13,9 @@ abstract class DatabaseState extends Equatable {
 class DatabaseInitial extends DatabaseState {}
 
 class DatabaseLoaded extends DatabaseState {
-  DatabaseLoaded({required raids}) : super(raids: raids);
+  const DatabaseLoaded({required raids}) : super(raids: raids);
+}
+
+class DatabaseUpdating extends DatabaseState {
+  const DatabaseUpdating({required raids}) : super(raids: raids);
 }
