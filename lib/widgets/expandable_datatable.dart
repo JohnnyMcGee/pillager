@@ -113,7 +113,7 @@ class RaidRow extends DataRow {
           onSelectChanged: onSelectChanged,
           cells: [
             RaidCell(data: data.location),
-            RaidCell(data: data.numOfShips.toString()),
+            RaidCell(data: data.numShips.toString()),
             RaidCell(data: readableDate(data.arrivalDate)),
           ],
         );

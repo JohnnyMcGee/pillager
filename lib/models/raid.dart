@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 
 class Raid extends Equatable {
   String location;
-  int numOfShips;
+  int numShips;
   DateTime arrivalDate;
   List vikings;
   List loot;
@@ -13,7 +13,7 @@ class Raid extends Equatable {
   Raid({
     required this.docId,
     required this.location,
-    required this.numOfShips,
+    required this.numShips,
     required this.arrivalDate,
     required this.vikings,
     required this.loot,
@@ -21,7 +21,7 @@ class Raid extends Equatable {
 
   @override
   List<Object> get props =>
-      [docId, location, numOfShips, arrivalDate, vikings, loot];
+      [docId, location, numShips, arrivalDate, vikings, loot];
 
   @override
   String toString() {
@@ -29,7 +29,7 @@ class Raid extends Equatable {
     Raid({
       docId: $docId,
       location: $location,
-      numOfShips: $numOfShips,
+      numShips: $numShips,
       arrivalDate: $arrivalDate,
       vikings: $vikings,
       loot: $loot
@@ -40,7 +40,7 @@ class Raid extends Equatable {
   Raid copyWith({
     docId,
     location,
-    numOfShips,
+    numShips,
     arrivalDate,
     vikings,
     loot,
@@ -48,7 +48,7 @@ class Raid extends Equatable {
     return Raid(
       docId: docId ?? this.docId,
       location: location ?? this.location,
-      numOfShips: numOfShips ?? this.numOfShips,
+      numShips: numShips ?? this.numShips,
       arrivalDate: arrivalDate ?? this.arrivalDate,
       vikings: vikings ?? this.vikings,
       loot: loot ?? this.loot,

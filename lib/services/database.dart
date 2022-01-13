@@ -23,7 +23,7 @@ class DatabaseService {
         .map((doc) => Raid(
               docId: doc.id,
               location: doc.get('location'),
-              numOfShips: doc.get('numShips'),
+              numShips: doc.get('numShips'),
               arrivalDate: doc.get('arrivalDate').toDate(),
               vikings: doc.get('vikings'),
               loot: doc.get('loot'),
@@ -31,8 +31,11 @@ class DatabaseService {
         .toList();
   }
 
-  void updateRaid(data) {
-    print(data.toString());
+  void updateRaid(Map<String, Object?> data) {
+    final raidDoc = raidsCollection.doc(data["docId"] as String);
+    data.removeWhere((k, v) => v == null || k == "docId");
+    if (data.isNotEmpty) {raidDoc.update(data);}
+    // else fire another event to reset the database state to loaded.
   }
 
   // raid from snapshot

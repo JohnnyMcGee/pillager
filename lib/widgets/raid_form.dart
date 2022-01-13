@@ -60,7 +60,7 @@ class _RaidFormState extends State<RaidForm> {
                 height: 20.0,
               ),
               DropdownButtonFormField(
-                value: _numShips ?? raid.numOfShips,
+                value: _numShips ?? raid.numShips,
                 items: List.generate(100, (index) => index).map((number) {
                   return DropdownMenuItem(
                     value: number,
