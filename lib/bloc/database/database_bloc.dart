@@ -21,7 +21,7 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
   }
 
   void _onraidEditorSaveButtonPressed(RaidEditorSaveButtonPressed event, Emitter emit) {
-    // store.updateRaid(event.data);
+    store.updateRaid(event.data);
     emit(DatabaseUpdating(raids: state.raids));
   }
 

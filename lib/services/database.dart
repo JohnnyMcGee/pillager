@@ -31,6 +31,10 @@ class DatabaseService {
         .toList();
   }
 
+  void updateRaid(data) {
+    print(data.toString());
+  }
+
   // raid from snapshot
 
 }

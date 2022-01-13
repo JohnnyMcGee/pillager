@@ -110,12 +110,14 @@ class _RaidFormState extends State<RaidForm> {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () async {
-                    final Raid updatedRaid = widget.raid.copyWith(
-                      location: _location,
-                      numOfShips: _numShips,
-                      arrivalDate: _arrivalDate,
-                    );
-                    print(updatedRaid.toString());
+                    final raidUpdate = {
+                      "docId":raid.docId,
+                      "location":_location,
+                      "numShips":_numShips,
+                      "arrivalDate":_arrivalDate,
+                    };
+                    print(raidUpdate.toString());
+                    context.read<DatabaseBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
                     Navigator.pop(context);
                   }),
             ],

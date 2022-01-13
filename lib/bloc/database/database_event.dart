@@ -15,7 +15,7 @@ class raidDataChange extends DatabaseEvent {
 }
 
 class RaidEditorSaveButtonPressed extends DatabaseEvent {
-  Raid data;
+  Map<String, Object?> data;
 
   RaidEditorSaveButtonPressed({required this.data});
 
