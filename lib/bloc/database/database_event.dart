@@ -22,3 +22,6 @@ class RaidEditorSaveButtonPressed extends DatabaseEvent {
   @override
   List<Object> get props => [data];
 }
+
+class RaidEditorNoChanges extends DatabaseEvent {
+}

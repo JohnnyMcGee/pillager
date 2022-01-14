@@ -9,21 +9,26 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
   final DatabaseService store;
 
   DatabaseBloc({required this.store}) : super(DatabaseInitial()) {
-    store.raids.listen((data) {add(raidDataChange(data: data));});
+    store.raids.listen((data) {
+      add(raidDataChange(data: data));
+    });
 
     on<raidDataChange>(_onRaidDataChange);
     on<RaidEditorSaveButtonPressed>(_onraidEditorSaveButtonPressed);
-    
+    on<RaidEditorNoChanges>(
+        (event, emit) => emit(DatabaseLoaded(raids: state.raids)));
   }
 
   void _onRaidDataChange(raidDataChange event, Emitter emit) {
     emit(DatabaseLoaded(raids: event.data));
   }
 
-  void _onraidEditorSaveButtonPressed(RaidEditorSaveButtonPressed event, Emitter emit) {
-    store.updateRaid(event.data);
-    emit(DatabaseUpdating(raids: state.raids));
+  void _onraidEditorSaveButtonPressed(
+      RaidEditorSaveButtonPressed event, Emitter emit) {
+    event.data.removeWhere((k, v) => v == null);
+    if (event.data.length > 1) {
+      store.updateRaid(event.data);
+      emit(DatabaseUpdating(raids: state.raids));
+    }
   }
-
-
 }
