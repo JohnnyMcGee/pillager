@@ -17,6 +17,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    const _columns = ['Location', '# Of Ships', 'Arrival Date'];
     // List<Raid> raids = context.read<DatabaseBloc>().state.raids;
 
     void _showEditorPanel(Raid raidData) {
@@ -31,6 +32,23 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
               child: RaidForm(raid: raidData),
             );
           });
+    }
+
+    List<DataRow> _buildRowsFromState(DatabaseState state) {
+      List<DataRow> rows = state.raids
+          .map((raid) => RaidRow(
+              data: raid, onSelectChanged: (x) => _showEditorPanel(raid)))
+          .toList();
+      var lastRow = DataRow(
+        cells: [
+          RaidCell(data: "Add New Raid"),
+          RaidCell(data: "Add New Raid"),
+          RaidCell(data: "Add New Raid"),
+        ],
+        onSelectChanged: (x) => print("Add New Raid"),
+      );
+      rows.add(lastRow);
+      return rows;
     }
 
     return Column(
@@ -62,14 +80,12 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                             MaterialStateProperty.all(Colors.blueGrey[400]),
                         columnSpacing: size.width / 3,
                         showCheckboxColumn: false,
-                        columns: [
-                          DataColumn(label: Text('Location')),
-                          DataColumn(label: Text('# Of Ships')),
-                          DataColumn(label: Text('Arrival Date')),
-                        ],
-                        rows: state.raids
-                            .map((raid) => RaidRow(data: raid, onSelectChanged: (x) => _showEditorPanel(raid)))
+                        columns: _columns
+                            .map(
+                              (col) => DataColumn(label: Text(col)),
+                            )
                             .toList(),
+                        rows: _buildRowsFromState(state),
                       );
                     }),
                   ),
