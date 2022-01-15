@@ -2,22 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pillager/models/models.dart';
 
 class DatabaseService {
-  // raids collection reference
   final CollectionReference raidsCollection =
       FirebaseFirestore.instance.collection('raids');
 
-  // get raids stream
   Stream<List<Raid>> get raids {
     return raidsCollection.snapshots().map(_raidsFromSnapshot);
   }
 
-  // add new raid
-
-  // update existing raid
-
-  // delete existing raid
-
-  // list of raids from snapshot
   List<Raid> _raidsFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs
         .map((doc) => Raid(
@@ -43,15 +34,16 @@ class DatabaseService {
 
   void createNewRaid(Map<String, Object?> data) {
     try {
-      raidsCollection.add(
-        {
-          "location":data.containsKey("location") ? data["location"] : "New Raid",
-          "numShips":data.containsKey("numShips") ? data["numShips"] : 1,
-          "arrivalDate":data.containsKey("arrivalDate") ? data["arrivalDate"] : DateTime.now(),
-          "vikings":data.containsKey("vikings") ? data["vikings"] : [],
-          "loot":data.containsKey("loot") ? data["loot"] : [],
-        }
-      );
+      raidsCollection.add({
+        "location":
+            data.containsKey("location") ? data["location"] : "New Raid",
+        "numShips": data.containsKey("numShips") ? data["numShips"] : 1,
+        "arrivalDate": data.containsKey("arrivalDate")
+            ? data["arrivalDate"]
+            : DateTime.now(),
+        "vikings": data.containsKey("vikings") ? data["vikings"] : [],
+        "loot": data.containsKey("loot") ? data["loot"] : [],
+      });
     } catch (e) {
       print(e);
     }
@@ -59,13 +51,10 @@ class DatabaseService {
 
   void deleteRaid(String docId) {
     try {
-    final raidDoc = raidsCollection.doc(docId);
-    raidDoc.delete();
+      final raidDoc = raidsCollection.doc(docId);
+      raidDoc.delete();
     } catch (e) {
       print(e);
     }
   }
-
-  // raid from snapshot
-
 }
