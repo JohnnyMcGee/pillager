@@ -17,15 +17,14 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    const _columns = ['Location', '# Of Ships', 'Arrival Date'];
-    // List<Raid> raids = context.read<DatabaseBloc>().state.raids;
+    const _columns = ['Location', '# Of Ships', 'Arrival Date', 'Vikings'];
 
     void _showEditorPanel(Raid raidData) {
       showModalBottomSheet(
           context: context,
           builder: (context) {
             return Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 vertical: 20.0,
                 horizontal: 60.0,
               ),
@@ -48,10 +47,11 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     List<DataRow> _buildRowsFromState(DatabaseState state) {
       List<RaidRow> raidRows = state.raids
           .map((raid) => RaidRow(
-              data: raid, 
+              data: raid,
               onSelectChanged: (x) => _showEditorPanel(raid),
-              onDeleteButtonPressed: () => context.read<DatabaseBloc>().add(RaidDeleteButtonPressed(data:raid))
-              ))
+              onDeleteButtonPressed: () => context
+                  .read<DatabaseBloc>()
+                  .add(RaidDeleteButtonPressed(data: raid))))
           .toList();
       List<DataRow> dataRows = List<DataRow>.from(raidRows);
       DataRow lastRow = DataRow(
@@ -59,7 +59,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
           DataCell(
             Center(
               child: Row(
-                children: [
+                children: const [
                   Icon(Icons.add),
                   Text(
                     "Add a New Raid",
@@ -69,7 +69,8 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
             ),
           ),
           // fill the other columns with blank cells
-          ...List<DataCell>.generate(_columns.length, (index) => const DataCell(SizedBox()))
+          ...List<DataCell>.generate(
+              _columns.length, (index) => const DataCell(SizedBox()))
         ],
         onSelectChanged: (x) => _editNewRaid(),
       );
@@ -171,6 +172,13 @@ class RaidRow extends DataRow {
             DataCell(
               Text(
                 readableDate(data.arrivalDate),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataCell(
+              Text(
+                "Ragnar Lothbrok, Bjorn Ironside, 2 others",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
