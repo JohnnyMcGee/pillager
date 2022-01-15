@@ -178,7 +178,7 @@ class RaidRow extends DataRow {
             ),
             DataCell(
               Text(
-                "Ragnar Lothbrok, Bjorn Ironside, 2 others",
+                'Ragnar Lothbrok, Bjorn Ironside, 2 others',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),

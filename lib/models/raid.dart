@@ -6,7 +6,7 @@ class Raid extends Equatable {
   String location;
   int numShips;
   DateTime arrivalDate;
-  List vikings;
+  List<String> vikings;
   List loot;
   String? docId;
 
@@ -31,7 +31,7 @@ class Raid extends Equatable {
       location: $location,
       numShips: $numShips,
       arrivalDate: $arrivalDate,
-      vikings: $vikings,
+      vikings: ${vikings.toString()},
       loot: $loot
     })
     ''';

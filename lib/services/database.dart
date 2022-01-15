@@ -23,7 +23,7 @@ class DatabaseService {
               location: doc.get('location'),
               numShips: doc.get('numShips'),
               arrivalDate: doc.get('arrivalDate').toDate(),
-              vikings: doc.get('vikings'),
+              vikings: List<String>.from(doc.get('vikings')),
               loot: doc.get('loot'),
             ))
         .toList();
