@@ -25,10 +25,17 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
 
   void _onraidEditorSaveButtonPressed(
       RaidEditorSaveButtonPressed event, Emitter emit) {
+    bool isRaidUpdate = (event.data["docId"] != null && event.data.length > 1);
+
+    // Drop empty form fields
     event.data.removeWhere((k, v) => v == null);
-    if (event.data.length > 1) {
+
+    if (isRaidUpdate) {
       store.updateRaid(event.data);
-      emit(DatabaseUpdating(raids: state.raids));
+    } else {
+      store.createNewRaid(event.data);
     }
+
+    emit(DatabaseUpdating(raids: state.raids));
   }
 }

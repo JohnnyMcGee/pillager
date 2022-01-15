@@ -40,7 +40,7 @@ class _RaidFormState extends State<RaidForm> {
   Widget build(BuildContext context) {
     return BlocBuilder<DatabaseBloc, DatabaseState>(builder: (context, state) {
       if (state is DatabaseLoaded) {
-        Raid raid = state.raids[0];
+        Raid raid = widget.raid;
         return Form(
           key: _formKey,
           child: Column(

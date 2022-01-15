@@ -34,6 +34,17 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
           });
     }
 
+    void _editNewRaid() {
+      Raid newRaid = Raid(
+        location: "",
+        numShips: 1,
+        arrivalDate: DateTime.now(),
+        vikings: [],
+        loot: [],
+      );
+      _showEditorPanel(newRaid);
+    }
+
     List<DataRow> _buildRowsFromState(DatabaseState state) {
       List<RaidRow> raidRows = state.raids
           .map((raid) => RaidRow(
@@ -57,7 +68,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
           DataCell(SizedBox()),
           DataCell(SizedBox()),
         ],
-        onSelectChanged: (x) => print("Add New Raid"),
+        onSelectChanged: (x) => _editNewRaid(),
       );
       dataRows.add(lastRow);
       return dataRows;

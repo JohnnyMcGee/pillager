@@ -8,10 +8,10 @@ class Raid extends Equatable {
   DateTime arrivalDate;
   List vikings;
   List loot;
-  String docId;
+  String? docId;
 
   Raid({
-    required this.docId,
+    this.docId,
     required this.location,
     required this.numShips,
     required this.arrivalDate,
@@ -21,7 +21,7 @@ class Raid extends Equatable {
 
   @override
   List<Object> get props =>
-      [docId, location, numShips, arrivalDate, vikings, loot];
+      [location, numShips, arrivalDate, vikings, loot];
 
   @override
   String toString() {

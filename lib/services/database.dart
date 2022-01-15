@@ -33,9 +33,25 @@ class DatabaseService {
 
   void updateRaid(Map<String, Object?> data) {
     final raidDoc = raidsCollection.doc(data["docId"] as String);
-    data.removeWhere((k,v) => k=="docId");
+    data.removeWhere((k, v) => k == "docId");
     try {
       raidDoc.update(data);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void createNewRaid(Map<String, Object?> data) {
+    try {
+      raidsCollection.add(
+        {
+          "location":data.containsKey("location") ? data["location"] : "",
+          "numShips":data.containsKey("numShips") ? data["numShips"] : 1,
+          "arrivalDate":data.containsKey("arrivalDate") ? data["arrivalDate"] : DateTime.now(),
+          "vikings":data.containsKey("vikings") ? data["vikings"] : [],
+          "loot":data.containsKey("loot") ? data["loot"] : [],
+        }
+      );
     } catch (e) {
       print(e);
     }
