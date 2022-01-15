@@ -14,16 +14,11 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
       add(raidDataChange(data: data));
     });
 
-    store.vikings.listen((data) {
-      add(VikingDataChange(data: data));
-    });
-
     on<raidDataChange>(_onRaidDataChange);
     on<RaidEditorSaveButtonPressed>(_onRaidEditorSaveButtonPressed);
     on<RaidDeleteButtonPressed>(_onRaidDeleteButtonPressed);
     on<RaidEditorNoChanges>(
         (event, emit) => emit(DatabaseLoaded(raids: state.raids)));
-    on<VikingDataChange>(_onVikingDataChange);
   }
 
   void _onRaidDataChange(raidDataChange event, Emitter emit) {
@@ -51,10 +46,5 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
       store.deleteRaid(event.data.docId!);
       emit(DatabaseUpdating(raids: state.raids));
     }
-  }
-  
-  void _onVikingDataChange(VikingDataChange event, Emitter emit) {
-    event.data.forEach((v) => print(v.toString()));
-    emit(DatabaseLoaded(raids: state.raids));
   }
 }

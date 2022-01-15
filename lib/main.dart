@@ -27,6 +27,12 @@ void main() async {
         create: (context) => DatabaseBloc(
           store: DatabaseService(),
         ),
+      ),
+      BlocProvider(
+        create: (context) => VikingsBloc(
+          store: DatabaseService(),
+        ),
+        lazy: false,
       )
     ],
     child: PillagerApp(),

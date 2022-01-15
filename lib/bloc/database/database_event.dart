@@ -24,9 +24,3 @@ class RaidDeleteButtonPressed extends DatabaseEvent {
 
   RaidDeleteButtonPressed({required this.data});
 }
-
-class VikingDataChange extends DatabaseEvent {
-  List<Viking> data;
-
-  VikingDataChange({required this.data});
-}
