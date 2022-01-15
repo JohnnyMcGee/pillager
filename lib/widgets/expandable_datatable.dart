@@ -48,7 +48,10 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     List<DataRow> _buildRowsFromState(DatabaseState state) {
       List<RaidRow> raidRows = state.raids
           .map((raid) => RaidRow(
-              data: raid, onSelectChanged: (x) => _showEditorPanel(raid)))
+              data: raid, 
+              onSelectChanged: (x) => _showEditorPanel(raid),
+              onDeleteButtonPressed: () => context.read<DatabaseBloc>().add(RaidDeleteButtonPressed(data:raid))
+              ))
           .toList();
       List<DataRow> dataRows = List<DataRow>.from(raidRows);
       DataRow lastRow = DataRow(
@@ -149,7 +152,7 @@ class RaidCell extends DataCell {
 class RaidRow extends DataRow {
   Raid data;
 
-  RaidRow({required this.data, onSelectChanged})
+  RaidRow({required this.data, onSelectChanged, onDeleteButtonPressed})
       : super(
           onSelectChanged: onSelectChanged,
           cells: [
@@ -176,7 +179,7 @@ class RaidRow extends DataRow {
             ),
             DataCell(
               IconButton(
-                onPressed: () => print("delete ${data.docId}"),
+                onPressed: onDeleteButtonPressed,
                 icon: const Icon(Icons.delete_outline_rounded),
               ),
             ),

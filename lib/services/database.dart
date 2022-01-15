@@ -57,6 +57,15 @@ class DatabaseService {
     }
   }
 
+  void deleteRaid(String docId) {
+    try {
+    final raidDoc = raidsCollection.doc(docId);
+    raidDoc.delete();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   // raid from snapshot
 
 }

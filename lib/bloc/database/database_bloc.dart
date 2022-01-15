@@ -14,7 +14,8 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
     });
 
     on<raidDataChange>(_onRaidDataChange);
-    on<RaidEditorSaveButtonPressed>(_onraidEditorSaveButtonPressed);
+    on<RaidEditorSaveButtonPressed>(_onRaidEditorSaveButtonPressed);
+    on<RaidDeleteButtonPressed>(_onRaidDeleteButtonPressed);
     on<RaidEditorNoChanges>(
         (event, emit) => emit(DatabaseLoaded(raids: state.raids)));
   }
@@ -23,7 +24,7 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
     emit(DatabaseLoaded(raids: event.data));
   }
 
-  void _onraidEditorSaveButtonPressed(
+  void _onRaidEditorSaveButtonPressed(
       RaidEditorSaveButtonPressed event, Emitter emit) {
     bool isRaidUpdate = (event.data["docId"] != null && event.data.length > 1);
 
@@ -37,5 +38,12 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
     }
 
     emit(DatabaseUpdating(raids: state.raids));
+  }
+
+  void _onRaidDeleteButtonPressed(RaidDeleteButtonPressed event, Emitter emit) {
+    if (event.data.docId != null) {
+      store.deleteRaid(event.data.docId!);
+      emit(DatabaseUpdating(raids: state.raids));
+    }
   }
 }

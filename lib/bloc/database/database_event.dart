@@ -25,3 +25,14 @@ class RaidEditorSaveButtonPressed extends DatabaseEvent {
 
 class RaidEditorNoChanges extends DatabaseEvent {
 }
+
+class RaidDeleteButtonPressed extends DatabaseEvent {
+  Raid data;
+
+  RaidDeleteButtonPressed({required this.data}) {
+    assert (data.docId != null);
+  }
+
+  @override
+  List<Object> get props => [data];
+}
