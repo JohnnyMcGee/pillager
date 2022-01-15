@@ -35,20 +35,32 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     }
 
     List<DataRow> _buildRowsFromState(DatabaseState state) {
-      List<DataRow> rows = state.raids
+      List<RaidRow> raidRows = state.raids
           .map((raid) => RaidRow(
               data: raid, onSelectChanged: (x) => _showEditorPanel(raid)))
           .toList();
-      var lastRow = DataRow(
+      List<DataRow> dataRows = List<DataRow>.from(raidRows);
+      DataRow lastRow = DataRow(
         cells: [
-          RaidCell(data: "Add New Raid"),
-          RaidCell(data: "Add New Raid"),
-          RaidCell(data: "Add New Raid"),
+          DataCell(
+            Center(
+              child: Row(
+                children: [
+                  Icon(Icons.add),
+                  Text(
+                    "Add a New Raid",
+                  ),
+                ],
+              ),
+            ),
+          ),
+          DataCell(SizedBox()),
+          DataCell(SizedBox()),
         ],
         onSelectChanged: (x) => print("Add New Raid"),
       );
-      rows.add(lastRow);
-      return rows;
+      dataRows.add(lastRow);
+      return dataRows;
     }
 
     return Column(
