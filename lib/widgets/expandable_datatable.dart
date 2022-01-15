@@ -36,7 +36,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
 
     void _editNewRaid() {
       Raid newRaid = Raid(
-        location: "",
+        location: "New Raid",
         numShips: 1,
         arrivalDate: DateTime.now(),
         vikings: [],
@@ -65,6 +65,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
               ),
             ),
           ),
+          DataCell(SizedBox()),
           DataCell(SizedBox()),
           DataCell(SizedBox()),
         ],
@@ -101,13 +102,14 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                       return DataTable(
                         headingRowColor:
                             MaterialStateProperty.all(Colors.blueGrey[400]),
-                        columnSpacing: size.width / 3,
+                        columnSpacing: size.width / 5,
                         showCheckboxColumn: false,
                         columns: _columns
                             .map(
                               (col) => DataColumn(label: Text(col)),
                             )
-                            .toList(),
+                            .toList()
+                          ..add(DataColumn(label: SizedBox(width: 20))),
                         rows: _buildRowsFromState(state),
                       );
                     }),
@@ -151,9 +153,33 @@ class RaidRow extends DataRow {
       : super(
           onSelectChanged: onSelectChanged,
           cells: [
-            RaidCell(data: data.location),
-            RaidCell(data: data.numShips.toString()),
-            RaidCell(data: readableDate(data.arrivalDate)),
+            DataCell(
+              Text(
+                data.location,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataCell(
+              Text(
+                data.numShips.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataCell(
+              Text(
+                readableDate(data.arrivalDate),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            DataCell(
+              IconButton(
+                onPressed: () => print("delete ${data.docId}"),
+                icon: const Icon(Icons.delete_outline_rounded),
+              ),
+            ),
           ],
         );
 }

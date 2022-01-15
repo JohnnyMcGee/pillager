@@ -45,7 +45,7 @@ class DatabaseService {
     try {
       raidsCollection.add(
         {
-          "location":data.containsKey("location") ? data["location"] : "",
+          "location":data.containsKey("location") ? data["location"] : "New Raid",
           "numShips":data.containsKey("numShips") ? data["numShips"] : 1,
           "arrivalDate":data.containsKey("arrivalDate") ? data["arrivalDate"] : DateTime.now(),
           "vikings":data.containsKey("vikings") ? data["vikings"] : [],
