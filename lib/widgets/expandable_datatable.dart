@@ -68,9 +68,8 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
               ),
             ),
           ),
-          DataCell(SizedBox()),
-          DataCell(SizedBox()),
-          DataCell(SizedBox()),
+          // fill the other columns with blank cells
+          ...List<DataCell>.generate(_columns.length, (index) => const DataCell(SizedBox()))
         ],
         onSelectChanged: (x) => _editNewRaid(),
       );
@@ -105,7 +104,6 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                       return DataTable(
                         headingRowColor:
                             MaterialStateProperty.all(Colors.blueGrey[400]),
-                        columnSpacing: size.width / 5,
                         showCheckboxColumn: false,
                         columns: _columns
                             .map(
