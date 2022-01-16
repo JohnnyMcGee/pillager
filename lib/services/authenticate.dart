@@ -12,7 +12,6 @@ class AuthService {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
       User? user = result.user;
-      print("Signed in!");
       return user;
     } catch (e) {
       print(e.toString());
@@ -24,7 +23,7 @@ class AuthService {
       User? user, String firstName, String lastName) async {
     String displayName = "$firstName $lastName";
     await user?.updateDisplayName(displayName);
-    User? currentUser = await _auth.currentUser;
+    User? currentUser = _auth.currentUser;
     return currentUser;
   }
 

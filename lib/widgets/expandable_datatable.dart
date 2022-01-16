@@ -38,8 +38,8 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
         location: "New Raid",
         numShips: 1,
         arrivalDate: DateTime.now(),
-        vikings: {},
-        loot: [],
+        vikings: const {},
+        loot: const [],
       );
       _showEditorPanel(newRaid);
     }
@@ -81,7 +81,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     return Column(
       children: [
         ExpansionPanelList(
-          animationDuration: Duration(milliseconds: 1000),
+          animationDuration: const Duration(milliseconds: 1000),
           children: [
             ExpansionPanel(
               backgroundColor: Colors.blueGrey,
@@ -95,7 +95,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                   ),
                 );
               },
-              body: Container(
+              body: SizedBox(
                 height: size.height / 3,
                 child: SingleChildScrollView(
                   child: SizedBox(
@@ -111,7 +111,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                               (col) => DataColumn(label: Text(col)),
                             )
                             .toList()
-                          ..add(DataColumn(label: SizedBox(width: 20))),
+                          ..add(const DataColumn(label: SizedBox(width: 20))),
                         rows: _buildRowsFromState(state),
                       );
                     }),
@@ -135,21 +135,21 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
 }
 
 class RaidCell extends DataCell {
-  String data;
+  final String data;
   RaidCell({required this.data})
       : super(
           Container(
             alignment: AlignmentDirectional.center,
             child: Text(
               data,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
         );
 }
 
 class RaidRow extends DataRow {
-  Raid data;
+  final Raid data;
 
   RaidRow({required this.data, onSelectChanged, onDeleteButtonPressed})
       : super(
@@ -159,28 +159,28 @@ class RaidRow extends DataRow {
               Text(
                 data.location,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             DataCell(
               Text(
                 data.numShips.toString(),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             DataCell(
               Text(
                 readableDate(data.arrivalDate),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             DataCell(
               Text(
                 readableVikings(data.vikings),
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
             DataCell(

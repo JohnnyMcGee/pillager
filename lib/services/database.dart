@@ -17,19 +17,22 @@ class DatabaseService {
   }
 
   List<Raid> _raidsFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.docs
-        .map((doc) => Raid(
+
+    return [
+      for (var doc in snapshot.docs)
+      Raid(
               docId: doc.id,
               location: doc.get('location'),
               numShips: doc.get('numShips'),
               arrivalDate: doc.get('arrivalDate').toDate(),
-              // Initialize vikings with just keys
+              // Initialize vikings with dummy value -1
               // Values added later using raidLoadVikings method
-              vikings: Map<String, Object>.fromIterable(doc.get('vikings'),
-                  key: (id) => id, value: (id) => -1),
+              vikings: {
+                for (var id in doc.get('vikings')) id: -1
+              },
               loot: doc.get('loot'),
-            ))
-        .toList();
+            )
+    ];
   }
 
   void updateRaid(Map<String, Object?> data) {
@@ -69,22 +72,22 @@ class DatabaseService {
   }
 
   Map<String, Viking> _vikingsFromSnapshot(QuerySnapshot snapshot) {
-    return Map.fromIterable(
-      snapshot.docs,
-      key: (doc) => doc.id,
-      value: (doc) => Viking(
-        uid: doc.id,
-        firstName: doc.get("firstName"),
-        lastName: doc.get("lastName"),
-        isBerserker: doc.get("isBerserker"),
-        isEarl: doc.get("isEarl"),
-      ),
-    );
+    return {
+      for (var doc in snapshot.docs)
+        doc.id: Viking(
+          uid: doc.id,
+          firstName: doc.get("firstName"),
+          lastName: doc.get("lastName"),
+          isBerserker: doc.get("isBerserker"),
+          isEarl: doc.get("isEarl"),
+        )
+    };
   }
 
   Raid raidLoadVikings(Raid raid, Map<String, Viking> vikings) {
-    Map<String, Object> raidVikings =
-        Map<String, Object>.from(raid.vikings.map((k, v) => MapEntry<String, Object>(k, (vikings.containsKey(k) ? vikings[k] : -2)!)));
-    return raid.copyWith(vikings:raidVikings);
+    Map<String, Object> raidVikings = Map<String, Object>.from(raid.vikings.map(
+        (k, v) => MapEntry<String, Object>(
+            k, (vikings.containsKey(k) ? vikings[k] : -2)!)));
+    return raid.copyWith(vikings: raidVikings);
   }
 }

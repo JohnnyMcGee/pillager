@@ -1,11 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/bloc/bloc.dart';
 
-abstract class RaidEvent {
-  @override
-  List<Object> get props => [];
-}
+abstract class RaidEvent {}
 
 class RaidDataChange extends RaidEvent {
   List<Raid> data;

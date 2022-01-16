@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 
-import 'package:pillager/services/services.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleSignInForm;
@@ -17,7 +16,6 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
   final _formKey = GlobalKey<FormState>();
-  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,7 @@ class _SignInState extends State<SignIn> {
                 onChanged: (val) {
                   setState(() => email = val);
                 },
-                decoration: InputDecoration(hintText: "email"),
+                decoration: const InputDecoration(hintText: "email"),
               ),
               SizedBox(height: size.height * .05),
               TextFormField(
@@ -54,7 +52,7 @@ class _SignInState extends State<SignIn> {
                 onChanged: (val) {
                   setState(() => password = val);
                 },
-                decoration: InputDecoration(hintText: "password"),
+                decoration: const InputDecoration(hintText: "password"),
               ),
               SizedBox(height: size.height * .1),
               ElevatedButton(
@@ -62,7 +60,7 @@ class _SignInState extends State<SignIn> {
                   backgroundColor:
                       MaterialStateProperty.all<Color?>(Colors.blueGrey[400]),
                 ),
-                child: Text(
+                child: const Text(
                   'Sign in',
                   style: TextStyle(color: Colors.white),
                 ),

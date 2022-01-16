@@ -11,7 +11,7 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[900],
-        title: Text('Pillager'),
+        title: const Text('Pillager'),
         elevation: 0.0,
         actions: <Widget>[
           TextButton.icon(
@@ -32,7 +32,7 @@ class Home extends StatelessWidget {
         ],
       ),
       body: Column(
-        children: [
+        children: const [
           Center(
             child: Padding(
               padding: EdgeInsets.symmetric(

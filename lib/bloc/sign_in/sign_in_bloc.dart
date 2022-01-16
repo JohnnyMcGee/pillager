@@ -7,7 +7,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final AuthService auth;
 
   SignInBloc({required this.auth}) : super(SignInInitial()) {
-    assert(auth != null);
     on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
     on<RegisterEmailButtonPressed>(_onRegisterEmailButtonPressed);
     on<SignOutButtonPressed>(_onSignOutButtonPressed);
@@ -17,7 +16,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   void _onSignInEmailButtonPressed(
       SignInEmailButtonPressed event, Emitter<SignInState> emit) async {
-    print("Event handled!");
 
     emit(SignInLoading());
 
@@ -51,7 +49,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     }
 
   Future<void>? _onSignInFailure(SignInFailure event, Emitter emit) {
-      print(event.message);
       emit(LoggedOut());
   }
 }

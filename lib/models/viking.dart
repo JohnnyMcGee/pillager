@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 
 class Viking extends Equatable {
-  String? uid;
-  String firstName;
-  String lastName;
-  bool isBerserker;
-  bool isEarl;
+  final String? uid;
+  final String firstName;
+  final String lastName;
+  final bool isBerserker;
+  final bool isEarl;
 
-  Viking(
+  const Viking(
       {this.uid,
       required this.firstName,
       required this.lastName,

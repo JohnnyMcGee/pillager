@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pillager/bloc/bloc.dart';
-import 'package:pillager/services/services.dart';
 
 class Register extends StatefulWidget {
   final Function toggleSignInForm;
@@ -21,7 +20,6 @@ class _RegisterState extends State<Register> {
   String password = '';
   String confirmPassword = '';
   final _formKey = GlobalKey<FormState>();
-  final AuthService _auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +48,7 @@ class _RegisterState extends State<Register> {
                 onChanged: (val) {
                   setState(() => firstName = val);
                 },
-                decoration: InputDecoration(hintText: "first name"),
+                decoration: const InputDecoration(hintText: "first name"),
               ),
               SizedBox(height: size.height * .05),
               TextFormField(
@@ -58,7 +56,7 @@ class _RegisterState extends State<Register> {
                 onChanged: (val) {
                   setState(() => lastName = val);
                 },
-                decoration: InputDecoration(hintText: "last name"),
+                decoration: const InputDecoration(hintText: "last name"),
               ),
               SizedBox(height: size.height * .05),
               TextFormField(
@@ -66,7 +64,7 @@ class _RegisterState extends State<Register> {
                 onChanged: (val) {
                   setState(() => email = val);
                 },
-                decoration: InputDecoration(hintText: "email"),
+                decoration: const InputDecoration(hintText: "email"),
               ),
               SizedBox(height: size.height * .05),
               TextFormField(
@@ -74,7 +72,7 @@ class _RegisterState extends State<Register> {
                 onChanged: (val) {
                   setState(() => password = val);
                 },
-                decoration: InputDecoration(hintText: "password"),
+                decoration: const InputDecoration(hintText: "password"),
               ),
               SizedBox(height: size.height * .05),
               TextFormField(
@@ -82,7 +80,7 @@ class _RegisterState extends State<Register> {
                 onChanged: (val) {
                   setState(() => confirmPassword = val);
                 },
-                decoration: InputDecoration(hintText: "confirm password"),
+                decoration: const InputDecoration(hintText: "confirm password"),
               ),
               SizedBox(height: size.height * .1),
               ElevatedButton(
@@ -90,7 +88,7 @@ class _RegisterState extends State<Register> {
                   backgroundColor:
                       MaterialStateProperty.all<Color?>(Colors.blueGrey[400]),
                 ),
-                child: Text(
+                child: const Text(
                   'Submit',
                   style: TextStyle(color: Colors.white),
                 ),

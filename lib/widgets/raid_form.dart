@@ -5,9 +5,9 @@ import 'package:pillager/models/models.dart';
 import 'package:pillager/widgets/expandable_datatable.dart';
 
 class RaidForm extends StatefulWidget {
-  Raid raid;
+  final Raid raid;
 
-  RaidForm({Key? key, required this.raid}) : super(key: key);
+  const RaidForm({Key? key, required this.raid}) : super(key: key);
 
   @override
   _RaidFormState createState() => _RaidFormState();
@@ -45,18 +45,18 @@ class _RaidFormState extends State<RaidForm> {
           key: _formKey,
           child: Column(
             children: [
-              Text(
+              const Text(
                 'Enter Raid Details',
-                style: TextStyle(fontSize: 18.0),
+                style:  TextStyle(fontSize: 18.0),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               TextFormField(
                 initialValue: _location ?? raid.location,
                 onChanged: (val) => setState(() => _location = val),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               DropdownButtonFormField(
@@ -70,7 +70,7 @@ class _RaidFormState extends State<RaidForm> {
                 onChanged: (val) =>
                     setState(() => _numShips = val as int),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               Row(
@@ -93,11 +93,11 @@ class _RaidFormState extends State<RaidForm> {
                           ? _arrivalDate!
                           : raid.arrivalDate,
                     ),
-                    icon: Icon(Icons.calendar_today),
+                    icon: const Icon(Icons.calendar_today),
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 30.0,
               ),
               ElevatedButton(
@@ -105,7 +105,7 @@ class _RaidFormState extends State<RaidForm> {
                     backgroundColor:
                         MaterialStateProperty.all<Color?>(Colors.blueGrey[900]),
                   ),
-                  child: Text(
+                  child: const Text(
                     'Save',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -116,7 +116,6 @@ class _RaidFormState extends State<RaidForm> {
                       "numShips":_numShips,
                       "arrivalDate":_arrivalDate,
                     };
-                    print(raidUpdate.toString());
                     context.read<RaidBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
                     Navigator.pop(context);
                   }),
@@ -124,7 +123,7 @@ class _RaidFormState extends State<RaidForm> {
           ),
         );
       } else {
-        return Text("Loading");
+        return const Text("Loading");
       }
     });
   }

@@ -22,7 +22,7 @@ class _AuthenticationState extends State<Authentication> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[900],
-        title: Text('Pillager'),
+        title: const Text('Pillager'),
         elevation: 0.0,
       ),
       body: showSignIn? SignIn(toggleSignInForm: toggleSignInForm) : Register(toggleSignInForm: toggleSignInForm),

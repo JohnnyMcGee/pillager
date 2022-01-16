@@ -1,9 +1,6 @@
 import 'package:pillager/models/models.dart';
 
-abstract class VikingEvent {
-  @override
-  List<Object> get props => [];
-}
+abstract class VikingEvent {}
 
 class VikingDataChange extends VikingEvent {
   Map<String, Viking> data;

@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pillager/models/models.dart';
 
 import './viking.dart';
 import 'package:pillager/services/services.dart';

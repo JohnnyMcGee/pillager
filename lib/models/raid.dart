@@ -1,16 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:equatable/equatable.dart';
-
 class Raid extends Equatable {
-  String location;
-  int numShips;
-  DateTime arrivalDate;
-  Map<String, Object> vikings;
-  List loot;
-  String? docId;
+  final String location;
+  final int numShips;
+  final DateTime arrivalDate;
+  final Map<String, Object> vikings;
+  final List loot;
+  final String? docId;
 
-  Raid({
+  const Raid({
     this.docId,
     required this.location,
     required this.numShips,

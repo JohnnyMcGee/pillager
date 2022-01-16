@@ -11,9 +11,9 @@ class AppWrapper extends StatelessWidget {
     return BlocBuilder<SignInBloc, SignInState>(
       builder: (context, state) {
         if (state is LoggedIn) {
-          return Home();
+          return const Home();
         } else {
-          return Authentication();
+          return const Authentication();
         }
       },
     );

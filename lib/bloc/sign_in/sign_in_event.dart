@@ -7,19 +7,19 @@ abstract class SignInEvent extends Equatable {
 }
 
 class SignInEmailButtonPressed extends SignInEvent {
-  String email;
-  String password;
+  final String email;
+  final String password;
 
   SignInEmailButtonPressed({required this.email, required this.password});
 
 }
 
 class RegisterEmailButtonPressed extends SignInEvent {
-  String firstName;
-  String lastName;
-  String email;
-  String password;
-  String confirmPassword;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String password;
+  final String confirmPassword;
 
   RegisterEmailButtonPressed({
     required this.firstName,
@@ -36,14 +36,14 @@ class SignOutButtonPressed extends SignInEvent {}
 class SignOutSuccess extends SignInEvent {}
 
 class SignInSuccess extends SignInEvent {
-  User user;
+  final User user;
 
   SignInSuccess({required this.user});
   
 }
 
 class SignInFailure extends SignInEvent {
-  String message;
+  final String message;
 
   SignInFailure({required this.message});
   
