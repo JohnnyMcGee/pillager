@@ -6,7 +6,7 @@ abstract class VikingsEvent {
 }
 
 class VikingDataChange extends VikingsEvent {
-  List<Viking> data;
+  Map<String, Viking> data;
 
   VikingDataChange({required this.data});
 }
