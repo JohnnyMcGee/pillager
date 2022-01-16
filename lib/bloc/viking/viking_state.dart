@@ -2,13 +2,13 @@ import 'package:equatable/equatable.dart';
 import 'package:pillager/models/models.dart';
 
 abstract class VikingState extends Equatable {
-  final List<Viking> vikings;
+  final Map<String, Viking> vikings;
 
   VikingState({required this.vikings});
 }
 
 class VikingInitial extends VikingState {
-  VikingInitial() : super(vikings: []);
+  VikingInitial() : super(vikings: {});
 
   @override
   List<Object?> get props => [vikings];

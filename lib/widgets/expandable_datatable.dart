@@ -178,7 +178,7 @@ class RaidRow extends DataRow {
             ),
             DataCell(
               Text(
-                'Ragnar Lothbrok, Bjorn Ironside, 2 others',
+                readableVikings(data.vikings),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
@@ -195,4 +195,15 @@ class RaidRow extends DataRow {
 
 String readableDate(DateTime dt) {
   return "${dt.day}-${dt.month}-${dt.year}";
+}
+
+String readableVikings(Map<String, Object> vikings) {
+  String nameString(v) => '${v.firstName} ${v.lastName}';
+  
+  final List<String> names = vikings.values.map(nameString).toList();
+
+  if (names.length > 2) {
+    return '${names[0]}, ${names[1]}, ${names.length -2} others';
+  }
+  return names.join(', ');
 }

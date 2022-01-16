@@ -38,12 +38,12 @@ class Raid extends Equatable {
   }
 
   Raid copyWith({
-    docId,
-    location,
-    numShips,
-    arrivalDate,
-    vikings,
-    loot,
+    String? docId,
+    String? location,
+    int? numShips,
+    DateTime? arrivalDate,
+    Map<String, Object>? vikings,
+    List? loot,
   }) {
     return Raid(
       docId: docId ?? this.docId,

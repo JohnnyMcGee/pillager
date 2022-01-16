@@ -82,8 +82,9 @@ class DatabaseService {
     );
   }
 
-  Raid raidLoadVikings(Raid raid, List<Viking> vikings) {
-    return raid;
+  Raid raidLoadVikings(Raid raid, Map<String, Viking> vikings) {
+    Map<String, Object> raidVikings =
+        Map<String, Object>.from(raid.vikings.map((k, v) => MapEntry<String, Object>(k, (vikings.containsKey(k) ? vikings[k] : -2)!)));
+    return raid.copyWith(vikings:raidVikings);
   }
-  
 }
