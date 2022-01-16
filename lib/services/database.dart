@@ -12,7 +12,7 @@ class DatabaseService {
     return raidsCollection.snapshots().map(_raidsFromSnapshot);
   }
 
-  Stream<List<Viking>> get vikings {
+  Stream<Map<String, Viking>> get vikings {
     return vikingsCollection.snapshots().map(_vikingsFromSnapshot);
   }
 
@@ -23,7 +23,8 @@ class DatabaseService {
               location: doc.get('location'),
               numShips: doc.get('numShips'),
               arrivalDate: doc.get('arrivalDate').toDate(),
-              vikings: List<String>.from(doc.get('vikings')),
+              // vikings: doc.get('vikings').map((k) => vikings[k]),
+              vikings: List<String>.from(doc.get('vikings')), 
               loot: doc.get('loot'),
             ))
         .toList();
@@ -65,15 +66,15 @@ class DatabaseService {
     }
   }
 
-  List<Viking> _vikingsFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.docs
-        .map((doc) => Viking(
+  Map<String, Viking> _vikingsFromSnapshot(QuerySnapshot snapshot) {
+    return Map.fromIterable(snapshot.docs,
+        key: (doc) => doc.id,
+        value: (doc) => Viking(
               uid: doc.id,
               firstName: doc.get("firstName"),
               lastName: doc.get("lastName"),
               isBerserker: doc.get("isBerserker"),
               isEarl: doc.get("isEarl"),
-            ))
-        .toList();
+            ));
   }
 }
