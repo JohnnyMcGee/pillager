@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/models/models.dart';
 
-import './vikings.dart';
+import './viking.dart';
 import 'package:pillager/services/services.dart';
 import 'package:pillager/bloc/bloc.dart';
 
-class VikingsBloc extends Bloc<VikingsEvent, VikingsState> {
+class VikingBloc extends Bloc<VikingEvent, VikingState> {
   final DatabaseService store;
 
-  VikingsBloc({required this.store}) : super(VikingsInitial()) {
+  VikingBloc({required this.store}) : super(VikingInitial()) {
     store.vikings.listen((data) {
       add(VikingDataChange(data: data));
     });
@@ -18,6 +18,6 @@ class VikingsBloc extends Bloc<VikingsEvent, VikingsState> {
 
   void _onVikingDataChange(VikingDataChange event, Emitter emit) {
     event.data.values.forEach((v) => print(v.toString()));
-    emit(VikingsLoaded(vikings: state.vikings));
+    emit(VikingLoaded(vikings: state.vikings));
   }
 }

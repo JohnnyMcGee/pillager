@@ -29,7 +29,7 @@ void main() async {
         ),
       ),
       BlocProvider(
-        create: (context) => VikingsBloc(
+        create: (context) => VikingBloc(
           store: DatabaseService(),
         ),
         lazy: false,
