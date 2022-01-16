@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
-import 'package:pillager/widgets/expandable_datatable.dart';
 
 class RaidForm extends StatefulWidget {
   final Raid raid;
@@ -47,7 +49,7 @@ class _RaidFormState extends State<RaidForm> {
             children: [
               const Text(
                 'Enter Raid Details',
-                style:  TextStyle(fontSize: 18.0),
+                style: TextStyle(fontSize: 18.0),
               ),
               const SizedBox(
                 height: 20.0,
@@ -67,8 +69,7 @@ class _RaidFormState extends State<RaidForm> {
                     child: Text(number.toString()),
                   );
                 }).toList(),
-                onChanged: (val) =>
-                    setState(() => _numShips = val as int),
+                onChanged: (val) => setState(() => _numShips = val as int),
               ),
               const SizedBox(
                 height: 30.0,
@@ -78,8 +79,8 @@ class _RaidFormState extends State<RaidForm> {
                 children: [
                   Text(
                     (_arrivalDate is DateTime)
-                        ? readableDate(_arrivalDate!)
-                        : readableDate(raid.arrivalDate),
+                        ? DateFormat.yMd().format(_arrivalDate!)
+                        : raid.arrivalDateFormatted,
                     style: TextStyle(
                       color: Colors.blueGrey[900],
                       fontSize: 20.0,
@@ -100,6 +101,14 @@ class _RaidFormState extends State<RaidForm> {
               const SizedBox(
                 height: 30.0,
               ),
+              Row(
+                children: [
+                  Text("Vikings")
+                ],
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
               ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor:
@@ -111,12 +120,14 @@ class _RaidFormState extends State<RaidForm> {
                   ),
                   onPressed: () async {
                     final raidUpdate = {
-                      "docId":raid.docId,
-                      "location":_location,
-                      "numShips":_numShips,
-                      "arrivalDate":_arrivalDate,
+                      "docId": raid.docId,
+                      "location": _location,
+                      "numShips": _numShips,
+                      "arrivalDate": _arrivalDate,
                     };
-                    context.read<RaidBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
+                    context
+                        .read<RaidBloc>()
+                        .add(RaidEditorSaveButtonPressed(data: raidUpdate));
                     Navigator.pop(context);
                   }),
             ],
