@@ -17,32 +17,30 @@ void main() async {
 
   BlocOverrides.runZoned(
     () {
-      // Use blocs...
+      runApp(MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => SignInBloc(
+              auth: AuthService(),
+            ),
+            child: const PillagerApp(),
+          ),
+          BlocProvider(
+            create: (context) => VikingBloc(
+              store: DatabaseService(),
+            ),
+            lazy: false,
+          ),
+          BlocProvider(
+            create: (context) => RaidBloc(
+              store: DatabaseService(),
+              vikingBloc: context.read<VikingBloc>(),
+            ),
+          ),
+        ],
+        child: const PillagerApp(),
+      ));
     },
     blocObserver: MyBlocObserver(),
   );
-
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider(
-        create: (context) => SignInBloc(
-          auth: AuthService(),
-        ),
-        child: const PillagerApp(),
-      ),
-      BlocProvider(
-        create: (context) => VikingBloc(
-          store: DatabaseService(),
-        ),
-        lazy: false,
-      ),
-      BlocProvider(
-        create: (context) => RaidBloc(
-          store: DatabaseService(),
-          vikingBloc: context.read<VikingBloc>(),
-        ),
-      ),
-    ],
-    child: const PillagerApp(),
-  ));
 }

@@ -21,19 +21,24 @@ class Raid extends Equatable {
   List<Object> get props =>
       [location, numShips, arrivalDate, vikings, loot];
 
-  @override
+    @override
   String toString() {
-    return '''
-    Raid({
-      docId: $docId,
-      location: $location,
-      numShips: $numShips,
-      arrivalDate: $arrivalDate,
-      vikings: ${vikings.toString()},
-      loot: $loot
-    })
-    ''';
+    return 'Raid({$docId, $location})';
   }
+
+  // @override
+  // String toString() {
+  //   return '''
+  //   Raid({
+  //     docId: $docId,
+  //     location: $location,
+  //     numShips: $numShips,
+  //     arrivalDate: $arrivalDate,
+  //     vikings: ${vikings.toString()},
+  //     loot: $loot
+  //   })
+  //   ''';
+  // }
 
   Raid copyWith({
     String? docId,

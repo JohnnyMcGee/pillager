@@ -17,14 +17,18 @@ class Viking extends Equatable {
   @override
   List<Object?> get props => [firstName, lastName, isBerserker, isEarl];
 
+
   @override
-  String toString() => """
-  {
-    uid: $uid,
-    firstName: $firstName,
-    lastName: $lastName,
-    isBerserker: $isBerserker,
-    isEarl: $isEarl
-  }
-  """;
+  String toString() => 'Viking({$firstName $lastName})';
+
+  // @override
+  // String toString() => """
+  // {
+  //   uid: $uid,
+  //   firstName: $firstName,
+  //   lastName: $lastName,
+  //   isBerserker: $isBerserker,
+  //   isEarl: $isEarl
+  // }
+  // """;
 }
