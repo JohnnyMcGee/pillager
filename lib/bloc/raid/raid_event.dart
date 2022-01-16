@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pillager/models/models.dart';
 
 abstract class RaidEvent {
@@ -6,7 +7,7 @@ abstract class RaidEvent {
 }
 
 class RaidDataChange extends RaidEvent {
-  List<Raid> data;
+  QuerySnapshot<Object?> data;
 
   RaidDataChange({required this.data});
 }

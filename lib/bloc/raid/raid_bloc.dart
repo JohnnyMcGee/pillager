@@ -22,7 +22,8 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
   }
 
   void _onRaidDataChange(RaidDataChange event, Emitter emit) {
-    emit(RaidLoaded(raids: event.data));
+    List<Raid> raids = store.raidsFromSnapshot(event.data);
+    emit(RaidLoaded(raids: raids));
   }
 
   void _onRaidEditorSaveButtonPressed(

@@ -8,15 +8,15 @@ class DatabaseService {
   final CollectionReference vikingsCollection =
       FirebaseFirestore.instance.collection('vikings');
 
-  Stream<List<Raid>> get raids {
-    return raidsCollection.snapshots().map(_raidsFromSnapshot);
+  Stream<QuerySnapshot<Object?>> get raids {
+    return raidsCollection.snapshots();
   }
 
   Stream<Map<String, Viking>> get vikings {
     return vikingsCollection.snapshots().map(_vikingsFromSnapshot);
   }
 
-  List<Raid> _raidsFromSnapshot(QuerySnapshot snapshot) {
+  List<Raid> raidsFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs
         .map((doc) => Raid(
               docId: doc.id,
