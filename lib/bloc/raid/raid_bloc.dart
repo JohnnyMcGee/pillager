@@ -2,27 +2,27 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/models/models.dart';
 
-import './database.dart';
+import 'raid.dart';
 import 'package:pillager/services/services.dart';
 import 'package:pillager/bloc/bloc.dart';
 
-class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
+class RaidBloc extends Bloc<RaidEvent, RaidState> {
   final DatabaseService store;
 
-  DatabaseBloc({required this.store}) : super(DatabaseInitial()) {
+  RaidBloc({required this.store}) : super(RaidInitial()) {
     store.raids.listen((data) {
-      add(raidDataChange(data: data));
+      add(RaidDataChange(data: data));
     });
 
-    on<raidDataChange>(_onRaidDataChange);
+    on<RaidDataChange>(_onRaidDataChange);
     on<RaidEditorSaveButtonPressed>(_onRaidEditorSaveButtonPressed);
     on<RaidDeleteButtonPressed>(_onRaidDeleteButtonPressed);
     on<RaidEditorNoChanges>(
-        (event, emit) => emit(DatabaseLoaded(raids: state.raids)));
+        (event, emit) => emit(RaidLoaded(raids: state.raids)));
   }
 
-  void _onRaidDataChange(raidDataChange event, Emitter emit) {
-    emit(DatabaseLoaded(raids: event.data));
+  void _onRaidDataChange(RaidDataChange event, Emitter emit) {
+    emit(RaidLoaded(raids: event.data));
   }
 
   void _onRaidEditorSaveButtonPressed(
@@ -38,13 +38,13 @@ class DatabaseBloc extends Bloc<DatabaseEvent, DatabaseState> {
       store.createNewRaid(event.data);
     }
 
-    emit(DatabaseUpdating(raids: state.raids));
+    emit(RaidUpdating(raids: state.raids));
   }
 
   void _onRaidDeleteButtonPressed(RaidDeleteButtonPressed event, Emitter emit) {
     if (event.data.docId != null) {
       store.deleteRaid(event.data.docId!);
-      emit(DatabaseUpdating(raids: state.raids));
+      emit(RaidUpdating(raids: state.raids));
     }
   }
 }

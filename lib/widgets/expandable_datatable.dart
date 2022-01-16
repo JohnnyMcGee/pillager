@@ -44,13 +44,13 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
       _showEditorPanel(newRaid);
     }
 
-    List<DataRow> _buildRowsFromState(DatabaseState state) {
+    List<DataRow> _buildRowsFromState(RaidState state) {
       List<RaidRow> raidRows = state.raids
           .map((raid) => RaidRow(
               data: raid,
               onSelectChanged: (x) => _showEditorPanel(raid),
               onDeleteButtonPressed: () => context
-                  .read<DatabaseBloc>()
+                  .read<RaidBloc>()
                   .add(RaidDeleteButtonPressed(data: raid))))
           .toList();
       List<DataRow> dataRows = List<DataRow>.from(raidRows);
@@ -100,7 +100,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
                 child: SingleChildScrollView(
                   child: SizedBox(
                     width: double.infinity,
-                    child: BlocBuilder<DatabaseBloc, DatabaseState>(
+                    child: BlocBuilder<RaidBloc, RaidState>(
                         builder: (context, state) {
                       return DataTable(
                         headingRowColor:

@@ -24,7 +24,7 @@ void main() async {
         child: const PillagerApp(),
       ),
       BlocProvider(
-        create: (context) => DatabaseBloc(
+        create: (context) => RaidBloc(
           store: DatabaseService(),
         ),
       ),

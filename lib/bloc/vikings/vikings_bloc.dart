@@ -17,7 +17,7 @@ class VikingsBloc extends Bloc<VikingsEvent, VikingsState> {
   }
 
   void _onVikingDataChange(VikingDataChange event, Emitter emit) {
-    event.data.forEach((v) => print(v.toString()));
+    event.data.values.forEach((v) => print(v.toString()));
     emit(VikingsLoaded(vikings: state.vikings));
   }
 }

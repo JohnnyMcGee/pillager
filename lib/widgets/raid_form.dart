@@ -38,8 +38,8 @@ class _RaidFormState extends State<RaidForm> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DatabaseBloc, DatabaseState>(builder: (context, state) {
-      if (state is DatabaseLoaded) {
+    return BlocBuilder<RaidBloc, RaidState>(builder: (context, state) {
+      if (state is RaidLoaded) {
         Raid raid = widget.raid;
         return Form(
           key: _formKey,
@@ -117,7 +117,7 @@ class _RaidFormState extends State<RaidForm> {
                       "arrivalDate":_arrivalDate,
                     };
                     print(raidUpdate.toString());
-                    context.read<DatabaseBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
+                    context.read<RaidBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
                     Navigator.pop(context);
                   }),
             ],
