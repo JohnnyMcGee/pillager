@@ -32,7 +32,7 @@ class Raid extends Equatable {
   List<String> get vikingNameList {
     return [
       for (var v in vikings.values)
-        (v is Viking) ? '${v.firstName} ${v.lastName}' : ''
+        (v is Viking) ? v.fullName : ''
     ];
   }
 

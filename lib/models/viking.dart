@@ -21,6 +21,8 @@ class Viking extends Equatable {
   @override
   String toString() => 'Viking({$firstName $lastName})';
 
+  String get fullName => '$firstName $lastName';
+
   // @override
   // String toString() => """
   // {

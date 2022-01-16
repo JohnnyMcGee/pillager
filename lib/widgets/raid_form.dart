@@ -22,6 +22,7 @@ class _RaidFormState extends State<RaidForm> {
   String? _location;
   int? _numShips;
   DateTime? _arrivalDate;
+  Map<String, Viking>? _vikings;
 
   Future<void> _selectDate(BuildContext context, DateTime initialDate) async {
     final DateTime? picked = await showDatePicker(
@@ -40,6 +41,27 @@ class _RaidFormState extends State<RaidForm> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> options = const ["Viking1", "Viking2", "Viking3"];
+      
+    Future<void> _selectAssignViking() async {
+      String? choice = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text("Assign a Viking"),
+            children: [
+              for (var option in options)
+              SimpleDialogOption(
+                onPressed: () {Navigator.pop(context, option);},
+                child: Text(option),
+              ),
+            ],
+          );
+        },
+      );
+      print(choice);
+    }
+
     return BlocBuilder<RaidBloc, RaidState>(builder: (context, state) {
       if (state is RaidLoaded) {
         Raid raid = widget.raid;
@@ -112,30 +134,32 @@ class _RaidFormState extends State<RaidForm> {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   children: [
                     ...[
-                      for (var name in raid.vikingNameList)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            name,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14.0,
+                      for (var name in (raid.vikingNameList))
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              name,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14.0,
+                              ),
                             ),
                           ),
                         )
                     ],
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add),
-                          TextButton(
-                            child: Text("Assign a Viking"),
-                            onPressed: () => print("Assign a Viking"),
-                          ),
-                        ],
+                      child: TextButton(
+                        onPressed: () => _selectAssignViking(),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.add),
+                            Text("Assign a Viking"),
+                          ],
+                        ),
                       ),
                     )
                   ],
