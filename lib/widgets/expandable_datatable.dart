@@ -38,7 +38,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
         location: "New Raid",
         numShips: 1,
         arrivalDate: DateTime.now(),
-        vikings: [],
+        vikings: {},
         loot: [],
       );
       _showEditorPanel(newRaid);

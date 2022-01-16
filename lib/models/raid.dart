@@ -6,7 +6,7 @@ class Raid extends Equatable {
   String location;
   int numShips;
   DateTime arrivalDate;
-  List<String> vikings;
+  Map<String, Object> vikings;
   List loot;
   String? docId;
 

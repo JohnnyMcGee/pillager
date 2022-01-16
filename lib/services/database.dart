@@ -8,23 +8,25 @@ class DatabaseService {
   final CollectionReference vikingsCollection =
       FirebaseFirestore.instance.collection('vikings');
 
-  Stream<QuerySnapshot<Object?>> get raids {
-    return raidsCollection.snapshots();
+  Stream<List<Raid>> get raids {
+    return raidsCollection.snapshots().map(_raidsFromSnapshot);
   }
 
   Stream<Map<String, Viking>> get vikings {
     return vikingsCollection.snapshots().map(_vikingsFromSnapshot);
   }
 
-  List<Raid> raidsFromSnapshot(QuerySnapshot snapshot) {
+  List<Raid> _raidsFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs
         .map((doc) => Raid(
               docId: doc.id,
               location: doc.get('location'),
               numShips: doc.get('numShips'),
               arrivalDate: doc.get('arrivalDate').toDate(),
-              // vikings: doc.get('vikings').map((k) => vikings[k]),
-              vikings: List<String>.from(doc.get('vikings')), 
+              // Initialize vikings with just keys
+              // Values added later using raidLoadVikings method
+              vikings: Map<String, Object>.fromIterable(doc.get('vikings'),
+                  key: (id) => id, value: (id) => -1),
               loot: doc.get('loot'),
             ))
         .toList();
@@ -67,14 +69,21 @@ class DatabaseService {
   }
 
   Map<String, Viking> _vikingsFromSnapshot(QuerySnapshot snapshot) {
-    return Map.fromIterable(snapshot.docs,
-        key: (doc) => doc.id,
-        value: (doc) => Viking(
-              uid: doc.id,
-              firstName: doc.get("firstName"),
-              lastName: doc.get("lastName"),
-              isBerserker: doc.get("isBerserker"),
-              isEarl: doc.get("isEarl"),
-            ));
+    return Map.fromIterable(
+      snapshot.docs,
+      key: (doc) => doc.id,
+      value: (doc) => Viking(
+        uid: doc.id,
+        firstName: doc.get("firstName"),
+        lastName: doc.get("lastName"),
+        isBerserker: doc.get("isBerserker"),
+        isEarl: doc.get("isEarl"),
+      ),
+    );
   }
+
+  Raid raidLoadVikings(Raid raid, List<Viking> vikings) {
+    return raid;
+  }
+  
 }

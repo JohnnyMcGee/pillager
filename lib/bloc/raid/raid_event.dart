@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pillager/models/models.dart';
+import 'package:pillager/bloc/bloc.dart';
 
 abstract class RaidEvent {
   @override
@@ -7,7 +8,7 @@ abstract class RaidEvent {
 }
 
 class RaidDataChange extends RaidEvent {
-  QuerySnapshot<Object?> data;
+  List<Raid> data;
 
   RaidDataChange({required this.data});
 }
@@ -24,4 +25,10 @@ class RaidDeleteButtonPressed extends RaidEvent {
   Raid data;
 
   RaidDeleteButtonPressed({required this.data});
+}
+
+class RaidVikingStateChange extends RaidEvent {
+  VikingState data;
+
+  RaidVikingStateChange({required this.data});
 }

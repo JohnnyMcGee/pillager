@@ -8,10 +8,16 @@ import 'package:pillager/bloc/bloc.dart';
 
 class RaidBloc extends Bloc<RaidEvent, RaidState> {
   final DatabaseService store;
+  final VikingBloc vikingBloc;
 
-  RaidBloc({required this.store}) : super(RaidInitial()) {
+  RaidBloc({required this.store, required this.vikingBloc})
+      : super(RaidInitial()) {
     store.raids.listen((data) {
       add(RaidDataChange(data: data));
+    });
+
+    vikingBloc.stream.listen((vikingState) {
+      add(RaidVikingStateChange(data: vikingState));
     });
 
     on<RaidDataChange>(_onRaidDataChange);
@@ -19,10 +25,20 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     on<RaidDeleteButtonPressed>(_onRaidDeleteButtonPressed);
     on<RaidEditorNoChanges>(
         (event, emit) => emit(RaidLoaded(raids: state.raids)));
+    on<RaidVikingStateChange>(_onRaidVikingStateChange);
   }
 
   void _onRaidDataChange(RaidDataChange event, Emitter emit) {
-    List<Raid> raids = store.raidsFromSnapshot(event.data);
+    List<Raid> raids;
+
+    if (vikingBloc.state is VikingLoaded) {
+      raids = event.data
+          .map((raid) => store.raidLoadVikings(raid, vikingBloc.state.vikings))
+          .toList();
+    } else {
+      raids = event.data;
+    }
+
     emit(RaidLoaded(raids: raids));
   }
 
@@ -46,6 +62,15 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     if (event.data.docId != null) {
       store.deleteRaid(event.data.docId!);
       emit(RaidUpdating(raids: state.raids));
+    }
+  }
+
+  void _onRaidVikingStateChange(RaidVikingStateChange event, Emitter emit) {
+    if (event.data is VikingLoaded && state is RaidLoaded) {
+      final List<Raid> raids = state.raids
+          .map((raid) => store.raidLoadVikings(raid, event.data.vikings))
+          .toList();
+      emit(RaidLoaded(raids: raids));
     }
   }
 }

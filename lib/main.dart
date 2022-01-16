@@ -15,6 +15,8 @@ void main() async {
     options: options,
   );
 
+
+
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider(
@@ -24,16 +26,17 @@ void main() async {
         child: const PillagerApp(),
       ),
       BlocProvider(
-        create: (context) => RaidBloc(
-          store: DatabaseService(),
-        ),
-      ),
-      BlocProvider(
         create: (context) => VikingBloc(
           store: DatabaseService(),
         ),
         lazy: false,
-      )
+      ),
+      BlocProvider(
+        create: (context) => RaidBloc(
+          store: DatabaseService(),
+          vikingBloc: context.read<VikingBloc>(),
+        ),
+      ),
     ],
     child: PillagerApp(),
   ));
