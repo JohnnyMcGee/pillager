@@ -15,7 +15,12 @@ void main() async {
     options: options,
   );
 
-
+  BlocOverrides.runZoned(
+    () {
+      // Use blocs...
+    },
+    blocObserver: MyBlocObserver(),
+  );
 
   runApp(MultiBlocProvider(
     providers: [
@@ -38,6 +43,6 @@ void main() async {
         ),
       ),
     ],
-    child: PillagerApp(),
+    child: const PillagerApp(),
   ));
 }
