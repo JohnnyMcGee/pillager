@@ -78,24 +78,6 @@ class _RaidFormState extends State<RaidForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Vikings: ${raid.vikingNames}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => print("edit vikings"),
-                    icon: const Icon(Icons.edit),
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
                     (_arrivalDate is DateTime)
                         ? DateFormat.yMd().format(_arrivalDate!)
                         : raid.arrivalDateFormatted,
@@ -115,6 +97,49 @@ class _RaidFormState extends State<RaidForm> {
                     icon: const Icon(Icons.calendar_today),
                   ),
                 ],
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              const Text(
+                "Vikings:",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 100.0,
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  children: [
+                    ...[
+                      for (var name in raid.vikingNameList)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            name,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        )
+                    ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add),
+                          TextButton(
+                            child: Text("Assign a Viking"),
+                            onPressed: () => print("Assign a Viking"),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 30.0,

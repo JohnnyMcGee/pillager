@@ -29,17 +29,17 @@ class Raid extends Equatable {
 
   String get arrivalDateFormatted => DateFormat.yMd().format(arrivalDate);
 
-  List<String> get _vikingNameList {
+  List<String> get vikingNameList {
     return [
       for (var v in vikings.values)
         (v is Viking) ? '${v.firstName} ${v.lastName}' : ''
     ];
   }
 
-  String get vikingNames => _vikingNameList.join(', ');
+  String get vikingNames => vikingNameList.join(', ');
 
   String get vikingNamesShort {
-    List<String> names = _vikingNameList;
+    List<String> names = vikingNameList;
 
     if (names.length > 2) {
       return '${names[0]}, ${names[1]}, ${names.length - 2} others';
