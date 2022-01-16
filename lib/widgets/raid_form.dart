@@ -78,6 +78,24 @@ class _RaidFormState extends State<RaidForm> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
+                    "Vikings: ${raid.vikingNames}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => print("edit vikings"),
+                    icon: const Icon(Icons.edit),
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
                     (_arrivalDate is DateTime)
                         ? DateFormat.yMd().format(_arrivalDate!)
                         : raid.arrivalDateFormatted,
@@ -96,14 +114,6 @@ class _RaidFormState extends State<RaidForm> {
                     ),
                     icon: const Icon(Icons.calendar_today),
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              Row(
-                children: [
-                  Text("Vikings")
                 ],
               ),
               const SizedBox(

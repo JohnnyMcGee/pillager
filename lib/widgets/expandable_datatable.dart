@@ -21,14 +21,19 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
 
     void _showEditorPanel(Raid raidData) {
       showModalBottomSheet(
+          isScrollControlled: true,
           context: context,
           builder: (context) {
-            return Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 20.0,
-                horizontal: 60.0,
-              ),
-              child: RaidForm(raid: raidData),
+            return Wrap(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20.0,
+                    horizontal: 60.0,
+                  ),
+                  child: RaidForm(raid: raidData),
+                ),
+              ],
             );
           });
     }
