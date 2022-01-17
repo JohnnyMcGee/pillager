@@ -16,10 +16,17 @@ class RaidFormState extends Equatable {
       : location = location ?? raid.location,
         numShips = numShips ?? raid.numShips,
         arrivalDate = arrivalDate ?? raid.arrivalDate,
-        vikings = vikings ?? raid.vikings as Map<String, Object>;
+        vikings = vikings ?? raid.vikings;
 
   @override
   List<Object> get props => [location, numShips, arrivalDate, vikings, raid];
+
+  Map<String, Object> toMap() => {
+        "location": location,
+        "numShips": numShips,
+        "arrivalDate": arrivalDate,
+        "vikings": vikings,
+      };
 }
 
 // Initialize Form with default Raid
@@ -37,21 +44,27 @@ class RaidFormInitial extends RaidFormState {
 }
 
 class RaidFormLoaded extends RaidFormState {
-  RaidFormLoaded.from({
-    required RaidFormState other,
+  RaidFormLoaded.from(
+    RaidFormState other, {
     raid,
     location,
     numShips,
     arrivalDate,
     vikings,
   }) : super(
-  // Update field values explicitly, or by passing in a new Raid, or both.
+          // Update field values explicitly, or by passing in a new Raid, or both.
           raid: raid ?? other.raid,
-          location: location ?? (raid != null) ? raid.location : other.location,
-          numShips: numShips ?? (raid != null) ? raid.numShips : other.numShips,
-          arrivalDate: arrivalDate ?? (raid != null)
-              ? raid.arrivalDate
-              : other.arrivalDate,
-          vikings: vikings ?? (raid != null) ? raid.vikings : other.vikings,
+          location:
+              location ?? ((raid != null) ? raid.location : other.location),
+          numShips:
+              numShips ?? ((raid != null) ? raid.numShips : other.numShips),
+          arrivalDate: arrivalDate ??
+              ((raid != null) ? raid.arrivalDate : other.arrivalDate),
+          vikings: vikings ?? ((raid != null) ? raid.vikings : other.vikings),
         );
+}
+
+class RaidFormSubmitted extends RaidFormLoaded {
+  RaidFormSubmitted.from(
+    RaidFormState other): super.from(other);
 }

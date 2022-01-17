@@ -17,3 +17,14 @@ class OpenRaidForm extends RaidFormEvent {
   @override
   List<Object> get props => [_data];
 }
+
+class EditForm extends RaidFormEvent {
+  final Map<String, Object?> data;
+
+  const EditForm(this.data);
+
+  @override
+  List<Object> get props => [data];
+}
+
+class FormSubmit extends RaidFormEvent {}
