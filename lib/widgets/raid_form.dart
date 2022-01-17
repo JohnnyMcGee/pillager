@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 
+const List<String> options = ["Viking1", "Viking2", "Viking3"];
+
 class RaidForm extends StatefulWidget {
   final Raid raid;
 
@@ -39,29 +41,43 @@ class _RaidFormState extends State<RaidForm> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    List<String> options = const ["Viking1", "Viking2", "Viking3"];
-      
-    Future<void> _selectAssignViking() async {
-      String? choice = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: const Text("Assign a Viking"),
-            children: [
-              for (var option in options)
+  Future<void> _selectAssignViking(
+      BuildContext context, List<String> currentVikings) async {
+    String? choice = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text("Assign a Viking"),
+          children: [
+            for (var option in options)
               SimpleDialogOption(
-                onPressed: () {Navigator.pop(context, option);},
+                onPressed: () {
+                  Navigator.pop(context, option);
+                },
                 child: Text(option),
               ),
-            ],
-          );
-        },
-      );
-      print(choice);
-    }
+          ],
+        );
+      },
+    );
+    print(choice);
+  }
 
+  Future<void> _onSave (BuildContext context) async {
+                    final raidUpdate = {
+                      "docId": widget.raid.docId,
+                      "location": _location,
+                      "numShips": _numShips,
+                      "arrivalDate": _arrivalDate,
+                    };
+                    context
+                        .read<RaidBloc>()
+                        .add(RaidEditorSaveButtonPressed(data: raidUpdate));
+                    Navigator.pop(context);
+                  }
+
+  @override
+  Widget build(BuildContext context) {
     return BlocBuilder<RaidBloc, RaidState>(builder: (context, state) {
       if (state is RaidLoaded) {
         Raid raid = widget.raid;
@@ -74,18 +90,18 @@ class _RaidFormState extends State<RaidForm> {
                 style: TextStyle(fontSize: 18.0),
               ),
               const SizedBox(
-                height: 20.0,
+                height: 30,
               ),
               TextFormField(
                 initialValue: _location ?? raid.location,
                 onChanged: (val) => setState(() => _location = val),
               ),
               const SizedBox(
-                height: 20.0,
+                height: 30,
               ),
               DropdownButtonFormField(
                 value: _numShips ?? raid.numShips,
-                items: List.generate(100, (index) => index).map((number) {
+                items: List.generate(101, (index) => index).map((number) {
                   return DropdownMenuItem(
                     value: number,
                     child: Text(number.toString()),
@@ -125,7 +141,10 @@ class _RaidFormState extends State<RaidForm> {
               ),
               const Text(
                 "Vikings:",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                ),
                 textAlign: TextAlign.center,
               ),
               SizedBox(
@@ -152,7 +171,8 @@ class _RaidFormState extends State<RaidForm> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: TextButton(
-                        onPressed: () => _selectAssignViking(),
+                        onPressed: () =>
+                            _selectAssignViking(context, const [""]),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: const [
@@ -169,26 +189,16 @@ class _RaidFormState extends State<RaidForm> {
                 height: 30.0,
               ),
               ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color?>(Colors.blueGrey[900]),
-                  ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: () async {
-                    final raidUpdate = {
-                      "docId": raid.docId,
-                      "location": _location,
-                      "numShips": _numShips,
-                      "arrivalDate": _arrivalDate,
-                    };
-                    context
-                        .read<RaidBloc>()
-                        .add(RaidEditorSaveButtonPressed(data: raidUpdate));
-                    Navigator.pop(context);
-                  }),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color?>(Colors.blueGrey[900]),
+                ),
+                child: const Text(
+                  'Save',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () => _onSave(context),
+              ),
             ],
           ),
         );
