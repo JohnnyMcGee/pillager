@@ -1,30 +1,25 @@
 part of 'raid_form_bloc.dart';
 
 class RaidFormState extends Equatable {
-  final String? _location;
-  final int? _numShips;
-  final DateTime? _arrivalDate;
-  final Map<String, Viking>? _vikings;
+  final String location;
+  final int numShips;
+  final DateTime arrivalDate;
+  final Map<String, Object> vikings;
   final Raid raid;
 
-  const RaidFormState({
-    required this.raid,
-    location,
-    numShips,
-    arrivalDate,
-    vikings,
-  })  : _location = location,
-        _numShips = numShips,
-        _arrivalDate = arrivalDate,
-        _vikings = vikings;
+  RaidFormState(
+      {required this.raid,
+      String? location,
+      int? numShips,
+      DateTime? arrivalDate,
+      Map<String, Object>? vikings})
+      : location = location ?? raid.location,
+        numShips = numShips ?? raid.numShips,
+        arrivalDate = arrivalDate ?? raid.arrivalDate,
+        vikings = vikings ?? raid.vikings as Map<String, Object>;
 
   @override
-  List<Object> get props => [];
-
-  String get location => _location ?? raid.location;
-  int get numShips => _numShips ?? raid.numShips;
-  DateTime get arrivalDate => _arrivalDate ?? raid.arrivalDate;
-  Map<String, Object> get vikings => _vikings ?? raid.vikings;
+  List<Object> get props => [location, numShips, arrivalDate, vikings, raid];
 }
 
 // Initialize Form with default Raid
@@ -35,28 +30,14 @@ class RaidFormInitial extends RaidFormState {
             location: "New Raid",
             numShips: 1,
             arrivalDate: DateTime.now(),
-            vikings: const {},
+            vikings: const <String, Viking>{},
             loot: const [],
           ),
         );
 }
 
 class RaidFormLoaded extends RaidFormState {
-  const RaidFormLoaded({
-    required Raid raid,
-    location,
-    numShips,
-    arrivalDate,
-    vikings,
-  }) : super(
-          raid: raid,
-          location: location,
-          numShips: numShips,
-          arrivalDate: arrivalDate,
-          vikings: vikings,
-        );
-  
-    RaidFormLoaded.from({
+  RaidFormLoaded.from({
     required RaidFormState other,
     raid,
     location,
@@ -64,10 +45,13 @@ class RaidFormLoaded extends RaidFormState {
     arrivalDate,
     vikings,
   }) : super(
+  // Update field values explicitly, or by passing in a new Raid, or both.
           raid: raid ?? other.raid,
-          location: location ?? other.location,
-          numShips: numShips ?? other.numShips,
-          arrivalDate: arrivalDate ?? other.arrivalDate,
-          vikings: vikings ?? other.vikings,
+          location: location ?? (raid != null) ? raid.location : other.location,
+          numShips: numShips ?? (raid != null) ? raid.numShips : other.numShips,
+          arrivalDate: arrivalDate ?? (raid != null)
+              ? raid.arrivalDate
+              : other.arrivalDate,
+          vikings: vikings ?? (raid != null) ? raid.vikings : other.vikings,
         );
 }

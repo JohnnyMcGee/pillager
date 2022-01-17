@@ -63,143 +63,157 @@ class _RaidFormState extends State<RaidForm> {
     print(choice);
   }
 
-  Future<void> _onSave (BuildContext context) async {
-                    final raidUpdate = {
-                      "docId": widget.raid.docId,
-                      "location": _location,
-                      "numShips": _numShips,
-                      "arrivalDate": _arrivalDate,
-                    };
-                    context
-                        .read<RaidBloc>()
-                        .add(RaidEditorSaveButtonPressed(data: raidUpdate));
-                    Navigator.pop(context);
-                  }
+  Future<void> _onSave(BuildContext context) async {
+    final raidUpdate = {
+      "docId": widget.raid.docId,
+      "location": _location,
+      "numShips": _numShips,
+      "arrivalDate": _arrivalDate,
+    };
+    context.read<RaidBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RaidBloc, RaidState>(builder: (context, state) {
-      if (state is RaidLoaded) {
+    return BlocBuilder<RaidBloc, RaidState>(builder: (context, raidState) {
+      if (raidState is RaidLoaded) {
         Raid raid = widget.raid;
         return Form(
           key: _formKey,
-          child: Column(
-            children: [
-              const Text(
-                'Enter Raid Details',
-                style: TextStyle(fontSize: 18.0),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              TextFormField(
-                initialValue: _location ?? raid.location,
-                onChanged: (val) => setState(() => _location = val),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              DropdownButtonFormField(
-                value: _numShips ?? raid.numShips,
-                items: List.generate(101, (index) => index).map((number) {
-                  return DropdownMenuItem(
-                    value: number,
-                    child: Text(number.toString()),
-                  );
-                }).toList(),
-                onChanged: (val) => setState(() => _numShips = val as int),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    (_arrivalDate is DateTime)
-                        ? DateFormat.yMd().format(_arrivalDate!)
-                        : raid.arrivalDateFormatted,
-                    style: TextStyle(
-                      color: Colors.blueGrey[900],
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => _selectDate(
-                      context,
-                      (_arrivalDate is DateTime)
-                          ? _arrivalDate!
-                          : raid.arrivalDate,
-                    ),
-                    icon: const Icon(Icons.calendar_today),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              const Text(
-                "Vikings:",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(
-                height: 100.0,
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  children: [
-                    ...[
-                      for (var name in (raid.vikingNameList))
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              name,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14.0,
-                              ),
+          child: BlocProvider(
+            create: (context) =>
+                RaidFormBloc()..add(OpenRaidForm(data: widget.raid)),
+            lazy: false,
+            child: BlocBuilder<RaidFormBloc, RaidFormState>(
+              builder: (context, state) {
+                if (state is RaidFormLoaded) {
+                  return Column(
+                    children: [
+                      const Text(
+                        'Enter Raid Details',
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      TextFormField(
+                        initialValue: _location ?? state.location,
+                        onChanged: (val) => setState(() => _location = val),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      DropdownButtonFormField(
+                        value: _numShips ?? state.numShips,
+                        items:
+                            List.generate(101, (index) => index).map((number) {
+                          return DropdownMenuItem(
+                            value: number,
+                            child: Text(number.toString()),
+                          );
+                        }).toList(),
+                        onChanged: (val) =>
+                            setState(() => _numShips = val as int),
+                      ),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            (_arrivalDate is DateTime)
+                                ? DateFormat.yMd().format(_arrivalDate!)
+                                : state.raid.arrivalDateFormatted,
+                            style: TextStyle(
+                              color: Colors.blueGrey[900],
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        )
-                    ],
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: TextButton(
-                        onPressed: () =>
-                            _selectAssignViking(context, const [""]),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.add),
-                            Text("Assign a Viking"),
+                          IconButton(
+                            onPressed: () => _selectDate(
+                              context,
+                              (_arrivalDate is DateTime)
+                                  ? _arrivalDate!
+                                  : state.arrivalDate,
+                            ),
+                            icon: const Icon(Icons.calendar_today),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                      const Text(
+                        "Vikings:",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 100.0,
+                        child: ListView(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          children: [
+                            ...[
+                              for (var name in (state.raid.vikingNameList))
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      name,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                            ],
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: TextButton(
+                                onPressed: () =>
+                                    _selectAssignViking(context, const [""]),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.add),
+                                    Text("Assign a Viking"),
+                                  ],
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color?>(Colors.blueGrey[900]),
-                ),
-                child: const Text(
-                  'Save',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () => _onSave(context),
-              ),
-            ],
+                      const SizedBox(
+                        height: 30.0,
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color?>(
+                              Colors.blueGrey[900]),
+                        ),
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () => _onSave(context),
+                      ),
+                    ],
+                  );
+                } else {
+                  return const Text("loading");
+                }
+              },
+            ),
           ),
         );
       } else {
