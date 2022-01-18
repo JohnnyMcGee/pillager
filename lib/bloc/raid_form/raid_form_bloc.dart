@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pillager/models/models.dart';
@@ -36,14 +37,14 @@ class RaidFormBloc extends Bloc<RaidFormEvent, RaidFormState> {
   Map<String, Object?> _getRaidChanges() {
         Map<String, Object?> changes = {"docId":state.raid.docId};
     if (state.location != state.raid.location) {changes["location"] = state.location;}
-    if (state.numShips != state.raid.numShips) {changes["numShips"] = state.location;}
-    if (state.arrivalDate != state.raid.arrivalDate) {changes["arrivalDate"] = state.location;}
-    if (state.vikings != state.raid.vikings) {changes["vikings"] = state.location;}
+    if (state.numShips != state.raid.numShips) {changes["numShips"] = state.numShips;}
+    if (state.arrivalDate != state.raid.arrivalDate) {changes["arrivalDate"] = state.arrivalDate;}
+    if (state.vikings != state.raid.vikings) {changes["vikings"] = state.vikings;}
     return changes;
   }
 
   void _onFormSubmit(FormSubmit event, Emitter emit) {
-    emit(RaidFormSubmitted.from(state));
     raidBloc.add(RaidEditorSaveButtonPressed(data: _getRaidChanges()));
+    emit(RaidFormSubmitted.from(state));
   }
 }
