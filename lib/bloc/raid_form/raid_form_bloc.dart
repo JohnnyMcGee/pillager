@@ -44,7 +44,6 @@ class RaidFormBloc extends Bloc<RaidFormEvent, RaidFormState> {
   }
 
   void _onFormSubmit(FormSubmit event, Emitter emit) {
-    raidBloc.add(RaidEditorSaveButtonPressed(data: _getRaidChanges()));
     emit(RaidFormSubmitted.from(state));
   }
 }

@@ -59,16 +59,16 @@ class _RaidFormState extends State<RaidForm> {
     print(choice);
   }
 
-  Future<void> _onSave(BuildContext context) async {
-    final raidUpdate = {
-      "docId": widget.raid.docId,
-      "location": _location,
-      "numShips": _numShips,
-      "arrivalDate": _arrivalDate,
-    };
-    context.read<RaidBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
-    Navigator.pop(context);
-  }
+  // Future<void> _onSave(BuildContext context) async {
+  //   final raidUpdate = {
+  //     "docId": widget.raid.docId,
+  //     "location": _location,
+  //     "numShips": _numShips,
+  //     "arrivalDate": _arrivalDate,
+  //   };
+  //   context.read<RaidBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
+  //   Navigator.pop(context);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +79,11 @@ class _RaidFormState extends State<RaidForm> {
       child: BlocBuilder<RaidFormBloc, RaidFormState>(
         builder: (context, state) {
           RaidFormBloc bloc = context.read<RaidFormBloc>();
+
+          if (state is RaidFormSubmitted) {
+            Navigator.pop(context, state.changes);
+          }
+          
           if (state is RaidFormLoaded) {
             return Form(
               key: _formKey,
@@ -191,7 +196,7 @@ class _RaidFormState extends State<RaidForm> {
                       'Save',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () {bloc.add(FormSubmit()); Navigator.pop(context);},
+                    onPressed: () => bloc.add(FormSubmit()),
                   ),
                 ],
               ),

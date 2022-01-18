@@ -67,4 +67,13 @@ class RaidFormLoaded extends RaidFormState {
 class RaidFormSubmitted extends RaidFormLoaded {
   RaidFormSubmitted.from(
     RaidFormState other): super.from(other);
+
+  Map<String, Object?> get changes {
+            Map<String, Object?> changes = {"docId":raid.docId};
+    if (location != raid.location) {changes["location"] = location;}
+    if (numShips != raid.numShips) {changes["numShips"] = numShips;}
+    if (arrivalDate != raid.arrivalDate) {changes["arrivalDate"] = arrivalDate;}
+    if (vikings != raid.vikings) {changes["vikings"] = vikings;}
+    return changes;
+  }
 }

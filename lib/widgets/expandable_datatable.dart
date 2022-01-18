@@ -19,8 +19,8 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     Size size = MediaQuery.of(context).size;
     const _columns = ['Location', '# Of Ships', 'Arrival Date', 'Vikings'];
 
-    void _showEditorPanel(Raid raidData) {
-      showModalBottomSheet(
+    Future<void> _showEditorPanel(Raid raidData) async {
+      Map<String, Object?> raidUpdate = await showModalBottomSheet(
           isScrollControlled: true,
           context: context,
           builder: (context) {
@@ -36,6 +36,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
               ],
             );
           });
+      context.read<RaidBloc>().add(EditRaid(raidUpdate));
     }
 
     void _editNewRaid() {
@@ -50,37 +51,35 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     }
 
     List<DataRow> _buildRowsFromState(RaidState state) {
-      List<RaidRow> raidRows = state.raids
-          .map((raid) => RaidRow(
-              data: raid,
-              onSelectChanged: (x) => _showEditorPanel(raid),
-              onDeleteButtonPressed: () => context
-                  .read<RaidBloc>()
-                  .add(RaidDeleteButtonPressed(data: raid))))
-          .toList();
-      List<DataRow> dataRows = List<DataRow>.from(raidRows);
-      DataRow lastRow = DataRow(
-        cells: [
-          DataCell(
-            Center(
-              child: Row(
+      RaidBloc bloc = context.read<RaidBloc>();
+
+      return [
+        ...[
+          for (var raid in state.raids)
+            RaidRow(
+                data: raid,
+                onSelectChanged: (x) => _showEditorPanel(raid),
+                onDeleteButtonPressed: () =>
+                    bloc.add(RaidDeleteButtonPressed(data: raid)))
+        ],
+        DataRow(
+          cells: [
+            DataCell(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
                   Icon(Icons.add),
-                  Text(
-                    "Add a New Raid",
-                  ),
+                  Text("Add a New Raid"),
                 ],
               ),
             ),
-          ),
-          // fill the other columns with blank cells
-          ...List<DataCell>.generate(
-              _columns.length, (index) => const DataCell(SizedBox()))
-        ],
-        onSelectChanged: (x) => _editNewRaid(),
-      );
-      dataRows.add(lastRow);
-      return dataRows;
+            // fill the other columns with blank cells
+            ...List<DataCell>.generate(
+                _columns.length, (i) => const DataCell(SizedBox()))
+          ],
+          onSelectChanged: (x) => _editNewRaid(),
+        )
+      ];
     }
 
     return Column(

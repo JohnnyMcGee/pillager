@@ -9,10 +9,10 @@ class RaidDataChange extends RaidEvent {
   RaidDataChange({required this.data});
 }
 
-class RaidEditorSaveButtonPressed extends RaidEvent {
+class EditRaid extends RaidEvent {
   Map<String, Object?> data;
 
-  RaidEditorSaveButtonPressed({required this.data});
+  EditRaid(this.data);
 }
 
 class RaidEditorNoChanges extends RaidEvent {}
