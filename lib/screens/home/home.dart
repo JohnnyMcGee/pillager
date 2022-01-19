@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/widgets/expandable_datatable.dart';
+import 'package:pillager/widgets/widgets.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,14 +15,6 @@ class Home extends StatelessWidget {
         title: const Text('Pillager'),
         elevation: 0.0,
         actions: <Widget>[
-          // TextButton.icon(
-          //   onPressed: () {
-          //     context.read<SignInBloc>().add(SignOutButtonPressed());
-          //   },
-          //   icon: Icon(
-          //     Icons.person,
-          //     color: Colors.blueGrey[400],
-          //   ),
           PopupMenuButton(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -45,7 +38,9 @@ class Home extends StatelessWidget {
             onSelected: (val) {
               switch (val) {
                 case 0:
-                  print("Edit Profile");
+                  showDialog(context: context, builder: ((context) {
+                    return const ProfileDialog();
+                  }));
                   break;
                 case 1:
                   context.read<SignInBloc>().add(SignOutButtonPressed());
