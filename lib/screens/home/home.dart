@@ -14,20 +14,54 @@ class Home extends StatelessWidget {
         title: const Text('Pillager'),
         elevation: 0.0,
         actions: <Widget>[
-          TextButton.icon(
-            onPressed: () {
-              context.read<SignInBloc>().add(SignOutButtonPressed());
-            },
-            icon: Icon(
-              Icons.person,
-              color: Colors.blueGrey[400],
-            ),
-            label: Text(
-              'Sign Out',
-              style: TextStyle(
-                color: Colors.blueGrey[400],
+          // TextButton.icon(
+          //   onPressed: () {
+          //     context.read<SignInBloc>().add(SignOutButtonPressed());
+          //   },
+          //   icon: Icon(
+          //     Icons.person,
+          //     color: Colors.blueGrey[400],
+          //   ),
+          PopupMenuButton(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(Icons.person),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      'My Account',
+                      style: TextStyle(
+                        color: Colors.blueGrey[400],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+            onSelected: (val) {
+              switch (val) {
+                case 0:
+                  print("Edit Profile");
+                  break;
+                case 1:
+                  context.read<SignInBloc>().add(SignOutButtonPressed());
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(
+                child: Text('Edit Profile'),
+                value: 0,
+              ),
+              const PopupMenuItem(
+                child: Text('Sign Out'),
+                value: 1,
+              ),
+            ],
           ),
         ],
       ),
