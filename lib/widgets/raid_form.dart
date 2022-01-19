@@ -33,7 +33,7 @@ class RaidForm extends StatelessWidget {
         .values
         .where((v) => !currentVikings.keys.contains(v.uid)));
 
-    Viking choice = await showDialog(
+    Viking? choice = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
@@ -50,9 +50,11 @@ class RaidForm extends StatelessWidget {
         );
       },
     );
+    if (choice != null) {
     final updatedVikings = currentVikings
       ..putIfAbsent(choice.uid!, () => choice);
     bloc.add(EditForm({"vikings": updatedVikings}));
+    }
   }
 
   @override
