@@ -33,13 +33,7 @@ class RaidFormState extends Equatable {
 class RaidFormInitial extends RaidFormState {
   RaidFormInitial()
       : super(
-          raid: Raid(
-            location: "New Raid",
-            numShips: 1,
-            arrivalDate: DateTime.now(),
-            vikings: const <String, Viking>{},
-            loot: const [],
-          ),
+          raid: Raid.newRaid,
         );
 }
 

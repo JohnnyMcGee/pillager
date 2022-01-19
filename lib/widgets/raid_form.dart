@@ -7,7 +7,7 @@ import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 
 class RaidForm extends StatelessWidget {
-  final Raid raid;
+  final Raid? raid;
   final _formKey = GlobalKey<FormState>();
 
   RaidForm({Key? key, required this.raid}) : super(key: key);
@@ -60,7 +60,7 @@ class RaidForm extends StatelessWidget {
     return BlocProvider(
       create: (context) => RaidFormBloc(
         raidBloc: context.read<RaidBloc>(),
-      )..add(OpenRaidForm(data: raid)),
+      )..add(OpenRaidForm(raid)),
       child: BlocBuilder<RaidFormBloc, RaidFormState>(
         builder: (context, state) {
           if (state is RaidFormSubmitted) {

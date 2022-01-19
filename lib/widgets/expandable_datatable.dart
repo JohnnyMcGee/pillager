@@ -19,7 +19,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     Size size = MediaQuery.of(context).size;
     const _columns = ['Location', '# Of Ships', 'Arrival Date', 'Vikings'];
 
-    Future<void> _showEditorPanel(Raid raidData) async {
+    Future<void> _showEditorPanel([Raid? raidData]) async {
       List<Raid> raidUpdate = await showModalBottomSheet(
           isScrollControlled: true,
           context: context,
@@ -37,17 +37,6 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
             );
           });
       context.read<RaidBloc>().add(EditRaid(raidUpdate));
-    }
-
-    void _editNewRaid() {
-      Raid newRaid = Raid(
-        location: "New Raid",
-        numShips: 1,
-        arrivalDate: DateTime.now(),
-        vikings: const {},
-        loot: const [],
-      );
-      _showEditorPanel(newRaid);
     }
 
     List<DataRow> _buildRowsFromState(RaidState state) {
@@ -77,7 +66,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
             ...List<DataCell>.generate(
                 _columns.length, (i) => const DataCell(SizedBox()))
           ],
-          onSelectChanged: (x) => _editNewRaid(),
+          onSelectChanged: (x) => _showEditorPanel(),
         )
       ];
     }

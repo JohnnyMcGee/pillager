@@ -10,7 +10,7 @@ abstract class RaidFormEvent extends Equatable {
 class OpenRaidForm extends RaidFormEvent {
   final Object _data;
 
-  const OpenRaidForm({data}) : _data = data ?? -1;
+  const OpenRaidForm(data) : _data = data ?? -1;
 
   Object get data => _data;
 

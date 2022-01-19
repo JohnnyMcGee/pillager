@@ -19,6 +19,14 @@ class Raid extends Equatable {
     required this.loot,
   });
 
+  static Raid newRaid = Raid(
+        location: "New Raid",
+        numShips: 1,
+        arrivalDate: DateTime.now(),
+        vikings: const <String, Object>{},
+        loot: const [],
+      );
+
   @override
   List<Object> get props => [location, numShips, arrivalDate, vikings, loot];
 

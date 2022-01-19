@@ -72,7 +72,7 @@ class DatabaseService {
         "location": raid.location,
         "numShips": raid.numShips,
         "arrivalDate": raid.arrivalDate,
-        "vikings": List.from(raid.vikings.values),
+        "vikings": List.from(raid.vikings.keys),
         "loot": [],
       });
     } catch (e) {
