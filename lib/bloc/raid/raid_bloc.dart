@@ -19,7 +19,7 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     });
 
     on<RaidDataChange>(_onRaidDataChange);
-    on<RaidEditorSaveButtonPressed>(_onRaidEditorSaveButtonPressed);
+    on<EditRaid>(_onEditRaid);
     on<RaidDeleteButtonPressed>(_onRaidDeleteButtonPressed);
     on<RaidEditorNoChanges>(
         (event, emit) => emit(RaidLoaded(raids: state.raids)));
@@ -40,8 +40,8 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     emit(RaidLoaded(raids: raids));
   }
 
-  void _onRaidEditorSaveButtonPressed(
-      RaidEditorSaveButtonPressed event, Emitter emit) {
+  void _onEditRaid(
+      EditRaid event, Emitter emit) {
     bool isRaidUpdate = (event.data["docId"] != null && event.data.length > 1);
 
     // Drop empty form fields

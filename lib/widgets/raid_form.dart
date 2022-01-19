@@ -6,25 +6,11 @@ import 'package:intl/intl.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 
-const List<String> options = ["Viking1", "Viking2", "Viking3"];
-
-class RaidForm extends StatefulWidget {
+class RaidForm extends StatelessWidget {
   final Raid raid;
-
-  const RaidForm({Key? key, required this.raid}) : super(key: key);
-
-  @override
-  _RaidFormState createState() => _RaidFormState();
-}
-
-class _RaidFormState extends State<RaidForm> {
   final _formKey = GlobalKey<FormState>();
 
-  // form values
-  String? _location;
-  int? _numShips;
-  DateTime? _arrivalDate;
-  Map<String, Viking>? _vikings;
+  RaidForm({Key? key, required this.raid}) : super(key: key);
 
   Future<void> _selectDate(BuildContext context, DateTime initialDate) async {
     final DateTime? newDate = await showDatePicker(
@@ -37,9 +23,17 @@ class _RaidFormState extends State<RaidForm> {
     context.read<RaidFormBloc>().add(EditForm({"arrivalDate": newDate}));
   }
 
-  Future<void> _selectAssignViking(
-      BuildContext context, List<String> currentVikings) async {
-    String? choice = await showDialog(
+  Future<String?> _selectAssignViking(BuildContext context) async {
+    final bloc = context.read<RaidFormBloc>();
+    final currentVikings = Map<String, Object>.from(bloc.state.vikings);
+    List<Viking> options = List<Viking>.from(context
+        .read<VikingBloc>()
+        .state
+        .vikings
+        .values
+        .where((v) => !currentVikings.keys.contains(v.uid)));
+
+    Viking choice = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
@@ -50,40 +44,31 @@ class _RaidFormState extends State<RaidForm> {
                 onPressed: () {
                   Navigator.pop(context, option);
                 },
-                child: Text(option),
+                child: Text(option.fullName),
               ),
           ],
         );
       },
     );
-    print(choice);
+    final updatedVikings = currentVikings
+      ..putIfAbsent(choice.uid!, () => choice);
+    bloc.add(EditForm({"vikings": updatedVikings}));
   }
-
-  // Future<void> _onSave(BuildContext context) async {
-  //   final raidUpdate = {
-  //     "docId": widget.raid.docId,
-  //     "location": _location,
-  //     "numShips": _numShips,
-  //     "arrivalDate": _arrivalDate,
-  //   };
-  //   context.read<RaidBloc>().add(RaidEditorSaveButtonPressed(data: raidUpdate));
-  //   Navigator.pop(context);
-  // }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => RaidFormBloc(
         raidBloc: context.read<RaidBloc>(),
-      )..add(OpenRaidForm(data: widget.raid)),
+      )..add(OpenRaidForm(data: raid)),
       child: BlocBuilder<RaidFormBloc, RaidFormState>(
         builder: (context, state) {
-          RaidFormBloc bloc = context.read<RaidFormBloc>();
-
           if (state is RaidFormSubmitted) {
             Navigator.pop(context, state.changes);
           }
-          
+
+          RaidFormBloc bloc = context.read<RaidFormBloc>();
+
           if (state is RaidFormLoaded) {
             return Form(
               key: _formKey,
@@ -106,12 +91,11 @@ class _RaidFormState extends State<RaidForm> {
                   DropdownButtonFormField(
                     value: state.numShips,
                     items: List.generate(
-                      100,
-                      (i) => DropdownMenuItem(
-                        value: i + 1,
-                        child: Text('${i + 1}'),
-                      ),
-                    ),
+                        100,
+                        (i) => DropdownMenuItem(
+                              value: i + 1,
+                              child: Text('${i + 1}'),
+                            )),
                     onChanged: (val) => bloc.add(EditForm({"numShips": val!})),
                   ),
                   const SizedBox(
@@ -152,12 +136,12 @@ class _RaidFormState extends State<RaidForm> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       children: [
                         ...[
-                          for (var name in (state.raid.vikingNameList))
+                          for (var viking in state.vikings.values)
                             Card(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  name,
+                                  (viking as Viking).fullName,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
@@ -170,8 +154,7 @@ class _RaidFormState extends State<RaidForm> {
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: TextButton(
-                            onPressed: () =>
-                                _selectAssignViking(context, const [""]),
+                            onPressed: () => _selectAssignViking(context),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: const [
