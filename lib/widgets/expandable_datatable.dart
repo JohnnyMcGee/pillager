@@ -20,7 +20,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
     const _columns = ['Location', '# Of Ships', 'Arrival Date', 'Vikings'];
 
     Future<void> _showEditorPanel([Raid? raidData]) async {
-      List<Raid> raidUpdate = await showModalBottomSheet(
+      List<Raid>? raidUpdate = await showModalBottomSheet(
           isScrollControlled: true,
           context: context,
           builder: (context) {
@@ -36,7 +36,10 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
               ],
             );
           });
-      context.read<RaidBloc>().add(EditRaid(raidUpdate));
+          
+      if (raidUpdate != null) {
+        context.read<RaidBloc>().add(EditRaid(raidUpdate));
+      }
     }
 
     List<DataRow> _buildRowsFromState(RaidState state) {

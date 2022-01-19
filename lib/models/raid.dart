@@ -45,7 +45,7 @@ class Raid extends Equatable {
   }
 
   String get vikingNames => vikingNameList.join(', ');
-
+  
   String get vikingNamesShort {
     List<String> names = vikingNameList;
 
