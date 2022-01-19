@@ -32,20 +32,28 @@ class Home extends StatelessWidget {
         ],
       ),
       body: Column(
-        children: const [
+        children: [
           Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 50.0,
                 vertical: 20.0,
               ),
-              child: Text(
-                "Welcome Viking Brother!",
-                style: TextStyle(
-                  color: Colors.blueGrey,
-                  fontSize: 20.0,
-                ),
-              ),
+              child: BlocBuilder<VikingBloc, VikingState>(
+                  builder: (context, state) {
+                String uid =
+                    (context.read<SignInBloc>().state as LoggedIn).user.uid;
+
+                return Text(
+                  (state is VikingLoaded && state.vikings.containsKey(uid))
+                      ? "Welcome ${state.vikings[uid]!.fullName}!"
+                      : "Welcome Viking Friend!",
+                  style: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 20.0,
+                  ),
+                );
+              }),
             ),
           ),
           ExpandableDataTable(),
