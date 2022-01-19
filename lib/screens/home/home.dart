@@ -1,11 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
-import 'package:pillager/widgets/expandable_datatable.dart';
 import 'package:pillager/widgets/widgets.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
+
+  void _showProfileEditor(BuildContext context) async {
+    Map<String, Object>? profileUpdate = await showDialog(
+        context: context,
+        builder: (context) {
+          return const SimpleDialog(
+            children: [
+              ProfileEditor(),
+            ],
+          );
+        });
+    if (profileUpdate != null) {
+      // fire events to update user profile
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +52,7 @@ class Home extends StatelessWidget {
             onSelected: (val) {
               switch (val) {
                 case 0:
-                  showDialog(context: context, builder: ((context) {
-                    return const ProfileDialog();
-                  }));
+                  _showProfileEditor(context);
                   break;
                 case 1:
                   context.read<SignInBloc>().add(SignOutButtonPressed());
