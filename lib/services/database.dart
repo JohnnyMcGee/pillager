@@ -45,7 +45,7 @@ class DatabaseService {
       changes["arrivalDate"] = update.arrivalDate;
     }
     if (raid.vikings != update.vikings) {
-      changes["vikings"] = update.vikings;
+      changes["vikings"] = List.from(update.vikings.keys);
     }
     if (raid.loot != update.loot) {
       changes["loot"] = update.loot;
