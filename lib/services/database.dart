@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pillager/models/models.dart';
 
 class DatabaseService {
@@ -57,7 +58,8 @@ class DatabaseService {
       createNewRaid(update);
     } else {
       final Map<String, Object> changes = _compareRaids(raid, update);
-      final DocumentReference raidDoc = raidsCollection.doc(update.docId as String);
+      final DocumentReference raidDoc =
+          raidsCollection.doc(update.docId as String);
       try {
         raidDoc.update(changes);
       } catch (e) {
@@ -107,5 +109,15 @@ class DatabaseService {
         (k, v) => MapEntry<String, Object>(
             k, (vikings.containsKey(k) ? vikings[k] : -2)!)));
     return raid.copyWith(vikings: raidVikings);
+  }
+
+  void createNewViking(Map<String, Object> data) {
+    try {
+      vikingsCollection.add(
+        data..addAll({"isEarl": false, "isBerserker": false}),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 }

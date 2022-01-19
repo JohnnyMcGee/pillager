@@ -16,6 +16,9 @@ class LoggedIn extends SignInState {
   final User user;
 
   LoggedIn({required this.user});
+
+  @override
+  List<Object> get props => [user];
 }
 
 class LoggedOut extends SignInState {}

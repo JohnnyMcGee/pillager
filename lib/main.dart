@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import './app.dart';
 import './bloc/bloc.dart';
 import './config.dart';
+
 import './services/services.dart';
 
 void main() async {
@@ -22,14 +23,14 @@ void main() async {
           BlocProvider(
             create: (context) => SignInBloc(
               auth: AuthService(),
+              store: DatabaseService(),
             ),
-            child: const PillagerApp(),
           ),
           BlocProvider(
             create: (context) => VikingBloc(
               store: DatabaseService(),
+              user: (context.read<SignInBloc>().state as LoggedIn).user,
             ),
-            lazy: false,
           ),
           BlocProvider(
             create: (context) => RaidBloc(

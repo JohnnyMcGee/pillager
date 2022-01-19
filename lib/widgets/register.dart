@@ -19,7 +19,7 @@ class _RegisterState extends State<Register> {
   String email = '';
   String password = '';
   String confirmPassword = '';
-  final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>(debugLabel: "registerFormKey");
 
   @override
   Widget build(BuildContext context) {

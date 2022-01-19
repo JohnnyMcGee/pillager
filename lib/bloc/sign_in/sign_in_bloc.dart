@@ -5,8 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final AuthService auth;
+  final DatabaseService store;
 
-  SignInBloc({required this.auth}) : super(SignInInitial()) {
+  SignInBloc({required this.auth, required this.store}) : super(SignInInitial()) {
     on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
     on<RegisterEmailButtonPressed>(_onRegisterEmailButtonPressed);
     on<SignOutButtonPressed>(_onSignOutButtonPressed);
@@ -16,7 +17,6 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   void _onSignInEmailButtonPressed(
       SignInEmailButtonPressed event, Emitter<SignInState> emit) async {
-
     emit(SignInLoading());
 
     User? user = await auth.signIn(event.email, event.password);
@@ -32,9 +32,13 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       RegisterEmailButtonPressed event, Emitter<SignInState> emit) async {
     emit(SignInLoading());
 
-    User? user =
-        await auth.registerWithEmailAndPassword(event.email, event.password, event.firstName, event.lastName);
+    User? user = await auth.registerWithEmailAndPassword(
+        event.email, event.password, event.firstName, event.lastName);
     if (user != null) {
+      store.createNewViking({
+        "firstName": event.firstName,
+        "lastName": event.lastName,
+      });
       add(SignInSuccess(user: user));
     } else {
       add(SignInFailure(
@@ -46,9 +50,9 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       SignOutButtonPressed event, Emitter emit) async {
     await auth.signOut();
     emit(LoggedOut());
-    }
+  }
 
   Future<void>? _onSignInFailure(SignInFailure event, Emitter emit) {
-      emit(LoggedOut());
+    emit(LoggedOut());
   }
 }
