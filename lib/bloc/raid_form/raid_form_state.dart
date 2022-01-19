@@ -48,7 +48,7 @@ class RaidFormLoaded extends RaidFormState {
     RaidFormState other, {
     raid,
     location,
-    numShips,
+    numShips, 
     arrivalDate,
     vikings,
   }) : super(
@@ -73,7 +73,7 @@ class RaidFormSubmitted extends RaidFormLoaded {
     if (location != raid.location) {changes["location"] = location;}
     if (numShips != raid.numShips) {changes["numShips"] = numShips;}
     if (arrivalDate != raid.arrivalDate) {changes["arrivalDate"] = arrivalDate;}
-    if (vikings != raid.vikings) {changes["vikings"] = vikings;}
+    if (vikings != raid.vikings) {changes["vikings"] = List.from(vikings.keys);}
     return changes;
   }
 }
