@@ -7,7 +7,8 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   final AuthService auth;
   final DatabaseService store;
 
-  SignInBloc({required this.auth, required this.store}) : super(SignInInitial()) {
+  SignInBloc({required this.auth, required this.store})
+      : super(SignInInitial()) {
     on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
     on<RegisterEmailButtonPressed>(_onRegisterEmailButtonPressed);
     on<SignOutButtonPressed>(_onSignOutButtonPressed);
@@ -35,10 +36,13 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     User? user = await auth.registerWithEmailAndPassword(
         event.email, event.password, event.firstName, event.lastName);
     if (user != null) {
-      store.createNewViking({
-        "firstName": event.firstName,
-        "lastName": event.lastName,
-      });
+      store.createNewViking(
+        user.uid,
+        {
+          "firstName": event.firstName,
+          "lastName": event.lastName,
+        },
+      );
       add(SignInSuccess(user: user));
     } else {
       add(SignInFailure(

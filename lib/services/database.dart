@@ -111,11 +111,9 @@ class DatabaseService {
     return raid.copyWith(vikings: raidVikings);
   }
 
-  void createNewViking(Map<String, Object> data) {
+  void createNewViking(String uid, Map<String, Object> data) {
     try {
-      vikingsCollection.add(
-        data..addAll({"isEarl": false, "isBerserker": false}),
-      );
+      vikingsCollection.doc(uid).set(data..addAll({"isBerserker":false, "isEarl":false}));
     } catch (e) {
       print(e);
     }
