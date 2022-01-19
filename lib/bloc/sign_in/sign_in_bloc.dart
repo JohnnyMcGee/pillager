@@ -33,14 +33,19 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       RegisterEmailButtonPressed event, Emitter<SignInState> emit) async {
     emit(SignInLoading());
 
+    String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+  
+    final String first = capitalize(event.firstName);
+    final String last = capitalize(event.lastName);
+    
     User? user = await auth.registerWithEmailAndPassword(
-        event.email, event.password, event.firstName, event.lastName);
+        event.email, event.password, first, last);
     if (user != null) {
       store.createNewViking(
         user.uid,
         {
-          "firstName": event.firstName,
-          "lastName": event.lastName,
+          "firstName": first,
+          "lastName": last,
         },
       );
       add(SignInSuccess(user: user));
