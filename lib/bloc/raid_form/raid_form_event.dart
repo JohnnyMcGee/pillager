@@ -27,4 +27,13 @@ class EditForm extends RaidFormEvent {
   List<Object> get props => [data];
 }
 
+class RemoveViking extends RaidFormEvent {
+  final Viking data;
+
+  const RemoveViking(this.data);
+
+  @override
+  List<Object> get props => [data];
+}
+
 class FormSubmit extends RaidFormEvent {}

@@ -51,9 +51,9 @@ class RaidForm extends StatelessWidget {
       },
     );
     if (choice != null) {
-    final updatedVikings = currentVikings
-      ..putIfAbsent(choice.uid!, () => choice);
-    bloc.add(EditForm({"vikings": updatedVikings}));
+      final updatedVikings = currentVikings
+        ..putIfAbsent(choice.uid!, () => choice);
+      bloc.add(EditForm({"vikings": updatedVikings}));
     }
   }
 
@@ -133,7 +133,7 @@ class RaidForm extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
-                    height: 100.0,
+                    height: 200.0,
                     child: ListView(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       children: [
@@ -142,13 +142,26 @@ class RaidForm extends StatelessWidget {
                             Card(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  (viking as Viking).fullName,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.0,
-                                  ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      (viking as Viking).fullName,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      onPressed: () =>
+                                          bloc.add(RemoveViking(viking)),
+                                      icon: const Icon(
+                                        Icons.close,
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             )

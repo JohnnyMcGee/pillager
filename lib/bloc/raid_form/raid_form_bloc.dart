@@ -8,11 +8,12 @@ part 'raid_form_state.dart';
 
 class RaidFormBloc extends Bloc<RaidFormEvent, RaidFormState> {
   RaidBloc raidBloc;
-  
+
   RaidFormBloc({required this.raidBloc}) : super(RaidFormInitial()) {
     on<OpenRaidForm>(_onOpenRaidForm);
     on<EditForm>(_onEditForm);
     on<FormSubmit>(_onFormSubmit);
+    on<RemoveViking>(_onRemoveViking);
   }
 
   void _onOpenRaidForm(OpenRaidForm event, Emitter emit) {
@@ -35,5 +36,12 @@ class RaidFormBloc extends Bloc<RaidFormEvent, RaidFormState> {
 
   void _onFormSubmit(FormSubmit event, Emitter emit) {
     emit(RaidFormSubmitted.from(state));
+  }
+
+  void _onRemoveViking(RemoveViking event, Emitter emit) {
+    Viking viking = event.data;
+    final updatedVikings = Map<String, Object>.from(state.vikings)
+      ..removeWhere((k, v) => k == viking.uid);
+    emit(RaidFormLoaded.from(state, vikings: updatedVikings));
   }
 }
