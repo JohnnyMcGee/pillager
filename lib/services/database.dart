@@ -17,45 +17,63 @@ class DatabaseService {
   }
 
   List<Raid> _raidsFromSnapshot(QuerySnapshot snapshot) {
-
     return [
       for (var doc in snapshot.docs)
-      Raid(
-              docId: doc.id,
-              location: doc.get('location'),
-              numShips: doc.get('numShips'),
-              arrivalDate: doc.get('arrivalDate').toDate(),
-              // Initialize vikings with dummy value -1
-              // Values added later using raidLoadVikings method
-              vikings: {
-                for (var id in doc.get('vikings')) id: -1
-              },
-              loot: doc.get('loot'),
-            )
+        Raid(
+          docId: doc.id,
+          location: doc.get('location'),
+          numShips: doc.get('numShips'),
+          arrivalDate: doc.get('arrivalDate').toDate(),
+          // Initialize vikings with dummy value -1
+          // Values added later using raidLoadVikings method
+          vikings: {for (var id in doc.get('vikings')) id: -1},
+          loot: doc.get('loot'),
+        )
     ];
   }
 
-  void updateRaid(Map<String, Object?> data) {
-    final raidDoc = raidsCollection.doc(data["docId"] as String);
-    data.removeWhere((k, v) => k == "docId");
-    try {
-      raidDoc.update(data);
-    } catch (e) {
-      print(e);
+  Map<String, Object> _compareRaids(raid, update) {
+    var changes = <String, Object>{};
+    if (raid.location != update.location) {
+      changes["location"] = update.location;
+    }
+    if (raid.numShips != update.numShips) {
+      changes["numShips"] = update.numShips;
+    }
+    if (raid.arrivalDate != update.arrivalDate) {
+      changes["arrivalDate"] = update.arrivalDate;
+    }
+    if (raid.vikings != update.vikings) {
+      changes["vikings"] = update.vikings;
+    }
+    if (raid.loot != update.loot) {
+      changes["loot"] = update.loot;
+    }
+    return changes;
+  }
+
+  void updateRaid(Raid raid, Raid update) {
+    if (update.docId == null) {
+      createNewRaid(update);
+    } else {
+      final Map<String, Object> changes = _compareRaids(raid, update);
+      final DocumentReference raidDoc = raidsCollection.doc(update.docId as String);
+      try {
+        raidDoc.update(changes);
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
-  void createNewRaid(Map<String, Object?> data) {
+  void createNewRaid(Raid raid) {
     try {
       raidsCollection.add({
-        "location":
-            data.containsKey("location") ? data["location"] : "New Raid",
-        "numShips": data.containsKey("numShips") ? data["numShips"] : 1,
-        "arrivalDate": data.containsKey("arrivalDate")
-            ? data["arrivalDate"]
-            : DateTime.now(),
-        "vikings": data.containsKey("vikings") ? data["vikings"] : [],
-        "loot": data.containsKey("loot") ? data["loot"] : [],
+        "location": raid.location,
+        "numShips": raid.numShips,
+        "arrivalDate": raid.arrivalDate,
+        "vikings": List.from(raid.vikings.values),
+        "loot": [],
       });
     } catch (e) {
       print(e);

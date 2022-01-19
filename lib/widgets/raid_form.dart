@@ -64,7 +64,7 @@ class RaidForm extends StatelessWidget {
       child: BlocBuilder<RaidFormBloc, RaidFormState>(
         builder: (context, state) {
           if (state is RaidFormSubmitted) {
-            Navigator.pop(context, state.changes);
+            Navigator.pop(context, [state.raid, state.raidUpdate]);
           }
 
           RaidFormBloc bloc = context.read<RaidFormBloc>();

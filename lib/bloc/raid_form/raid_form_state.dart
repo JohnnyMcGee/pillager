@@ -1,11 +1,8 @@
 part of 'raid_form_bloc.dart';
 
 class RaidFormState extends Equatable {
-  final String location;
-  final int numShips;
-  final DateTime arrivalDate;
-  final Map<String, Object> vikings;
   final Raid raid;
+  final Raid raidUpdate;
 
   RaidFormState(
       {required this.raid,
@@ -13,20 +10,23 @@ class RaidFormState extends Equatable {
       int? numShips,
       DateTime? arrivalDate,
       Map<String, Object>? vikings})
-      : location = location ?? raid.location,
-        numShips = numShips ?? raid.numShips,
-        arrivalDate = arrivalDate ?? raid.arrivalDate,
-        vikings = vikings ?? raid.vikings;
+      : raidUpdate = Raid(
+          docId: raid.docId,
+          location: location ?? raid.location,
+          numShips: numShips = numShips ?? raid.numShips,
+          arrivalDate: arrivalDate = arrivalDate ?? raid.arrivalDate,
+          vikings: vikings = vikings ?? raid.vikings,
+          loot: raid.loot,
+        );
+
+  String? get docId => raidUpdate.docId;
+  String get location => raidUpdate.location;
+  int get numShips => raidUpdate.numShips;
+  DateTime get arrivalDate => raidUpdate.arrivalDate;
+  Map<String, Object> get vikings => raidUpdate.vikings;
 
   @override
-  List<Object> get props => [location, numShips, arrivalDate, vikings, raid];
-
-  Map<String, Object> toMap() => {
-        "location": location,
-        "numShips": numShips,
-        "arrivalDate": arrivalDate,
-        "vikings": vikings,
-      };
+  List<Object> get props => [raid, raidUpdate];
 }
 
 // Initialize Form with default Raid
@@ -48,7 +48,7 @@ class RaidFormLoaded extends RaidFormState {
     RaidFormState other, {
     raid,
     location,
-    numShips, 
+    numShips,
     arrivalDate,
     vikings,
   }) : super(
@@ -65,15 +65,5 @@ class RaidFormLoaded extends RaidFormState {
 }
 
 class RaidFormSubmitted extends RaidFormLoaded {
-  RaidFormSubmitted.from(
-    RaidFormState other): super.from(other);
-
-  Map<String, Object?> get changes {
-            Map<String, Object?> changes = {"docId":raid.docId};
-    if (location != raid.location) {changes["location"] = location;}
-    if (numShips != raid.numShips) {changes["numShips"] = numShips;}
-    if (arrivalDate != raid.arrivalDate) {changes["arrivalDate"] = arrivalDate;}
-    if (vikings != raid.vikings) {changes["vikings"] = List.from(vikings.keys);}
-    return changes;
-  }
+  RaidFormSubmitted.from(RaidFormState other) : super.from(other);
 }

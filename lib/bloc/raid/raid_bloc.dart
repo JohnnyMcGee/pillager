@@ -40,18 +40,8 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     emit(RaidLoaded(raids: raids));
   }
 
-  void _onEditRaid(
-      EditRaid event, Emitter emit) {
-    bool isRaidUpdate = (event.data["docId"] != null && event.data.length > 1);
-
-    // Drop empty form fields
-    event.data.removeWhere((k, v) => v == null);
-
-    if (isRaidUpdate) {
-      store.updateRaid(event.data);
-    } else {
-      store.createNewRaid(event.data);
-    }
+  void _onEditRaid(EditRaid event, Emitter emit) {
+    store.updateRaid(event.data[0], event.data[1]);
 
     emit(RaidUpdating(raids: state.raids));
   }

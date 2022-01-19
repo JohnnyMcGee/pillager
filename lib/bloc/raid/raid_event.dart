@@ -10,9 +10,12 @@ class RaidDataChange extends RaidEvent {
 }
 
 class EditRaid extends RaidEvent {
-  Map<String, Object?> data;
-
-  EditRaid(this.data);
+  List<Raid> data;
+  EditRaid(this.data) {
+    // data must contain a raid and corresponding "updated" raid
+    assert(data.length == 2);
+    assert(data[0].docId == data[1].docId);
+  }
 }
 
 class RaidEditorNoChanges extends RaidEvent {}
