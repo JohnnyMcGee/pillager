@@ -29,8 +29,8 @@ void main() async {
           BlocProvider(
             create: (context) => VikingBloc(
               store: DatabaseService(),
-              user: (context.read<SignInBloc>().state as LoggedIn).user,
             ),
+            lazy:false,
           ),
           BlocProvider(
             create: (context) => RaidBloc(

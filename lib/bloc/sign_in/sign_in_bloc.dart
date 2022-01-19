@@ -33,7 +33,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       RegisterEmailButtonPressed event, Emitter<SignInState> emit) async {
     emit(SignInLoading());
 
-    String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+    String capitalize(String s) => (s.length > 0) ? s[0].toUpperCase() + s.substring(1) : s;
   
     final String first = capitalize(event.firstName);
     final String last = capitalize(event.lastName);

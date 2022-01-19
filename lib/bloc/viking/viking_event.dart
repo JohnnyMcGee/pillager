@@ -1,3 +1,4 @@
+import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 
 abstract class VikingEvent {}

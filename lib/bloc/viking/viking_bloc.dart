@@ -6,9 +6,8 @@ import 'package:pillager/bloc/bloc.dart';
 
 class VikingBloc extends Bloc<VikingEvent, VikingState> {
   final DatabaseService store;
-  final User user;
 
-  VikingBloc({required this.store, required this.user})
+  VikingBloc({required this.store})
       : super(VikingInitial()) {
     store.vikings.listen((data) {
       add(VikingDataChange(data));
