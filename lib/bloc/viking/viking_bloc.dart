@@ -9,9 +9,9 @@ class VikingBloc extends Bloc<VikingEvent, VikingState> {
 
   VikingBloc({required this.store, required this.signInBloc})
       : super(VikingInitial()) {
-    signInBloc.stream.listen((signInState) => add(SignInChange(signInState)));
+    // signInBloc.stream.listen((signInState) => add(SignInChange(signInState)));
+    store.vikings.listen((data) => add(VikingDataChange(data)));
 
-    on<SignInChange>(_onSignInChange);
     on<VikingDataChange>(_onVikingDataChange);
     on<UpdateViking>(_onUpdateViking);
   }
@@ -20,19 +20,11 @@ class VikingBloc extends Bloc<VikingEvent, VikingState> {
     emit(VikingLoaded(vikings: event.data));
   }
 
-  void _onSignInChange(SignInChange event, Emitter emit) {
-    if (event.data is LoggedIn) {
-      store.vikings.listen((data) {
-        add(VikingDataChange(data));
-      });
-
-      emit(VikingUpdating(vikings: state.vikings));
-    }
-  }
-
   void _onUpdateViking(UpdateViking event, Emitter emit) {
+    if (event.update.isNotEmpty)
+    {
     store.updateViking(event.viking, event.update);
     emit(VikingUpdating(vikings: state.vikings));
+    }
   }
-  
 }

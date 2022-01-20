@@ -9,11 +9,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   SignInBloc({required this.auth, required this.store})
       : super(SignInInitial()) {
+    auth.user.listen((user) => add(UserStateChange(user)));
+
     on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
     on<RegisterEmailButtonPressed>(_onRegisterEmailButtonPressed);
     on<SignOutButtonPressed>(_onSignOutButtonPressed);
     on<SignInSuccess>((event, emit) => emit(LoggedIn(user: event.user)));
     on<SignInFailure>(_onSignInFailure);
+    on<UserStateChange>(_onUserStateChange);
   }
 
   void _onSignInEmailButtonPressed(
@@ -65,5 +68,13 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   Future<void>? _onSignInFailure(SignInFailure event, Emitter emit) {
     emit(LoggedOut());
   }
-
+  
+  void _onUserStateChange(UserStateChange event, Emitter emit) {
+    final user = event.user;
+    if (user is User) {
+      emit(LoggedIn(user: user));
+    } else {
+      emit(LoggedOut());
+    }
+  }
 }

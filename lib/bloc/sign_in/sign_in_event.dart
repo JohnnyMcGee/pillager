@@ -45,8 +45,11 @@ class SignInFailure extends SignInEvent {
   SignInFailure({required this.message});
 }
 
-class UpdateEmail extends SignInEvent {
-  final String data;
+class UserStateChange extends SignInEvent {
+  final User? user;
 
-  UpdateEmail(this.data);
+  UserStateChange(this.user);
 }
+
+
+

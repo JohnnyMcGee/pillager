@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
+import 'package:pillager/services/authenticate.dart';
 import 'package:pillager/widgets/widgets.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
   void _showProfileEditor(BuildContext context) async {
-    final signInBloc = context.read<SignInBloc>();
+    final user = AuthService().currentUser;
     final vikingBloc = context.read<VikingBloc>();
-    final user = (signInBloc.state as LoggedIn).user;
-    final profile = vikingBloc.state.vikings[user.uid];
+    final profile = vikingBloc.state.vikings[user?.uid];
 
-    if (profile != null) {
+    if (profile is Viking && user is User) {
       Map<String, Object>? profileUpdate = await showDialog(
           context: context,
           builder: (context) {
@@ -29,9 +29,12 @@ class Home extends StatelessWidget {
           });
 
       if (profileUpdate != null) {
-        vikingBloc.add(UpdateViking(viking:profile, update:profileUpdate));
-
         final email = profileUpdate["email"];
+
+        vikingBloc.add(UpdateViking(
+            viking: profile,
+            update: profileUpdate..removeWhere((k, v) => k == "email")));
+
         if (email is String) {
           user.updateEmail(email);
           print(email);
