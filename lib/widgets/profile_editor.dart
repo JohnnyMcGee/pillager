@@ -1,74 +1,88 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pillager/bloc/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pillager/models/models.dart';
 
-class ProfileEditor extends StatelessWidget {
-  const ProfileEditor({Key? key}) : super(key: key);
+class ProfileEditor extends StatefulWidget {
+  final User user;
+  final Viking viking;
+
+  const ProfileEditor({Key? key, required this.user, required this.viking})
+      : super(key: key);
+
+  @override
+  State<ProfileEditor> createState() => _ProfileEditorState();
+}
+
+class _ProfileEditorState extends State<ProfileEditor> {
+  final _formKey = GlobalKey<FormState>();
+  String? _email;
+  String? _firstName;
+  String? _lastName;
+  bool? _isBerserker;
+  bool? _isEarl;
+
+  Map<String, Object> _profileUpdate() {
+    var changes = {
+      "email": _email,
+      "firstName": _firstName,
+      "lastName": _lastName,
+      "isBerserker": _isBerserker,
+      "isEarl": _isEarl,
+    }..removeWhere((k, v) => v == null);
+    
+    return Map<String, Object>.from(changes);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProfileEditorBloc(
-        signInBloc: context.read<SignInBloc>(),
-        vikingBloc: context.read<VikingBloc>(),
-      )..add(LoadProfile()),
-      child: BlocBuilder<ProfileEditorBloc, ProfileEditorState>(
-          builder: (context, state) {
-        if (state is ProfileEditorSubmitted) {
-          Navigator.pop(context, {
-            "email": state.email,
-            "viking": state.viking,
-            "update": state.update,
-          });
-        }
-
-        final bloc = context.read<ProfileEditorBloc>();
-        if (state is ProfileEditorLoaded) {
-          return Form(
-            child: Column(
-              children: [
-                const Text(
-                  "Edit Profile",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                  ),
-                ),
-                TextFormField(
-                  initialValue: state.email,
-                  onChanged: (val) => bloc.add(EditProfile({"email": val})),
-                ),
-                TextFormField(
-                  initialValue: state.firstName,
-                  onChanged: (val) => bloc.add(EditProfile({"firstName": val})),
-                ),
-                TextFormField(
-                  initialValue: state.lastName,
-                  onChanged: (val) => bloc.add(EditProfile({"lastName": val})),
-                ),
-                Switch(
-                  value: state.isBerserker,
-                  onChanged: (val) =>
-                      bloc.add(EditProfile({"isBerserker": val})),
-                ),
-                Switch(
-                  value: state.isEarl,
-                  onChanged: (val) => bloc.add(EditProfile({"isEarl": val})),
-                ),
-                TextButton(
-                  child: const Text(
-                    "Update Profile",
-                    textAlign: TextAlign.center,
-                  ),
-                  onPressed: () => bloc.add(UpdateProfile()),
-                ),
-              ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          const Text(
+            "Edit Profile",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
             ),
-          );
-        } else {
-          return const Text("Loading");
-        }
-      }),
+          ),
+          TextFormField(
+            initialValue: _email ?? widget.user.email,
+            onChanged: (value) => setState(() {
+              _email = value;
+            }),
+          ),
+          TextFormField(
+            initialValue: _firstName ?? widget.viking.firstName,
+            onChanged: (value) => setState(() {
+              _firstName = value;
+            }),
+          ),
+          TextFormField(
+            initialValue: _lastName ?? widget.viking.lastName,
+            onChanged: (value) => setState(() {
+              _lastName = value;
+            }),
+          ),
+          Switch(
+              value: _isBerserker ?? widget.viking.isBerserker,
+              onChanged: (value) => setState(() {
+                    _isBerserker = value;
+                  })),
+          Switch(
+              value: _isEarl ?? widget.viking.isEarl,
+              onChanged: (value) => setState(() {
+                    _isEarl = value;
+                  })),
+          TextButton(
+            child: const Text(
+              "Update Profile",
+              textAlign: TextAlign.center,
+            ),
+            onPressed: () => Navigator.pop(context, _profileUpdate()),
+          ),
+        ],
+      ),
     );
   }
 }

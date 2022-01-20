@@ -113,9 +113,19 @@ class DatabaseService {
 
   void createNewViking(String uid, Map<String, Object> data) {
     try {
-      vikingsCollection.doc(uid).set(data..addAll({"isBerserker":false, "isEarl":false}));
+      vikingsCollection
+          .doc(uid)
+          .set(data..addAll({"isBerserker": false, "isEarl": false}));
     } catch (e) {
       print(e);
     }
+  }
+
+  void updateViking(Viking viking, Map<String, Object> update) {
+    final doc = vikingsCollection.doc(viking.uid);
+    final data = Map<String, Object>.from(update)
+      ..removeWhere((k, v) =>
+          !["firstName", "lastName", "isBerserker", "isEarl"].contains(k));
+    doc.update(update);
   }
 }

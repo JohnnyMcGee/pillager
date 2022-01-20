@@ -52,7 +52,7 @@ class RaidForm extends StatelessWidget {
     );
     if (choice != null) {
       final updatedVikings = currentVikings
-        ..putIfAbsent(choice.uid!, () => choice);
+        ..putIfAbsent(choice.uid, () => choice);
       bloc.add(EditForm({"vikings": updatedVikings}));
     }
   }

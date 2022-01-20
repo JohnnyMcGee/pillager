@@ -22,6 +22,7 @@ class ProfileEditorLoaded extends ProfileEditorState {
     bool? isBerserker,
     bool? isEarl,
   }) : update = Viking(
+          uid: viking.uid,
           firstName: firstName ?? viking.firstName,
           lastName: lastName ?? viking.lastName,
           isBerserker: isBerserker ?? viking.isBerserker,
@@ -39,6 +40,7 @@ class ProfileEditorLoaded extends ProfileEditorState {
   })  : viking = viking ?? other.viking,
         email = email ?? other.email,
         update = Viking(
+          uid: viking.uid,
           firstName: firstName ?? other.firstName,
           lastName: lastName ?? other.lastName,
           isBerserker: isBerserker ?? other.isBerserker,

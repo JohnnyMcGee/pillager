@@ -29,6 +29,7 @@ void main() async {
           BlocProvider(
             create: (context) => VikingBloc(
               store: DatabaseService(),
+              signInBloc: context.read<SignInBloc>(),
             ),
             lazy:false,
           ),

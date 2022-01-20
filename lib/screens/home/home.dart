@@ -1,23 +1,39 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
+import 'package:pillager/models/models.dart';
 import 'package:pillager/widgets/widgets.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
   void _showProfileEditor(BuildContext context) async {
-    Map<String, Object>? profileUpdate = await showDialog(
-        context: context,
-        builder: (context) {
-          return const SimpleDialog(
-            children: [
-              ProfileEditor(),
-            ],
-          );
-        });
-    if (profileUpdate != null) {
-      print(profileUpdate);
+    final signInBloc = context.read<SignInBloc>();
+    final vikingBloc = context.read<VikingBloc>();
+    final user = (signInBloc.state as LoggedIn).user;
+    final profile = vikingBloc.state.vikings[user.uid];
+
+    if (profile != null) {
+      Map<String, Object>? profileUpdate = await showDialog(
+          context: context,
+          builder: (context) {
+            return SimpleDialog(
+              children: [
+                ProfileEditor(
+                  user: user,
+                  viking: profile,
+                ),
+              ],
+            );
+          });
+
+      if (profileUpdate != null) {
+        // signInBloc.add(UpdateUser({"email": profileUpdate["email"]}));
+        vikingBloc.add(UpdateViking(viking:profile, update:profileUpdate));
+      }
+    } else {
+      return;
     }
   }
 
