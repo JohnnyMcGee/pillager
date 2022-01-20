@@ -35,6 +35,40 @@ class _ProfileEditorState extends State<ProfileEditor> {
     return Map<String, Object>.from(changes);
   }
 
+  Future<void> _showDeleteDialog(BuildContext context) async {
+    final bool? confirm = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Delete My Account", textAlign: TextAlign.center,),
+          content: Text(
+            """Are you sure you want to delete this account?
+            You will not be able to recover it.""",
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: const Text("Delete Account"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: const Text("Cancel"),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirm == true) {
+      context.read<SignInBloc>().add(DeleteAccount());
+      Navigator.pop(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -82,7 +116,7 @@ class _ProfileEditorState extends State<ProfileEditor> {
               "Delete My Account",
               textAlign: TextAlign.center,
             ),
-            onPressed: () {context.read<SignInBloc>().add(DeleteAccount()); Navigator.pop(context);},
+            onPressed: () => _showDeleteDialog(context),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
