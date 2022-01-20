@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pillager/models/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pillager/bloc/bloc.dart';
 
 class ProfileEditor extends StatefulWidget {
   final User user;
@@ -29,7 +31,7 @@ class _ProfileEditorState extends State<ProfileEditor> {
       "isBerserker": _isBerserker,
       "isEarl": _isEarl,
     }..removeWhere((k, v) => v == null);
-    
+
     return Map<String, Object>.from(changes);
   }
 
@@ -74,7 +76,16 @@ class _ProfileEditorState extends State<ProfileEditor> {
               onChanged: (value) => setState(() {
                     _isEarl = value;
                   })),
+          const SizedBox(height: 20),
           TextButton(
+            child: const Text(
+              "Delete My Account",
+              textAlign: TextAlign.center,
+            ),
+            onPressed: () {context.read<SignInBloc>().add(DeleteAccount()); Navigator.pop(context);},
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
             child: const Text(
               "Update Profile",
               textAlign: TextAlign.center,

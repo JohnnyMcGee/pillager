@@ -17,6 +17,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInSuccess>((event, emit) => emit(LoggedIn(user: event.user)));
     on<SignInFailure>(_onSignInFailure);
     on<UserStateChange>(_onUserStateChange);
+    on<DeleteAccount>(_onDeleteAccount);
   }
 
   void _onSignInEmailButtonPressed(
@@ -37,7 +38,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     emit(SignInLoading());
 
     String capitalize(String s) =>
-        (s.length > 0) ? s[0].toUpperCase() + s.substring(1) : s;
+        (s.isNotEmpty) ? s[0].toUpperCase() + s.substring(1) : s;
 
     final String first = capitalize(event.firstName);
     final String last = capitalize(event.lastName);
@@ -77,4 +78,13 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       emit(LoggedOut());
     }
   }
+
+    void _onDeleteAccount(DeleteAccount event, Emitter emit) {
+      final user = auth.currentUser;
+      if (user is User) {
+        user.delete();
+        emit(LoggedOut());
+      }
+  }
+  
 }

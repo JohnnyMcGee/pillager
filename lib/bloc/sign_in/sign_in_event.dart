@@ -51,5 +51,4 @@ class UserStateChange extends SignInEvent {
   UserStateChange(this.user);
 }
 
-
-
+class DeleteAccount extends SignInEvent {}
