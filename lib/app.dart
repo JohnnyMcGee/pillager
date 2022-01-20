@@ -12,7 +12,7 @@ class PillagerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    context.read<SignInBloc>().add(SignInEmailButtonPressed(email: "ragnar@vikings.vik", password: "sailwest"));
+    context.read<SignInBloc>().add(SignInEmailButtonPressed(email: "ragnar.lothbrok@vikings.vik", password: "sailwest"));
     
     return MaterialApp(
         title: 'Pillager - Management Solutions for the Modern Viking',

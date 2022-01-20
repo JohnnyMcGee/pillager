@@ -126,6 +126,6 @@ class DatabaseService {
     final data = Map<String, Object>.from(update)
       ..removeWhere((k, v) =>
           !["firstName", "lastName", "isBerserker", "isEarl"].contains(k));
-    doc.update(update);
+    doc.update(data);
   }
 }

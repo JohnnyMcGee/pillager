@@ -29,8 +29,13 @@ class Home extends StatelessWidget {
           });
 
       if (profileUpdate != null) {
-        // signInBloc.add(UpdateUser({"email": profileUpdate["email"]}));
         vikingBloc.add(UpdateViking(viking:profile, update:profileUpdate));
+
+        final email = profileUpdate["email"];
+        if (email is String) {
+          user.updateEmail(email);
+          print(email);
+        }
       }
     } else {
       return;

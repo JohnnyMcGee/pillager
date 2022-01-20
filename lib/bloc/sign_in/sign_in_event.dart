@@ -11,7 +11,6 @@ class SignInEmailButtonPressed extends SignInEvent {
   final String password;
 
   SignInEmailButtonPressed({required this.email, required this.password});
-
 }
 
 class RegisterEmailButtonPressed extends SignInEvent {
@@ -27,8 +26,7 @@ class RegisterEmailButtonPressed extends SignInEvent {
     required this.email,
     required this.password,
     required this.confirmPassword,
-    });
-
+  });
 }
 
 class SignOutButtonPressed extends SignInEvent {}
@@ -39,12 +37,16 @@ class SignInSuccess extends SignInEvent {
   final User user;
 
   SignInSuccess({required this.user});
-  
 }
 
 class SignInFailure extends SignInEvent {
   final String message;
 
   SignInFailure({required this.message});
-  
+}
+
+class UpdateEmail extends SignInEvent {
+  final String data;
+
+  UpdateEmail(this.data);
 }

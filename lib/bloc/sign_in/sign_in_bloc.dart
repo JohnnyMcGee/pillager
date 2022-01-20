@@ -33,11 +33,12 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       RegisterEmailButtonPressed event, Emitter<SignInState> emit) async {
     emit(SignInLoading());
 
-    String capitalize(String s) => (s.length > 0) ? s[0].toUpperCase() + s.substring(1) : s;
-  
+    String capitalize(String s) =>
+        (s.length > 0) ? s[0].toUpperCase() + s.substring(1) : s;
+
     final String first = capitalize(event.firstName);
     final String last = capitalize(event.lastName);
-    
+
     User? user = await auth.registerWithEmailAndPassword(
         event.email, event.password, first, last);
     if (user != null) {
@@ -64,4 +65,5 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   Future<void>? _onSignInFailure(SignInFailure event, Emitter emit) {
     emit(LoggedOut());
   }
+
 }
