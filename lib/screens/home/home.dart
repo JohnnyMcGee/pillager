@@ -17,7 +17,7 @@ class Home extends StatelessWidget {
           );
         });
     if (profileUpdate != null) {
-      // fire events to update user profile
+      print(profileUpdate);
     }
   }
 

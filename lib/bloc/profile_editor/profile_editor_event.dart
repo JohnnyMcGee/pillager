@@ -13,8 +13,12 @@ class LoadProfile extends ProfileEditorEvent {
 
 class EditProfile extends ProfileEditorEvent {
   // contains updated data
+  final Map<String, Object> data;
+
+  const EditProfile(this.data);
+
+  @override
+  List<Object> get props => [data];
 }
 
-class UpdateProfile extends ProfileEditorEvent {
-  // submits the profile data
-}
+class UpdateProfile extends ProfileEditorEvent {}
