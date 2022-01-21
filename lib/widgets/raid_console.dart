@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pillager/bloc/bloc.dart';
+import 'package:pillager/models/models.dart';
+import 'package:pillager/widgets/widgets.dart';
 
 class RaidConsole extends StatelessWidget {
   String raidId;
@@ -13,10 +15,42 @@ class RaidConsole extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<RaidBloc, RaidState>(
       builder: (context, state) {
-        return Container(
-          padding: EdgeInsets.all(100.0),
-          child: Text("Raid Console"),
-        );
+        if (state is RaidLoaded) {
+          Size size = MediaQuery.of(context).size;
+          Raid raid = state.raids.firstWhere((raid) => raid.docId == raidId);
+
+          return Container(
+            padding: const EdgeInsets.all(20.0),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      color: Colors.black12,
+                      child: RaidForm(raid: raid),
+                    ),
+                  ),
+                  Flexible(
+                    flex:2,
+                    child: Container(
+                      padding: const EdgeInsets.all(10.0),
+                      color: Colors.amber[50],
+                      child: SizedBox(
+                        child: Text(raid.toString()),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        } else {
+          return Text("Loading");
+        }
       },
     );
   }
