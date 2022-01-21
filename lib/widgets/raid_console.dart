@@ -35,12 +35,12 @@ class RaidConsole extends StatelessWidget {
                     ),
                   ),
                   Flexible(
-                    flex:2,
+                    flex: 2,
                     child: Container(
                       padding: const EdgeInsets.all(10.0),
                       color: Colors.amber[50],
                       child: SizedBox(
-                        child: Text(raid.toString()),
+                        child: RaidChat(raid: raid),
                       ),
                     ),
                   ),

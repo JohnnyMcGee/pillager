@@ -6,3 +6,4 @@ export 'profile_editor.dart';
 export './raid_form.dart';
 export './raid_table.dart';
 export './raid_console.dart';
+export './raid_chat.dart';
