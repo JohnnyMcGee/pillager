@@ -15,6 +15,19 @@ class RaidTable extends StatelessWidget {
       : filter = filter ?? ((_) => true),
         super(key: key);
 
+  Future<void> _showRaidConsole(BuildContext context, Raid raid) async {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Wrap(
+            children: [
+              RaidConsole(raidId: raid.docId!),
+            ],
+          );
+        });
+  }
+
   Future<void> _showRaidEditor(BuildContext context, [Raid? raid]) async {
     List<Raid>? raidUpdate = await showModalBottomSheet(
         isScrollControlled: true,
@@ -58,7 +71,7 @@ class RaidTable extends StatelessWidget {
           for (var raid in raids)
             RaidRow(
               raid: raid,
-              editRaid: () => _showRaidEditor(context, raid),
+              editRaid: () => _showRaidConsole(context, raid),
               deleteRaid: () => bloc.add(DeleteRaid(raid)),
             ),
           DataRow(
