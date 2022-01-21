@@ -9,7 +9,11 @@ import './widgets.dart';
 class RaidTable extends StatelessWidget {
   static const _columns = ['Location', '# Of Ships', 'Arrival Date', 'Vikings'];
 
-  const RaidTable({Key? key}) : super(key: key);
+  final bool Function(Raid) filter;
+
+  RaidTable({Key? key, filter})
+      : filter = filter ?? ((_) => true),
+        super(key: key);
 
   Future<void> _showRaidEditor(BuildContext context, [Raid? raid]) async {
     List<Raid>? raidUpdate = await showModalBottomSheet(
@@ -28,10 +32,15 @@ class RaidTable extends StatelessWidget {
     }
   }
 
+  Iterable<Raid> _applyFilter(
+          Iterable<Raid> raids, bool Function(Raid) filter) =>
+      raids.where(filter);
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RaidBloc, RaidState>(builder: (context, state) {
       final bloc = context.read<RaidBloc>();
+      final raids = _applyFilter(state.raids, filter);
 
       return DataTable(
         headingRowColor: MaterialStateProperty.all(Colors.blueGrey[400]),
@@ -46,7 +55,7 @@ class RaidTable extends StatelessWidget {
           )
         ],
         rows: <DataRow>[
-          for (var raid in state.raids)
+          for (var raid in raids)
             RaidRow(
               raid: raid,
               editRaid: () => _showRaidEditor(context, raid),
