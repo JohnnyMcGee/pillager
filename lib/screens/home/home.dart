@@ -47,6 +47,8 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[900],
@@ -121,7 +123,10 @@ class Home extends StatelessWidget {
               }),
             ),
           ),
-          ExpandableDataTable(),
+          SizedBox(
+            height: size.height * .85 - 80,
+            child: ExpandableDataTable(),
+          ),
         ],
       ),
     );
