@@ -20,7 +20,7 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
 
     on<RaidDataChange>(_onRaidDataChange);
     on<EditRaid>(_onEditRaid);
-    on<RaidDeleteButtonPressed>(_onRaidDeleteButtonPressed);
+    on<DeleteRaid>(_onRaidDeleteButtonPressed);
     on<RaidEditorNoChanges>(
         (event, emit) => emit(RaidLoaded(raids: state.raids)));
     on<RaidVikingStateChange>(_onRaidVikingStateChange);
@@ -46,9 +46,9 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     emit(RaidUpdating(raids: state.raids));
   }
 
-  void _onRaidDeleteButtonPressed(RaidDeleteButtonPressed event, Emitter emit) {
-    if (event.data.docId != null) {
-      store.deleteRaid(event.data.docId!);
+  void _onRaidDeleteButtonPressed(DeleteRaid event, Emitter emit) {
+    if (event.raid.docId != null) {
+      store.deleteRaid(event.raid.docId!);
       emit(RaidUpdating(raids: state.raids));
     }
   }

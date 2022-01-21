@@ -20,10 +20,10 @@ class EditRaid extends RaidEvent {
 
 class RaidEditorNoChanges extends RaidEvent {}
 
-class RaidDeleteButtonPressed extends RaidEvent {
-  Raid data;
+class DeleteRaid extends RaidEvent {
+  Raid raid;
 
-  RaidDeleteButtonPressed({required this.data});
+  DeleteRaid(this.raid);
 }
 
 class RaidVikingStateChange extends RaidEvent {
