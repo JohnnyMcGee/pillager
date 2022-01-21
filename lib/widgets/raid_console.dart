@@ -20,6 +20,7 @@ class RaidConsole extends StatelessWidget {
           Raid raid = state.raids.firstWhere((raid) => raid.docId == raidId);
 
           return Container(
+            height: size.height * .8,
             padding: const EdgeInsets.all(20.0),
             child: Center(
               child: Row(
@@ -31,7 +32,11 @@ class RaidConsole extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.all(10.0),
                       color: Colors.black12,
-                      child: RaidForm(raid: raid),
+                      child: ListView(
+                        children: [
+                          RaidForm(raid: raid),
+                        ],
+                      ),
                     ),
                   ),
                   Flexible(
