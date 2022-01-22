@@ -6,34 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/services/services.dart';
+import 'package:pillager/widgets/widgets.dart';
 
-class Message extends StatelessWidget {
-  final Comment comment;
-  final bool received;
-  const Message({Key? key, required this.comment, required this.received})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Align(
-        alignment: received ? Alignment.topLeft : Alignment.topRight,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: received ? Colors.grey : Colors.blue,
-          ),
-          padding: const EdgeInsets.all(16),
-          child: Text(
-            comment.message,
-            style: const TextStyle(fontSize: 15),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class RaidChat extends StatefulWidget {
   final String raidId;

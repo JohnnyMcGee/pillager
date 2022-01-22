@@ -86,7 +86,10 @@ class _RaidFormState extends State<RaidForm> {
       "vikings": _vikings,
     }..removeWhere((k, v) => v == null);
     print(update);
-    context.read<RaidBloc>().add(EditRaid(raid, Map<String, Object>.from(update)));
+    context.read<RaidBloc>().add(EditRaid(
+          raid,
+          Map<String, Object>.from(update),
+        ));
     Navigator.pop(context);
   }
 
@@ -94,7 +97,7 @@ class _RaidFormState extends State<RaidForm> {
   Widget build(BuildContext context) {
     return BlocBuilder<RaidBloc, RaidState>(
       builder: (context, state) {
-        Raid raid = state.raids.firstWhere(
+        Raid raid = state.raids.singleWhere(
           (raid) => raid.docId == widget.raidId,
           orElse: () => Raid.newRaid,
         );
