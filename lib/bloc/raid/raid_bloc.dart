@@ -24,6 +24,7 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     on<RaidEditorNoChanges>(
         (event, emit) => emit(RaidLoaded(raids: state.raids)));
     on<RaidVikingStateChange>(_onRaidVikingStateChange);
+    on<AddComment>(_onAddComment);
   }
 
   void _onRaidDataChange(RaidDataChange event, Emitter emit) {
@@ -61,4 +62,11 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
       emit(RaidLoaded(raids: raids));
     }
   }
+
+  void _onAddComment(AddComment event, Emitter emit) {
+    
+  }
+
+
+  
 }

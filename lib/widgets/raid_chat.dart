@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/services/services.dart';
 
@@ -54,9 +58,19 @@ class RaidChat extends StatefulWidget {
 }
 
 class _RaidChatState extends State<RaidChat> {
+  final TextEditingController _controller = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final String uid = AuthService().currentUser!.uid;
+    final comments = List<Comment>.from(widget.raid.comments);
+    final bloc = context.read<RaidBloc>();
+
+    void _sendComment(Comment comment) {
+      final comments = List<Comment>.from(widget.raid.comments)..add(comment);
+      final Raid update = widget.raid.copyWith(comments:comments);
+      bloc.add(EditRaid([widget.raid, update]));
+    }
 
     return Stack(
       children: [
@@ -100,9 +114,10 @@ class _RaidChatState extends State<RaidChat> {
                 const SizedBox(
                   width: 15,
                 ),
-                const Expanded(
+                Expanded(
                   child: TextField(
-                    decoration: InputDecoration(
+                    controller: _controller,
+                    decoration: const InputDecoration(
                         hintText: "Write a comment...",
                         hintStyle: TextStyle(color: Colors.black54),
                         border: InputBorder.none),
@@ -112,7 +127,14 @@ class _RaidChatState extends State<RaidChat> {
                   width: 15,
                 ),
                 FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _sendComment(Comment(
+                      message: _controller.text,
+                      sender: uid,
+                      timeStamp: DateTime.now(),
+                    ));
+                    _controller.clear();
+                  },
                   child: const Icon(Icons.send),
                   backgroundColor: Colors.blueGrey[900],
                   elevation: 0,

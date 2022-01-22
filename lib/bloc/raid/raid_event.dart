@@ -31,3 +31,10 @@ class RaidVikingStateChange extends RaidEvent {
 
   RaidVikingStateChange({required this.data});
 }
+
+class AddComment extends RaidEvent {
+  Comment comment;
+  String raidId;
+
+  AddComment({required this.raidId, required this.comment});
+}
