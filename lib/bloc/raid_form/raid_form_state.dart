@@ -16,7 +16,6 @@ class RaidFormState extends Equatable {
           numShips: numShips = numShips ?? raid.numShips,
           arrivalDate: arrivalDate = arrivalDate ?? raid.arrivalDate,
           vikings: vikings = vikings ?? raid.vikings,
-          comments: raid.comments,
         );
 
   String? get docId => raidUpdate.docId;

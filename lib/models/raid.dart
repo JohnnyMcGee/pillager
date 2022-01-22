@@ -7,7 +7,6 @@ class Raid extends Equatable {
   final int numShips;
   final DateTime arrivalDate;
   final Map<String, Object> vikings;
-  final List<Comment> comments;
   final String? docId;
 
   const Raid({
@@ -16,7 +15,6 @@ class Raid extends Equatable {
     required this.numShips,
     required this.arrivalDate,
     required this.vikings,
-    required this.comments,
   });
 
   static Raid newRaid = Raid(
@@ -24,11 +22,10 @@ class Raid extends Equatable {
         numShips: 1,
         arrivalDate: DateTime.now(),
         vikings: const <String, Object>{},
-        comments: const <Comment>[],
       );
 
   @override
-  List<Object> get props => [location, numShips, arrivalDate, vikings, comments];
+  List<Object> get props => [location, numShips, arrivalDate, vikings];
 
   @override
   String toString() {
@@ -83,7 +80,6 @@ class Raid extends Equatable {
       numShips: numShips ?? this.numShips,
       arrivalDate: arrivalDate ?? this.arrivalDate,
       vikings: vikings ?? this.vikings,
-      comments: comments ?? this.comments,
     );
   }
 }

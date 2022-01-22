@@ -34,7 +34,6 @@ class DatabaseService {
           // Initialize vikings with dummy value -1
           // Values added later using raidLoadVikings method
           vikings: {for (var id in doc.get('vikings')) id: -1},
-          comments: [for (var map in doc.get('comments')) Comment.fromMap(map)],
         )
     ];
   }
@@ -81,7 +80,6 @@ class DatabaseService {
         "numShips": raid.numShips,
         "arrivalDate": raid.arrivalDate,
         "vikings": List.from(raid.vikings.keys),
-        "comments": [for (var c in raid.comments) c.toMap()],
       });
     } catch (e) {
       print(e);

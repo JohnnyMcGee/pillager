@@ -7,9 +7,9 @@ import 'package:pillager/models/models.dart';
 import 'package:pillager/widgets/widgets.dart';
 
 class RaidConsole extends StatelessWidget {
-  String raidId;
+  final String raidId;
 
-  RaidConsole({Key? key, required this.raidId}) : super(key: key);
+  const RaidConsole({Key? key, required this.raidId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

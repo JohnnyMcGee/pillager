@@ -7,21 +7,6 @@ import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/services/services.dart';
 
-// List<Comment> comments = [
-//   Comment(
-//       sender: "0tsNz6KtFtP6virwrie3IW1eOjg2",
-//       timeStamp: DateTime(2022, 1, 21, 14),
-//       message: "Let us defeat our enemies!"),
-//   Comment(
-//       sender: "jJqRNN5En7Yqs8fGPzxKaAkZqpd2",
-//       timeStamp: DateTime(2022, 1, 21, 14, 5),
-//       message: "We will send them up to the Gods"),
-//   Comment(
-//       sender: "",
-//       timeStamp: DateTime(2022, 1, 21, 14, 6),
-//       message: "Ragnar updated the location: Northumbria"),
-// ];
-
 class Message extends StatelessWidget {
   final Comment comment;
   final bool received;
@@ -66,14 +51,6 @@ class _RaidChatState extends State<RaidChat> {
   @override
   Widget build(BuildContext context) {
     final String uid = AuthService().currentUser!.uid;
-    final comments = List<Comment>.from(widget.raid.comments);
-    // final bloc = context.read<RaidBloc>();
-
-    // void _sendComment(Comment comment) {
-    //   final newComments = List<Comment>.from(comments)..add(comment);
-    //   final Raid update = widget.raid.copyWith(comments: newComments);
-    //   bloc.add(EditRaid([widget.raid, update]));
-    // }
 
     SchedulerBinding.instance?.addPostFrameCallback((_) {
       _scrollController.animateTo(
