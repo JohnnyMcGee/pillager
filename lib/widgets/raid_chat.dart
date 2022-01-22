@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -58,7 +59,8 @@ class RaidChat extends StatefulWidget {
 }
 
 class _RaidChatState extends State<RaidChat> {
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
+  final ScrollController _scrollController = ScrollController(keepScrollOffset: true);
 
   @override
   Widget build(BuildContext context) {
@@ -67,40 +69,52 @@ class _RaidChatState extends State<RaidChat> {
     final bloc = context.read<RaidBloc>();
 
     void _sendComment(Comment comment) {
-      final comments = List<Comment>.from(widget.raid.comments)..add(comment);
-      final Raid update = widget.raid.copyWith(comments:comments);
+      final newComments = List<Comment>.from(comments)..add(comment);
+      final Raid update = widget.raid.copyWith(comments: newComments);
       bloc.add(EditRaid([widget.raid, update]));
     }
 
+    SchedulerBinding.instance?.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.ease,
+      );
+    });
+
     return Stack(
       children: [
-        ListView.builder(
-          itemCount: comments.length,
-          shrinkWrap: true,
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            final Comment comment = comments[index];
+        Padding(
+          padding: const EdgeInsets.only(bottom: 45.0),
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: comments.length,
+            shrinkWrap: true,
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            // physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final Comment comment = comments[index];
 
-            if (comment.sender.isEmpty) {
-              return Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    comment.message,
-                    style: const TextStyle(color: Colors.black54),
+              if (comment.sender.isEmpty) {
+                return Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      comment.message,
+                      style: const TextStyle(color: Colors.black54),
+                    ),
                   ),
-                ),
-              );
-            }
+                );
+              }
 
-            return Message(
-              comment: comment,
-              received: uid != comment.sender,
-            );
-          },
+              return Message(
+                comment: comment,
+                received: uid != comment.sender,
+              );
+            },
+          ),
         ),
         Align(
           alignment: Alignment.bottomLeft,
@@ -116,7 +130,7 @@ class _RaidChatState extends State<RaidChat> {
                 ),
                 Expanded(
                   child: TextField(
-                    controller: _controller,
+                    controller: _textController,
                     decoration: const InputDecoration(
                         hintText: "Write a comment...",
                         hintStyle: TextStyle(color: Colors.black54),
@@ -129,11 +143,11 @@ class _RaidChatState extends State<RaidChat> {
                 FloatingActionButton(
                   onPressed: () {
                     _sendComment(Comment(
-                      message: _controller.text,
+                      message: _textController.text,
                       sender: uid,
                       timeStamp: DateTime.now(),
                     ));
-                    _controller.clear();
+                    _textController.clear();
                   },
                   child: const Icon(Icons.send),
                   backgroundColor: Colors.blueGrey[900],
