@@ -14,6 +14,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
 
     store.getComments(docId).listen((comments) => add(CommentChange(comments)));
     
+    
     on<CommentChange>((event, emit) => emit(CommentLoaded(event.comments)));
     on<SubmitComment>(_onSubmitComment);
   }

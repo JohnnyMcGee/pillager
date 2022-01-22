@@ -19,9 +19,8 @@ class DatabaseService {
     return vikingsCollection.snapshots().map(_vikingsFromSnapshot);
   }
 
-  Stream<List<Comment>> getComments(String docId) {
-    return commentsCollection.doc(docId).snapshots().map(_commentsFromSnapshot);
-  }
+  Stream<List<Comment>> getComments(String docId) =>
+      commentsCollection.doc(docId).snapshots().map(_commentsFromSnapshot);
 
   List<Raid> _raidsFromSnapshot(QuerySnapshot snapshot) {
     return [
@@ -134,17 +133,27 @@ class DatabaseService {
   }
 
   List<Comment> _commentsFromSnapshot(DocumentSnapshot snapshot) {
-    final data = snapshot.get("comments");
-    if (data is Iterable) {
-      return [for (var comment in data) Comment.fromMap(comment)];
+    if (snapshot.exists) {
+      final data = snapshot.get("comments");
+      if (data is Iterable) {
+        return [for (var comment in data) Comment.fromMap(comment)];
+      } else {
+        return <Comment>[
+          Comment(
+              sender: "",
+              timeStamp: DateTime.now(),
+              message: "${data.runtimeType}")
+        ];
+      }
     } else {
-      return <Comment>[Comment(sender:"", timeStamp: DateTime.now(), message: "${data.runtimeType}")];
+      commentsCollection.doc(snapshot.id).set({"comments": []});
+      return <Comment>[];
     }
   }
-    void updateComments(String docId, List<Comment> update) {
+
+  void updateComments(String docId, List<Comment> update) {
     final doc = commentsCollection.doc(docId);
     final data = update.map((comment) => comment.toMap());
     doc.update({"comments": data});
   }
-  
 }
