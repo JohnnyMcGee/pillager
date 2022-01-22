@@ -3,14 +3,14 @@ import 'package:pillager/models/models.dart';
 import 'package:intl/intl.dart';
 
 class Raid extends Equatable {
+  final String docId;
   final String location;
   final int numShips;
   final DateTime arrivalDate;
   final Map<String, Object> vikings;
-  final String? docId;
 
   const Raid({
-    this.docId,
+    required this.docId,
     required this.location,
     required this.numShips,
     required this.arrivalDate,
@@ -18,11 +18,12 @@ class Raid extends Equatable {
   });
 
   static Raid newRaid = Raid(
-        location: "New Raid",
-        numShips: 1,
-        arrivalDate: DateTime.now(),
-        vikings: const <String, Object>{},
-      );
+    docId: "",
+    location: "New Raid",
+    numShips: 1,
+    arrivalDate: DateTime.now(),
+    vikings: const <String, Object>{},
+  );
 
   @override
   List<Object> get props => [location, numShips, arrivalDate, vikings];
@@ -35,14 +36,11 @@ class Raid extends Equatable {
   String get arrivalDateFormatted => DateFormat.yMd().format(arrivalDate);
 
   List<String> get vikingNameList {
-    return [
-      for (var v in vikings.values)
-        (v is Viking) ? v.fullName : ''
-    ];
+    return [for (var v in vikings.values) (v is Viking) ? v.fullName : ''];
   }
 
   String get vikingNames => vikingNameList.join(', ');
-  
+
   String get vikingNamesShort {
     List<String> names = vikingNameList;
 

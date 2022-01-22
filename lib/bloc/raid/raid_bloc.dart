@@ -42,14 +42,20 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
   }
 
   void _onEditRaid(EditRaid event, Emitter emit) {
-    store.updateRaid(event.data[0], event.data[1]);
+    if (event.update.isNotEmpty) {
+      if (event.raid.docId.isEmpty) {
+        store.createNewRaid(event.update);
+      } else {
+        store.updateRaid(event.raid, event.update);
+      }
 
-    emit(RaidUpdating(raids: state.raids));
+      emit(RaidUpdating(raids: state.raids));
+    }
   }
 
   void _onRaidDeleteButtonPressed(DeleteRaid event, Emitter emit) {
-    if (event.raid.docId != null) {
-      store.deleteRaid(event.raid.docId!);
+    if (event.raid.docId.isNotEmpty) {
+      store.deleteRaid(event.raid.docId);
       emit(RaidUpdating(raids: state.raids));
     }
   }
@@ -63,10 +69,5 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     }
   }
 
-  void _onAddComment(AddComment event, Emitter emit) {
-    
-  }
-
-
-  
+  void _onAddComment(AddComment event, Emitter emit) {}
 }

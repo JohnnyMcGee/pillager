@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pillager/screens/screens.dart';
 import 'package:pillager/bloc/bloc.dart';
-import 'package:pillager/services/services.dart';
 
 class PillagerApp extends StatelessWidget {
   const PillagerApp({Key? key}) : super(key: key);

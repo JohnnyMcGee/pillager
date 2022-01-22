@@ -6,11 +6,21 @@ import 'package:intl/intl.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 
-class RaidForm extends StatelessWidget {
-  final Raid? raid;
-  final _formKey = GlobalKey<FormState>();
+class RaidForm extends StatefulWidget {
+  final String raidId;
 
-  RaidForm({Key? key, required this.raid}) : super(key: key);
+  const RaidForm({Key? key, required this.raidId}) : super(key: key);
+
+  @override
+  State<RaidForm> createState() => _RaidFormState();
+}
+
+class _RaidFormState extends State<RaidForm> {
+  final _formKey = GlobalKey<FormState>();
+  String? _location;
+  int? _numShips;
+  DateTime? _arrivalDate;
+  Map<String, Object>? _vikings;
 
   Future<void> _selectDate(BuildContext context, DateTime initialDate) async {
     final DateTime? newDate = await showDatePicker(
@@ -20,12 +30,13 @@ class RaidForm extends StatelessWidget {
       lastDate: DateTime(2025),
     );
 
-    context.read<RaidFormBloc>().add(EditForm({"arrivalDate": newDate}));
+    setState(() {
+      _arrivalDate = newDate;
+    });
   }
 
-  Future<String?> _selectAssignViking(BuildContext context) async {
-    final bloc = context.read<RaidFormBloc>();
-    final currentVikings = Map<String, Object>.from(bloc.state.vikings);
+  Future<String?> _selectAssignViking(
+      BuildContext context, Map<String, Object> currentVikings) async {
     List<Viking> options = List<Viking>.from(context
         .read<VikingBloc>()
         .state
@@ -53,157 +64,172 @@ class RaidForm extends StatelessWidget {
     if (choice != null) {
       final updatedVikings = currentVikings
         ..putIfAbsent(choice.uid, () => choice);
-      bloc.add(EditForm({"vikings": updatedVikings}));
+      setState(() {
+        _vikings = updatedVikings;
+      });
     }
+  }
+
+  void _removeViking(Viking viking, Map<String, Object> currentVikings) {
+    final newVikings = Map<String, Object>.from(currentVikings)
+      ..removeWhere((k, v) => k == viking.uid);
+    setState(() {
+      _vikings = newVikings;
+    });
+  }
+
+  void _submitForm(BuildContext context, Raid raid) {
+    final update = {
+      "location": _location,
+      "arrivalDate": _arrivalDate,
+      "numShips": _numShips,
+      "vikings": _vikings,
+    }..removeWhere((k, v) => v == null);
+    print(update);
+    context.read<RaidBloc>().add(EditRaid(raid, Map<String, Object>.from(update)));
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => RaidFormBloc(
-        raidBloc: context.read<RaidBloc>(),
-      )..add(OpenRaidForm(raid)),
-      child: BlocBuilder<RaidFormBloc, RaidFormState>(
-        builder: (context, state) {
-          if (state is RaidFormSubmitted) {
-            Navigator.pop(context, [state.raid, state.raidUpdate]);
-          }
+    return BlocBuilder<RaidBloc, RaidState>(
+      builder: (context, state) {
+        Raid raid = state.raids.firstWhere(
+          (raid) => raid.docId == widget.raidId,
+          orElse: () => Raid.newRaid,
+        );
 
-          RaidFormBloc bloc = context.read<RaidFormBloc>();
-
-          if (state is RaidFormLoaded) {
-            return Form(
-              key: _formKey,
-              child: Column(
+        return Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              const Text(
+                'Enter Raid Details',
+                style: TextStyle(fontSize: 18.0),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              TextFormField(
+                initialValue: _location ?? raid.location,
+                onChanged: (value) => setState(() => _location = value),
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              DropdownButtonFormField(
+                value: _numShips ?? raid.numShips,
+                items: List.generate(
+                    100,
+                    (i) => DropdownMenuItem(
+                          value: i + 1,
+                          child: Text('${i + 1}'),
+                        )),
+                onChanged: (value) => setState(() => _numShips = value as int),
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Enter Raid Details',
-                    style: TextStyle(fontSize: 18.0),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextFormField(
-                    initialValue: state.location,
-                    onChanged: (val) => bloc.add(EditForm({"location": val})),
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  DropdownButtonFormField(
-                    value: state.numShips,
-                    items: List.generate(
-                        100,
-                        (i) => DropdownMenuItem(
-                              value: i + 1,
-                              child: Text('${i + 1}'),
-                            )),
-                    onChanged: (val) => bloc.add(EditForm({"numShips": val!})),
-                  ),
-                  const SizedBox(
-                    height: 30.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        DateFormat.yMd().format(state.arrivalDate),
-                        style: TextStyle(
-                          color: Colors.blueGrey[900],
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () =>
-                            _selectDate(context, state.arrivalDate),
-                        icon: const Icon(Icons.calendar_today),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30.0,
-                  ),
-                  const Text(
-                    "Vikings:",
+                  Text(
+                    DateFormat.yMd().format(_arrivalDate ?? raid.arrivalDate),
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      color: Colors.blueGrey[900],
                       fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  SizedBox(
-                    height: 200.0,
-                    child: ListView(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      children: [
-                        ...[
-                          for (var viking in state.vikings.values)
-                            Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      (viking as Viking).fullName,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.0,
-                                      ),
-                                    ),
-                                    IconButton(
-                                      onPressed: () =>
-                                          bloc.add(RemoveViking(viking)),
-                                      icon: const Icon(
-                                        Icons.close,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )
-                        ],
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: TextButton(
-                            onPressed: () => _selectAssignViking(context),
+                  IconButton(
+                    onPressed: () =>
+                        _selectDate(context, _arrivalDate ?? raid.arrivalDate),
+                    icon: const Icon(Icons.calendar_today),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              const Text(
+                "Vikings:",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20.0,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                height: 200.0,
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(vertical: 10.0),
+                  children: [
+                    ...[
+                      for (var viking in (_vikings != null)
+                          ? (_vikings as Map<String, Object>).values
+                          : raid.vikings.values)
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(Icons.add),
-                                Text("Assign a Viking"),
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  (viking as Viking).fullName,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () => _removeViking(
+                                      viking, _vikings ?? raid.vikings),
+                                  icon: const Icon(
+                                    Icons.close,
+                                  ),
+                                )
                               ],
                             ),
                           ),
                         )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 30.0,
-                  ),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color?>(
-                          Colors.blueGrey[900]),
-                    ),
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () => bloc.add(FormSubmit()),
-                  ),
-                ],
+                    ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: TextButton(
+                        onPressed: () => _selectAssignViking(
+                            context, _vikings ?? raid.vikings),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.add),
+                            Text("Assign a Viking"),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            );
-          } else {
-            return const Text("loading");
-          }
-        },
-      ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color?>(Colors.blueGrey[900]),
+                ),
+                child: const Text(
+                  'Save',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () => _submitForm(context, raid),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

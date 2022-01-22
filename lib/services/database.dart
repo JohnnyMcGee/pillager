@@ -37,48 +37,46 @@ class DatabaseService {
     ];
   }
 
-  Map<String, Object> _compareRaids(raid, update) {
-    var changes = <String, Object>{};
-    if (raid.location != update.location) {
-      changes["location"] = update.location;
-    }
-    if (raid.numShips != update.numShips) {
-      changes["numShips"] = update.numShips;
-    }
-    if (raid.arrivalDate != update.arrivalDate) {
-      changes["arrivalDate"] = update.arrivalDate;
-    }
-    if (raid.vikings != update.vikings) {
-      changes["vikings"] = List.from(update.vikings.keys);
-    }
-    if (raid.comments != update.comments) {
-      changes["comments"] = [for (var c in update.comments) c.toMap()];
-    }
-    return changes;
-  }
+  // Map<String, Object> _compareRaids(raid, update) {
+  //   var changes = <String, Object>{};
+  //   if (raid.location != update.location) {
+  //     changes["location"] = update.location;
+  //   }
+  //   if (raid.numShips != update.numShips) {
+  //     changes["numShips"] = update.numShips;
+  //   }
+  //   if (raid.arrivalDate != update.arrivalDate) {
+  //     changes["arrivalDate"] = update.arrivalDate;
+  //   }
+  //   if (raid.vikings != update.vikings) {
+  //     changes["vikings"] = List.from(update.vikings.keys);
+  //   }
+  //   if (raid.comments != update.comments) {
+  //     changes["comments"] = [for (var c in update.comments) c.toMap()];
+  //   }
+  //   return changes;
+  // }
 
-  void updateRaid(Raid raid, Raid update) {
-    if (update.docId == null) {
-      createNewRaid(update);
-    } else {
-      final Map<String, Object> changes = _compareRaids(raid, update);
-      final DocumentReference raidDoc =
-          raidsCollection.doc(update.docId as String);
-      try {
-        raidDoc.update(changes);
-      } catch (e) {
-        print(e);
+  void updateRaid(Raid raid, Map<String, Object> update) {
+    final DocumentReference raidDoc = raidsCollection.doc(raid.docId);
+    try {
+      if (update.containsKey("vikings")) {
+        update["vikings"] =
+            (update["vikings"] as Map<String, Object>).keys.toList();
       }
+      raidDoc.update(update);
+    } catch (e) {
+      print(e);
     }
   }
 
-  void createNewRaid(Raid raid) {
+  void createNewRaid(Map<String, Object> data) {
     try {
       raidsCollection.add({
-        "location": raid.location,
-        "numShips": raid.numShips,
-        "arrivalDate": raid.arrivalDate,
-        "vikings": List.from(raid.vikings.keys),
+        "location": data["location"],
+        "numShips": data["numShips"],
+        "arrivalDate": data["arrivalDate"],
+        "vikings": List.from((data["vikings"] as Map<String, Object>).keys),
       });
     } catch (e) {
       print(e);
@@ -154,6 +152,10 @@ class DatabaseService {
   void updateComments(String docId, List<Comment> update) {
     final doc = commentsCollection.doc(docId);
     final data = update.map((comment) => comment.toMap());
-    doc.update({"comments": data});
+    try {
+      doc.update({"comments": data});
+    } catch (e) {
+      print(e);
+    }
   }
 }

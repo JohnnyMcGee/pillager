@@ -36,8 +36,8 @@ class Message extends StatelessWidget {
 }
 
 class RaidChat extends StatefulWidget {
-  final Raid raid;
-  const RaidChat({Key? key, required this.raid}) : super(key: key);
+  final String raidId;
+  const RaidChat({Key? key, required this.raidId}) : super(key: key);
 
   @override
   _RaidChatState createState() => _RaidChatState();
@@ -74,7 +74,7 @@ class _RaidChatState extends State<RaidChat> {
 
     return BlocProvider(
       create: (context) => CommentBloc(
-        docId: widget.raid.docId!,
+        docId: widget.raidId,
         store: DatabaseService(),
       ),
       child: BlocBuilder<CommentBloc, CommentState>(builder: (context, state) {

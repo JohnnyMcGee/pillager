@@ -22,27 +22,23 @@ class RaidTable extends StatelessWidget {
         builder: (context) {
           return Wrap(
             children: [
-              RaidConsole(raidId: raid.docId!),
+              RaidConsole(raidId: raid.docId),
             ],
           );
         });
   }
 
-  Future<void> _showRaidEditor(BuildContext context, [Raid? raid]) async {
-    List<Raid>? raidUpdate = await showModalBottomSheet(
+  void _showRaidEditor(BuildContext context, [String raidId = ""]) {
+    showModalBottomSheet(
         isScrollControlled: true,
         context: context,
         builder: (context) {
           return Wrap(
             children: [
-              RaidForm(raid: raid),
+              RaidForm(raidId: raidId),
             ],
           );
         });
-
-    if (raidUpdate != null) {
-      context.read<RaidBloc>().add(EditRaid(raidUpdate));
-    }
   }
 
   Iterable<Raid> _applyFilter(

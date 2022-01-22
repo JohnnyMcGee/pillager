@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Comment {
   String sender;
@@ -18,4 +17,12 @@ class Comment {
         "timeStamp": timeStamp,
         "message": message,
       };
+
+  String toString() {
+    return """
+    sender: $sender,
+    timeStamp: ${timeStamp.toString()}
+    message: $message,
+    """;
+  }
 }

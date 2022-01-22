@@ -37,7 +37,6 @@ class Home extends StatelessWidget {
 
         if (email is String) {
           user.updateEmail(email);
-          print(email);
         }
       }
     } else {
@@ -56,7 +55,7 @@ class Home extends StatelessWidget {
             context: context,
             builder: (context) {
               return Wrap(
-                children: [
+                children: const [
                   RaidConsole(raidId: "AJWQQyI8eM4uqmHtPbEN"),
                 ],
               );
@@ -138,7 +137,7 @@ class Home extends StatelessWidget {
           ),
           SizedBox(
             height: size.height * .85 - 80,
-            child: ExpandableDataTable(),
+            child: const ExpandableDataTable(),
           ),
         ],
       ),

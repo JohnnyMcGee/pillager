@@ -40,8 +40,8 @@ class _ProfileEditorState extends State<ProfileEditor> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Delete My Account", textAlign: TextAlign.center,),
-          content: Text(
+          title: const Text("Delete My Account", textAlign: TextAlign.center,),
+          content: const Text(
             """Are you sure you want to delete this account?
             You will not be able to recover it.""",
           ),

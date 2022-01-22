@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:pillager/models/models.dart';
@@ -9,11 +11,11 @@ part 'comment_state.dart';
 class CommentBloc extends Bloc<CommentEvent, CommentState> {
   final String docId;
   final DatabaseService store;
+  late final StreamSubscription _comments;
   
   CommentBloc({required this.docId, required this.store}) : super(CommentInitial()) {
 
-    store.getComments(docId).listen((comments) => add(CommentChange(comments)));
-    
+    _comments = store.getComments(docId).listen((comments) => add(CommentChange(comments)));
     
     on<CommentChange>((event, emit) => emit(CommentLoaded(event.comments)));
     on<SubmitComment>(_onSubmitComment);
@@ -23,5 +25,11 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
     final update = List<Comment>.from(state.comments)..add(event.comment);
     store.updateComments(docId, update);
     emit(CommentUpdating(state.comments));
+  }
+
+  @override
+  Future<void> close() {
+    _comments.cancel();
+    return super.close();
   }
 }
