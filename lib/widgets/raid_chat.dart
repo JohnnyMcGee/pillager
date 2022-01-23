@@ -8,7 +8,6 @@ import 'package:pillager/models/models.dart';
 import 'package:pillager/services/services.dart';
 import 'package:pillager/widgets/widgets.dart';
 
-
 class RaidChat extends StatefulWidget {
   final String raidId;
   const RaidChat({Key? key, required this.raidId}) : super(key: key);
@@ -21,6 +20,13 @@ class _RaidChatState extends State<RaidChat> {
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController =
       ScrollController(keepScrollOffset: true);
+  Comment? _selectedComment;
+
+  void _selectComment(Comment? comment) {
+    setState(() {
+      _selectedComment = comment;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,15 +41,16 @@ class _RaidChatState extends State<RaidChat> {
     });
 
     void _submitComment(BuildContext context) {
-      final comment = Comment(
-        message: _textController.text,
-        sender: uid,
-        timeStamp: DateTime.now(),
-      );
+      if (_textController.text.isNotEmpty) {
+        final comment = Comment(
+          message: _textController.text,
+          sender: uid,
+          timeStamp: DateTime.now(),
+        );
 
-      context.read<CommentBloc>().add(SubmitComment(comment));
-
-      _textController.clear();
+        context.read<CommentBloc>().add(SubmitComment(comment));
+        _textController.clear();
+      }
     }
 
     return BlocProvider(
@@ -54,78 +61,85 @@ class _RaidChatState extends State<RaidChat> {
       child: BlocBuilder<CommentBloc, CommentState>(builder: (context, state) {
         final comments = state.comments;
         final bloc = context.read<CommentBloc>();
-        return Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 45.0),
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: comments.length,
-                shrinkWrap: true,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                // physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final Comment comment = comments[index];
+        return GestureDetector(
+          onTap: () => setState(() {
+            _selectedComment = null;
+          }),
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 45.0),
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: comments.length,
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  // physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final Comment comment = comments[index];
 
-                  if (comment.sender.isEmpty) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 10),
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          comment.message,
-                          style: const TextStyle(color: Colors.black54),
+                    if (comment.sender.isEmpty) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 10),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(
+                            comment.message,
+                            style: const TextStyle(color: Colors.black54),
+                          ),
                         ),
-                      ),
-                    );
-                  }
+                      );
+                    }
 
-                  return Message(
-                    comment: comment,
-                    received: uid != comment.sender,
-                    onDelete: () => bloc.add(DeleteComment(comment)),
-                  );
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Container(
-                padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                height: 50,
-                width: double.infinity,
-                color: Colors.white,
-                child: Row(
-                  children: <Widget>[
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: _textController,
-                        decoration: const InputDecoration(
-                            hintText: "Write a comment...",
-                            hintStyle: TextStyle(color: Colors.black54),
-                            border: InputBorder.none),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    FloatingActionButton(
-                      onPressed: () {
-                        _submitComment(context);
-                      },
-                      child: const Icon(Icons.send),
-                      backgroundColor: Colors.blueGrey[900],
-                      elevation: 0,
-                    ),
-                  ],
+                    return Message(
+                      comment: comment,
+                      received: uid != comment.sender,
+                      onDelete: () => bloc.add(DeleteComment(comment)),
+                      isSelected: _selectedComment == comment,
+                      onSelect: _selectComment,
+                    );
+                  },
                 ),
               ),
-            ),
-          ],
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Container(
+                  padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
+                  height: 50,
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Row(
+                    children: <Widget>[
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _textController,
+                          decoration: const InputDecoration(
+                              hintText: "Write a comment...",
+                              hintStyle: TextStyle(color: Colors.black54),
+                              border: InputBorder.none),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      FloatingActionButton(
+                        onPressed: () {
+                          _submitComment(context);
+                        },
+                        child: const Icon(Icons.send),
+                        backgroundColor: Colors.blueGrey[900],
+                        elevation: 0,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         );
       }),
     );
