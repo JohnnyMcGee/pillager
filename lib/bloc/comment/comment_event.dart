@@ -24,3 +24,12 @@ class SubmitComment extends CommentEvent {
   @override
   List<Object> get props => [comment];
 }
+
+class DeleteComment extends CommentEvent {
+  final Comment comment;
+
+  const DeleteComment(this.comment);
+
+  @override
+  List<Object> get props => [comment];
+}

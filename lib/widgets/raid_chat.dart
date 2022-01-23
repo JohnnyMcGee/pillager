@@ -53,6 +53,7 @@ class _RaidChatState extends State<RaidChat> {
       ),
       child: BlocBuilder<CommentBloc, CommentState>(builder: (context, state) {
         final comments = state.comments;
+        final bloc = context.read<CommentBloc>();
         return Stack(
           children: [
             Padding(
@@ -83,6 +84,7 @@ class _RaidChatState extends State<RaidChat> {
                   return Message(
                     comment: comment,
                     received: uid != comment.sender,
+                    onDelete: () => bloc.add(DeleteComment(comment)),
                   );
                 },
               ),

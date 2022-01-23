@@ -1,5 +1,6 @@
+import 'package:equatable/equatable.dart';
 
-class Comment {
+class Comment extends Equatable{
   String sender;
   DateTime timeStamp;
   String message;
@@ -25,4 +26,7 @@ class Comment {
     message: $message,
     """;
   }
+
+  @override
+  List<Object> get props => [sender, timeStamp, message];
 }
