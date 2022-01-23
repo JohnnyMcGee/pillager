@@ -29,7 +29,7 @@ class _RaidChatState extends State<RaidChat> {
   }
 
   Future<bool> _confirmDelete(BuildContext context) async {
-    return await showDialog(
+    final bool? confirmed = await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -45,19 +45,12 @@ class _RaidChatState extends State<RaidChat> {
             ],
           );
         });
+    return confirmed ?? false;
   }
 
   @override
   Widget build(BuildContext context) {
     final String uid = AuthService().currentUser!.uid;
-
-    SchedulerBinding.instance?.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 1000),
-        curve: Curves.ease,
-      );
-    });
 
     void _submitComment(BuildContext context) {
       if (_textController.text.isNotEmpty) {
@@ -80,6 +73,16 @@ class _RaidChatState extends State<RaidChat> {
       child: BlocBuilder<CommentBloc, CommentState>(builder: (context, state) {
         final comments = state.comments;
         final bloc = context.read<CommentBloc>();
+
+        SchedulerBinding.instance?.addPostFrameCallback((_) {
+          // _scrollController.animateTo(
+          //   _scrollController.position.maxScrollExtent,
+          //   duration: const Duration(milliseconds: 600),
+          //   curve: Curves.ease,
+          // );
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+        });
+
         return GestureDetector(
           onTap: () => setState(() {
             _selectedComment = null;
@@ -91,7 +94,7 @@ class _RaidChatState extends State<RaidChat> {
             children: [
               Positioned.fill(
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 45.0),
+                  padding: const EdgeInsets.only(bottom: 65.0),
                   child: ListView.builder(
                     controller: _scrollController,
                     itemCount: comments.length,
@@ -122,6 +125,9 @@ class _RaidChatState extends State<RaidChat> {
                           if (await _confirmDelete(context)) {
                             bloc.add(DeleteComment(comment));
                           }
+                          setState(() {
+                            _selectedComment = null;
+                          });
                         },
                         isSelected: _selectedComment == comment,
                         onSelect: _selectComment,
@@ -134,7 +140,7 @@ class _RaidChatState extends State<RaidChat> {
                 alignment: Alignment.bottomLeft,
                 child: Container(
                   padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                  height: 50,
+                  // height: 50,
                   width: double.infinity,
                   color: Colors.white,
                   child: Row(
@@ -145,6 +151,7 @@ class _RaidChatState extends State<RaidChat> {
                       Expanded(
                         child: TextField(
                           controller: _textController,
+                          maxLines: null,
                           decoration: const InputDecoration(
                               hintText: "Write a comment...",
                               hintStyle: TextStyle(color: Colors.black54),
@@ -154,13 +161,16 @@ class _RaidChatState extends State<RaidChat> {
                       const SizedBox(
                         width: 15,
                       ),
-                      FloatingActionButton(
-                        onPressed: () {
-                          _submitComment(context);
-                        },
-                        child: const Icon(Icons.send),
-                        backgroundColor: Colors.blueGrey[900],
-                        elevation: 0,
+                      SizedBox(
+                        height: 40,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            _submitComment(context);
+                          },
+                          child: const Icon(Icons.send),
+                          backgroundColor: Colors.blueGrey[900],
+                          elevation: 0,
+                        ),
                       ),
                     ],
                   ),
