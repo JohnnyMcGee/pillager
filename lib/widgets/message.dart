@@ -32,6 +32,7 @@ class Message extends StatelessWidget {
   Widget build(BuildContext context) {
     final vikings = context.read<VikingBloc>().state.vikings;
     final Viking? sender = vikings[comment.sender];
+    final Size size = MediaQuery.of(context).size;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       child: Align(
@@ -58,17 +59,20 @@ class Message extends StatelessWidget {
                   received ? MainAxisAlignment.start : MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                InkWell(
-                  onTap: () => onSelect(comment),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: _color(),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      comment.message,
-                      style: const TextStyle(fontSize: 15),
+                SizedBox(
+                  width: size.width * .4,
+                  child: InkWell(
+                    onTap: () => onSelect(comment),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: _color(),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        comment.message,
+                        style: const TextStyle(fontSize: 15),
+                      ),
                     ),
                   ),
                 ),

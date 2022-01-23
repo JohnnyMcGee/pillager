@@ -22,10 +22,29 @@ class _RaidChatState extends State<RaidChat> {
       ScrollController(keepScrollOffset: true);
   Comment? _selectedComment;
 
-  void _selectComment(Comment? comment) {
+  void _selectComment(Comment comment) {
     setState(() {
       _selectedComment = comment;
     });
+  }
+
+  Future<bool> _confirmDelete(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Delete Comment"),
+            content: const Text("Are you sure?"),
+            actions: [
+              ElevatedButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text("Yes")),
+              ElevatedButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text("No")),
+            ],
+          );
+        });
   }
 
   @override
@@ -65,41 +84,50 @@ class _RaidChatState extends State<RaidChat> {
           onTap: () => setState(() {
             _selectedComment = null;
           }),
+          onHorizontalDragStart: (_) => setState(() {
+            _selectedComment = null;
+          }),
           child: Stack(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 45.0),
-                child: ListView.builder(
-                  controller: _scrollController,
-                  itemCount: comments.length,
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  // physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final Comment comment = comments[index];
+              Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 45.0),
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    itemCount: comments.length,
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    // physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final Comment comment = comments[index];
 
-                    if (comment.sender.isEmpty) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 20, horizontal: 10),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(
-                            comment.message,
-                            style: const TextStyle(color: Colors.black54),
+                      if (comment.sender.isEmpty) {
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 10),
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Text(
+                              comment.message,
+                              style: const TextStyle(color: Colors.black54),
+                            ),
                           ),
-                        ),
-                      );
-                    }
+                        );
+                      }
 
-                    return Message(
-                      comment: comment,
-                      received: uid != comment.sender,
-                      onDelete: () => bloc.add(DeleteComment(comment)),
-                      isSelected: _selectedComment == comment,
-                      onSelect: _selectComment,
-                    );
-                  },
+                      return Message(
+                        comment: comment,
+                        received: uid != comment.sender,
+                        onDelete: () async {
+                          if (await _confirmDelete(context)) {
+                            bloc.add(DeleteComment(comment));
+                          }
+                        },
+                        isSelected: _selectedComment == comment,
+                        onSelect: _selectComment,
+                      );
+                    },
+                  ),
                 ),
               ),
               Align(
