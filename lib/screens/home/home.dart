@@ -48,19 +48,6 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    Future.delayed(
-        Duration.zero,
-        () => showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (context) {
-              return Wrap(
-                children: const [
-                  RaidConsole(raidId: "AJWQQyI8eM4uqmHtPbEN"),
-                ],
-              );
-            }));
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blueGrey[900],
@@ -135,9 +122,8 @@ class Home extends StatelessWidget {
               }),
             ),
           ),
-          SizedBox(
-            height: size.height * .85 - 80,
-            child: const ExpandableDataTable(),
+          const Expanded(
+            child: ExpandableDataTable(),
           ),
         ],
       ),

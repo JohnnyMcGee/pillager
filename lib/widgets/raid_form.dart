@@ -62,7 +62,7 @@ class _RaidFormState extends State<RaidForm> {
       },
     );
     if (choice != null) {
-      final updatedVikings = currentVikings
+      final updatedVikings = Map<String, Object>.from(currentVikings)
         ..putIfAbsent(choice.uid, () => choice);
       setState(() {
         _vikings = updatedVikings;

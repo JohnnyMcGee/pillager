@@ -75,12 +75,11 @@ class _RaidChatState extends State<RaidChat> {
         final bloc = context.read<CommentBloc>();
 
         SchedulerBinding.instance?.addPostFrameCallback((_) {
-          // _scrollController.animateTo(
-          //   _scrollController.position.maxScrollExtent,
-          //   duration: const Duration(milliseconds: 600),
-          //   curve: Curves.ease,
-          // );
-          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.ease,
+          );
         });
 
         return GestureDetector(
