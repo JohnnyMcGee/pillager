@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/models/models.dart';
 
@@ -7,14 +9,16 @@ import 'package:pillager/bloc/bloc.dart';
 class RaidBloc extends Bloc<RaidEvent, RaidState> {
   final DatabaseService store;
   final VikingBloc vikingBloc;
+  late final StreamSubscription _blocListener;
+  late final StreamSubscription _raidListener;
 
   RaidBloc({required this.store, required this.vikingBloc})
       : super(RaidInitial()) {
-    store.raids.listen((data) {
+    _raidListener = store.raids.listen((data) {
       add(RaidDataChange(data: data));
     });
 
-    vikingBloc.stream.listen((vikingState) {
+    _blocListener = vikingBloc.stream.listen((vikingState) {
       add(RaidVikingStateChange(data: vikingState));
     });
 
@@ -70,4 +74,12 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
   }
 
   void _onAddComment(AddComment event, Emitter emit) {}
+
+    @override
+  Future<void> close() async {
+    _blocListener.cancel();
+    _raidListener.cancel();
+    super.close();
+  }
+  
 }

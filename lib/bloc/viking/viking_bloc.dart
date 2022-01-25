@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pillager/services/services.dart';
@@ -6,14 +8,14 @@ import 'package:pillager/bloc/bloc.dart';
 class VikingBloc extends Bloc<VikingEvent, VikingState> {
   final DatabaseService store;
   final SignInBloc signInBloc;
+  late final StreamSubscription _vikingListener;
 
   VikingBloc({required this.store, required this.signInBloc})
       : super(VikingInitial()) {
-    signInBloc.stream.listen((signInState) => add(SignInChange(signInState)));
+    _vikingListener = store.vikings.listen((data) => add(VikingDataChange(data)));
 
     on<VikingDataChange>(_onVikingDataChange);
     on<UpdateViking>(_onUpdateViking);
-    on<SignInChange>(_onSignInChange);
   } 
 
   void _onVikingDataChange(VikingDataChange event, Emitter emit) {
@@ -28,10 +30,10 @@ class VikingBloc extends Bloc<VikingEvent, VikingState> {
     }
   }
 
-    void _onSignInChange(SignInChange event, Emitter emit) {
-      if (event.data is LoggedIn) {
-        // Subscribe to the stream of vikings data
-        // Using auth token?
-      }
+  @override
+  Future<void> close() async {
+    _vikingListener.cancel();
+    super.close();
   }
+
 }

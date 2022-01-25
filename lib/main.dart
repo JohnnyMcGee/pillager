@@ -31,7 +31,6 @@ void main() async {
               store: DatabaseService(),
               signInBloc: context.read<SignInBloc>(),
             ),
-            lazy:false,
           ),
           BlocProvider(
             create: (context) => RaidBloc(
