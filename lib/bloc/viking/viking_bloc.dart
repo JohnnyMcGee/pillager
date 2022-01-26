@@ -17,8 +17,11 @@ class VikingBloc extends Bloc<VikingEvent, VikingState> {
     final _vikingListener =
         store.vikings.listen((data) => add(VikingDataChange(data)));
     _vikingListeners.add(_vikingListener);
-    _signInListener =
-        signInBloc.stream.listen((state) => add(SignInChange(state)));
+    _signInListener = signInBloc.stream.listen((state) {
+      if (state is LoggedIn || state is SignOutLoading) {
+        add(SignInChange(state));
+      }
+    });
 
     on<VikingDataChange>(_onVikingDataChange);
     on<UpdateViking>(_onUpdateViking);
@@ -41,7 +44,7 @@ class VikingBloc extends Bloc<VikingEvent, VikingState> {
       final _vikingListener =
           store.vikings.listen((data) => add(VikingDataChange(data)));
       _vikingListeners.add(_vikingListener);
-    } else if (event.data is SignOutLoading) {
+    } else if (event.data is SignOutLoading && state is VikingLoaded) {
       _vikingListeners.forEach((sub) async {
         await sub.cancel();
       });

@@ -17,8 +17,11 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
   RaidBloc(
       {required this.store, required this.vikingBloc, required this.signInBloc})
       : super(RaidInitial()) {
-    _signInBlocListener =
-        signInBloc.stream.listen((state) => add(SignInChange(state)));
+    _signInBlocListener = signInBloc.stream.listen((state) {
+      if (state is LoggedIn || state is SignOutLoading) {
+        add(SignInChange(state));
+      }
+    });
 
     _addListeners();
 
@@ -77,7 +80,7 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
   void _onSignInChange(SignInChange event, Emitter emit) async {
     if (event.data is LoggedIn) {
       _addListeners();
-    } else if (event.data is SignOutLoading) {
+    } else if (event.data is SignOutLoading && state is RaidLoaded) {
       _raidListeners.forEach((sub) async => await sub.cancel());
       signInBloc.add(StreamClosed(raidStreamClosed: true));
       _vikingBlocListener.cancel();
