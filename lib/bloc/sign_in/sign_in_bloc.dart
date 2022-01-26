@@ -18,6 +18,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignInFailure>(_onSignInFailure);
     on<UserStateChange>(_onUserStateChange);
     on<DeleteAccount>(_onDeleteAccount);
+    on<StreamClosed>(_onStreamClosed);
   }
 
   void _onSignInEmailButtonPressed(
@@ -60,10 +61,24 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     }
   }
 
-  Future<void> _onSignOutButtonPressed(
-      SignOutButtonPressed event, Emitter emit) async {
-    await auth.signOut();
-    emit(LoggedOut());
+  void _onSignOutButtonPressed(
+      SignOutButtonPressed event, Emitter emit) {
+    // Allow firestore subscriptions to close before signing out
+    emit(SignOutLoading(raidStreamClosed: false, vikingStreamClosed: false));
+  }
+
+  void _onStreamClosed(StreamClosed event, Emitter emit) {
+    if (state is SignOutLoading) {
+    final raid = (event.raidStreamClosed) ? true : (state as SignOutLoading).raidStreamClosed;
+    final viking = (event.vikingStreamClosed) ? true : (state as SignOutLoading).vikingStreamClosed;
+    
+    if (raid && viking) {
+      auth.signOut();
+      emit(LoggedOut());
+    } else {
+      emit(SignOutLoading(raidStreamClosed: raid, vikingStreamClosed: viking));
+    }
+    }
   }
 
   Future<void>? _onSignInFailure(SignInFailure event, Emitter emit) {

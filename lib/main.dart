@@ -35,6 +35,7 @@ void main() async {
           BlocProvider(
             create: (context) => RaidBloc(
               store: DatabaseService(),
+              signInBloc: context.read<SignInBloc>(),
               vikingBloc: context.read<VikingBloc>(),
             ),
           ),
