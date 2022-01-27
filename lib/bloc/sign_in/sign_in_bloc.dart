@@ -13,78 +13,60 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
     on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
     on<RegisterEmailButtonPressed>(_onRegisterEmailButtonPressed);
-    on<SignOutButtonPressed>(_onSignOutButtonPressed);
-    on<SignInSuccess>((event, emit) => emit(LoggedIn(user: event.user)));
-    on<SignInFailure>(_onSignInFailure);
     on<UserStateChange>(_onUserStateChange);
     on<DeleteAccount>(_onDeleteAccount);
-    on<StreamClosed>(_onStreamClosed);
+    on<SignOutButtonPressed>(_onSignOutButtonPressed);
+    on<RaidStreamClosed>(_onRaidStreamClosed);
+    on<VikingStreamClosed>(_onVikingStreamClosed);
   }
 
   void _onSignInEmailButtonPressed(
       SignInEmailButtonPressed event, Emitter<SignInState> emit) async {
+    auth.signIn(event.email, event.password);
     emit(SignInLoading());
-
-    User? user = await auth.signIn(event.email, event.password);
-    if (user != null) {
-      add(SignInSuccess(user: user));
-    } else {
-      add(SignInFailure(
-          message: 'Invalid email or password. Please try again.'));
-    }
   }
 
   void _onRegisterEmailButtonPressed(
       RegisterEmailButtonPressed event, Emitter<SignInState> emit) async {
-    emit(SignInLoading());
-
     String capitalize(String s) =>
         (s.isNotEmpty) ? s[0].toUpperCase() + s.substring(1) : s;
 
     final String first = capitalize(event.firstName);
     final String last = capitalize(event.lastName);
 
-    User? user = await auth.registerWithEmailAndPassword(
-        event.email, event.password, first, last);
-    if (user != null) {
-      store.createNewViking(
-        user.uid,
-        {
-          "firstName": first,
-          "lastName": last,
-        },
-      );
-      add(SignInSuccess(user: user));
-    } else {
-      add(SignInFailure(
-          message: 'Unable to create account. Please try again.'));
-    }
+    auth
+        .registerWithEmailAndPassword(event.email, event.password, first, last)
+        .then((user) => store
+            .createNewViking(user.uid, {"firstName": first, "lastName": last}));
+
+    emit(SignInLoading());
   }
 
-  void _onSignOutButtonPressed(
-      SignOutButtonPressed event, Emitter emit) {
+  void _onSignOutButtonPressed(SignOutButtonPressed event, Emitter emit) {
     // Allow firestore subscriptions to close before signing out
     emit(SignOutLoading(raidStreamClosed: false, vikingStreamClosed: false));
   }
 
-  void _onStreamClosed(StreamClosed event, Emitter emit) {
+  void _onRaidStreamClosed(RaidStreamClosed event, Emitter emit) {
     if (state is SignOutLoading) {
-    final raid = (event.raidStreamClosed) ? true : (state as SignOutLoading).raidStreamClosed;
-    final viking = (event.vikingStreamClosed) ? true : (state as SignOutLoading).vikingStreamClosed;
-    
-    if (raid && viking) {
-      auth.signOut();
-      emit(LoggedOut());
-    } else {
-      emit(SignOutLoading(raidStreamClosed: raid, vikingStreamClosed: viking));
-    }
+      if ((state as SignOutLoading).vikingStreamClosed) {
+        emit(LoggedOut());
+      } else {
+        emit(SignOutLoading(raidStreamClosed: true));
+      }
     }
   }
 
-  Future<void>? _onSignInFailure(SignInFailure event, Emitter emit) {
-    emit(LoggedOut());
+  void _onVikingStreamClosed(VikingStreamClosed event, Emitter emit) {
+    if (state is SignOutLoading) {
+      if ((state as SignOutLoading).raidStreamClosed) {
+        emit(LoggedOut());
+      } else {
+        emit(SignOutLoading(vikingStreamClosed: true));
+      }
+    }
   }
-  
+
   void _onUserStateChange(UserStateChange event, Emitter emit) {
     final user = event.user;
     if (user is User) {
@@ -94,12 +76,11 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     }
   }
 
-    void _onDeleteAccount(DeleteAccount event, Emitter emit) {
-      final user = auth.currentUser;
-      if (user is User) {
-        user.delete();
-        emit(LoggedOut());
-      }
+  void _onDeleteAccount(DeleteAccount event, Emitter emit) {
+    final user = auth.currentUser;
+    if (user is User) {
+      user.delete();
+      emit(LoggedOut());
+    }
   }
-  
 }

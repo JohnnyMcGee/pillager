@@ -53,11 +53,6 @@ class UserStateChange extends SignInEvent {
 
 class DeleteAccount extends SignInEvent {}
 
-class StreamClosed extends SignInEvent {
-  final bool raidStreamClosed;
-  final bool vikingStreamClosed;
+class RaidStreamClosed extends SignInEvent {}
 
-  StreamClosed({this.raidStreamClosed=false, this.vikingStreamClosed=false});
-
-  List<Object> get props => [raidStreamClosed, vikingStreamClosed];
-}
+class VikingStreamClosed extends SignInEvent {}

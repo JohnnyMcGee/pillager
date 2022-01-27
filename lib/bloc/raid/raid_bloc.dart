@@ -81,9 +81,7 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     if (event.data is LoggedIn) {
       _addListeners();
     } else if (event.data is SignOutLoading && state is RaidLoaded) {
-      _raidListeners.forEach((sub) async => await sub.cancel());
-      signInBloc.add(StreamClosed(raidStreamClosed: true));
-      _vikingBlocListener.cancel();
+      _cancelDataListeners();
     }
     emit(const RaidUpdating(raids: <Raid>[]));
   }
@@ -100,12 +98,17 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     });
   }
 
+  void _cancelDataListeners() {
+    cancelSub(StreamSubscription sub) async => await sub.cancel();
+    _raidListeners.forEach(cancelSub);
+    _vikingBlocListener.cancel();
+    signInBloc.add(RaidStreamClosed());
+  }
+
   @override
   Future<void> close() async {
     _signInBlocListener.cancel();
-    _vikingBlocListener.cancel();
-    _raidListeners.forEach((sub) async => await sub.cancel());
-    // _raidListener.cancel();
+    _cancelDataListeners();
     super.close();
   }
 }

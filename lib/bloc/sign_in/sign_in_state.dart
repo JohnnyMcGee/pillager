@@ -15,7 +15,7 @@ class SignOutLoading extends SignInState {
   final bool vikingStreamClosed;
 
   SignOutLoading(
-      {required this.raidStreamClosed, required this.vikingStreamClosed});
+      {this.raidStreamClosed=false, this.vikingStreamClosed=false});
 
   @override
   List<Object> get props => [raidStreamClosed, vikingStreamClosed];
