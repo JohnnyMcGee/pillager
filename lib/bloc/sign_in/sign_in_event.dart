@@ -52,3 +52,7 @@ class UserStateChange extends SignInEvent {
 }
 
 class DeleteAccount extends SignInEvent {}
+
+class RaidStreamClosed extends SignInEvent {}
+
+class VikingStreamClosed extends SignInEvent {}
