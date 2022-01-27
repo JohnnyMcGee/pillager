@@ -1,13 +1,6 @@
-import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 
 abstract class VikingEvent {}
-
-class SignInChange extends VikingEvent {
-  SignInState data;
-
-  SignInChange(this.data);
-}
 
 class VikingDataChange extends VikingEvent {
   Map<String, Viking> data;

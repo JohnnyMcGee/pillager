@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/models/models.dart';
 
@@ -7,16 +9,21 @@ import 'package:pillager/bloc/bloc.dart';
 class RaidBloc extends Bloc<RaidEvent, RaidState> {
   final DatabaseService store;
   final VikingBloc vikingBloc;
+  final SignInBloc signInBloc;
+  late final StreamSubscription _signInBlocListener;
+  late StreamSubscription _vikingBlocListener;
+  final List<StreamSubscription> _raidListeners = <StreamSubscription>[];
 
-  RaidBloc({required this.store, required this.vikingBloc})
+  RaidBloc(
+      {required this.store, required this.vikingBloc, required this.signInBloc})
       : super(RaidInitial()) {
-    store.raids.listen((data) {
-      add(RaidDataChange(data: data));
+    _signInBlocListener = signInBloc.stream.listen((state) {
+      if (state is LoggedIn || state is SignOutLoading) {
+        add(SignInChange(state));
+      }
     });
 
-    vikingBloc.stream.listen((vikingState) {
-      add(RaidVikingStateChange(data: vikingState));
-    });
+    _addListeners();
 
     on<RaidDataChange>(_onRaidDataChange);
     on<EditRaid>(_onEditRaid);
@@ -24,7 +31,8 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     on<RaidEditorNoChanges>(
         (event, emit) => emit(RaidLoaded(raids: state.raids)));
     on<RaidVikingStateChange>(_onRaidVikingStateChange);
-    on<AddComment>(_onAddComment);
+
+    on<SignInChange>(_onSignInChange);
   }
 
   void _onRaidDataChange(RaidDataChange event, Emitter emit) {
@@ -69,5 +77,38 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     }
   }
 
-  void _onAddComment(AddComment event, Emitter emit) {}
+  void _onSignInChange(SignInChange event, Emitter emit) async {
+    if (event.data is LoggedIn) {
+      _addListeners();
+    } else if (event.data is SignOutLoading && state is RaidLoaded) {
+      _cancelDataListeners();
+    }
+    emit(const RaidUpdating(raids: <Raid>[]));
+  }
+
+  void _addListeners() {
+    final _raidListener = store.raids.listen((data) {
+      add(RaidDataChange(data: data));
+    });
+
+    _raidListeners.add(_raidListener);
+
+    _vikingBlocListener = vikingBloc.stream.listen((vikingState) {
+      add(RaidVikingStateChange(data: vikingState));
+    });
+  }
+
+  void _cancelDataListeners() {
+    cancelSub(StreamSubscription sub) async => await sub.cancel();
+    _raidListeners.forEach(cancelSub);
+    _vikingBlocListener.cancel();
+    signInBloc.add(RaidStreamClosed());
+  }
+
+  @override
+  Future<void> close() async {
+    _signInBlocListener.cancel();
+    _cancelDataListeners();
+    super.close();
+  }
 }

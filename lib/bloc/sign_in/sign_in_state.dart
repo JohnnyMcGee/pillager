@@ -10,7 +10,16 @@ class SignInInitial extends SignInState {}
 
 class SignInLoading extends SignInState {}
 
-class SignOutLoading extends SignInState {}
+class SignOutLoading extends SignInState {
+  final bool raidStreamClosed;
+  final bool vikingStreamClosed;
+
+  SignOutLoading(
+      {this.raidStreamClosed=false, this.vikingStreamClosed=false});
+
+  @override
+  List<Object> get props => [raidStreamClosed, vikingStreamClosed];
+}
 
 class LoggedIn extends SignInState {
   final User user;
