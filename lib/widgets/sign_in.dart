@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
-import 'package:pillager/shared.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleSignInForm;
