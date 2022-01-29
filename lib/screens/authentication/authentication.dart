@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pillager/widgets/widgets.dart';
-import 'package:pillager/shared.dart';
 
 class Authentication extends StatefulWidget {
   const Authentication({Key? key}) : super(key: key);
@@ -24,20 +23,17 @@ class _AuthenticationState extends State<Authentication> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ashGray,
         title: const Text(
           'Pillager',
           style: TextStyle(
-            color: navyBlue,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+            fontSize: 22,
           ),
         ),
         elevation: 0.0,
       ),
-      body: Container(
-        color: ghostWhite,
+      body: SizedBox(
         height: size.height,
+        width: size.width,
         child: showSignIn
             ? SignIn(toggleSignInForm: toggleSignInForm)
             : Register(toggleSignInForm: toggleSignInForm),
