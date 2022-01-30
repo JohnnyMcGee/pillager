@@ -9,7 +9,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
 
   SignInBloc({required this.auth, required this.store})
       : super(SignInInitial()) {
-    // auth.user.listen((user) => add(UserStateChange(user)));
+    auth.user.listen((user) => add(UserStateChange(user)));
 
     on<SignInEmailButtonPressed>(_onSignInEmailButtonPressed);
     on<RegisterEmailButtonPressed>(_onRegisterEmailButtonPressed);
