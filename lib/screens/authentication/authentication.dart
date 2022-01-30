@@ -9,7 +9,7 @@ class Authentication extends StatefulWidget {
 }
 
 class _AuthenticationState extends State<Authentication> {
-  bool showSignIn = false;
+  bool showSignIn = true;
 
   void toggleSignInForm() {
     setState(() {
@@ -19,8 +19,6 @@ class _AuthenticationState extends State<Authentication> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -32,13 +30,14 @@ class _AuthenticationState extends State<Authentication> {
         elevation: 0.0,
       ),
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 400),
         transitionBuilder: (Widget child, Animation<double> animation) {
+          final x0 = showSignIn ? -1.0 : 1.0;
           final inAnimation =
-              Tween(begin: const Offset(1, 0), end: const Offset(0, 0))
+              Tween(begin: Offset(x0, 0), end: const Offset(0, 0))
                   .animate(animation);
           final outAnimation =
-              Tween(begin: const Offset(-1, 0), end: const Offset(0, 0))
+              Tween(begin: Offset(-x0, 0), end: const Offset(0, 0))
                   .animate(animation);
           return SlideTransition(
               child: child,
