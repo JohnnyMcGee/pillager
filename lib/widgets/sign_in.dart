@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 
+import 'package:pillager/shared.dart';
+
 class SignIn extends StatefulWidget {
   final Function toggleSignInForm;
 
@@ -45,37 +47,19 @@ class _SignInState extends State<SignIn> {
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: TextFormField(
-                          initialValue: '',
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
-                          decoration: const InputDecoration(
-                              hintText: "email",
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30.0)),
-                              ),
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 16)),
+                        child: buildTextFormField(
+                          onChanged: (val) => setState(() {
+                            email = val;
+                          }),
+                          hintText: "email",
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: TextFormField(
-                          initialValue: '',
-                          onChanged: (val) {
-                            setState(() => password = val);
-                          },
-                          decoration: const InputDecoration(
-                            hintText: "password",
-                            border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30.0)),
-                            ),
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 16),
-                          ),
+                        child: buildTextFormField(
+                          onChanged: (value) =>
+                              setState(() => password = value),
+                          hintText: "password",
                         ),
                       ),
                       Padding(
