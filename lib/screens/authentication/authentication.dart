@@ -31,12 +31,24 @@ class _AuthenticationState extends State<Authentication> {
         ),
         elevation: 0.0,
       ),
-      body: SizedBox(
-        height: size.height,
-        width: size.width,
-        child: showSignIn
-            ? SignIn(toggleSignInForm: toggleSignInForm)
-            : Register(toggleSignInForm: toggleSignInForm),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Flexible(
+                fit: FlexFit.loose,
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 550),
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: showSignIn
+                      ? SignIn(toggleSignInForm: toggleSignInForm)
+                      : Register(toggleSignInForm: toggleSignInForm),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
