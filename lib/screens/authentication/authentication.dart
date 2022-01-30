@@ -31,19 +31,44 @@ class _AuthenticationState extends State<Authentication> {
         ),
         elevation: 0.0,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          final inAnimation =
+              Tween(begin: const Offset(1, 0), end: const Offset(0, 0))
+                  .animate(animation);
+          final outAnimation =
+              Tween(begin: const Offset(-1, 0), end: const Offset(0, 0))
+                  .animate(animation);
+          return SlideTransition(
+              child: child,
+              position: (child.key == Key(showSignIn.toString()))
+                  ? inAnimation
+                  : outAnimation);
+        },
+        child: SafeArea(
+          key: Key(showSignIn.toString()),
+          child: Stack(
             children: [
-              Flexible(
-                fit: FlexFit.loose,
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 550),
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                  child: showSignIn
-                      ? SignIn(toggleSignInForm: toggleSignInForm)
-                      : Register(toggleSignInForm: toggleSignInForm),
+              Align(
+                alignment: Alignment.topCenter,
+                child: SingleChildScrollView(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: Container(
+                          constraints: const BoxConstraints(maxWidth: 550),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 20),
+                          child: showSignIn
+                              ? SignIn(toggleSignInForm: toggleSignInForm)
+                              : Register(toggleSignInForm: toggleSignInForm),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
