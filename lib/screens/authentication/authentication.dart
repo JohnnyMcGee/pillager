@@ -40,7 +40,7 @@ class _AuthenticationState extends State<Authentication> {
                 fit: FlexFit.loose,
                 child: Container(
                   constraints: const BoxConstraints(maxWidth: 550),
-                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                   child: showSignIn
                       ? SignIn(toggleSignInForm: toggleSignInForm)
                       : Register(toggleSignInForm: toggleSignInForm),
