@@ -35,22 +35,16 @@ class _SignInState extends State<SignIn> {
               textAlign: TextAlign.center,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: buildTextFormField(
-              onChanged: (val) => setState(() {
-                email = val;
-              }),
-              hintText: "email",
-            ),
+          buildTextFormField(
+            onChanged: (val) => setState(() {
+              email = val;
+            }),
+            hintText: "email",
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: buildTextFormField(
-              onChanged: (value) =>
-                  setState(() => password = value),
-              hintText: "password",
-            ),
+          buildTextFormField(
+            onChanged: (value) =>
+                setState(() => password = value),
+            hintText: "password",
           ),
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 20),

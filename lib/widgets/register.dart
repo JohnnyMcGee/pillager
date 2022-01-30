@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pillager/bloc/bloc.dart';
+import 'package:pillager/shared.dart';
 
 class Register extends StatefulWidget {
   final Function toggleSignInForm;
@@ -29,79 +30,60 @@ class _RegisterState extends State<Register> {
       key: _formKey,
       child: Column(
         children: [
-          Text(
-            'Create an Account',
-            style: TextStyle(
-              color: Colors.blueGrey,
-              fontSize: size.height * 0.025,
+          const Padding(
+            padding: EdgeInsets.only(top: 40, bottom: 30),
+            child: Text(
+              'Create an Account',
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
-          TextFormField(
-            initialValue: '',
-            onChanged: (val) {
-              setState(() => firstName = val);
-            },
-            decoration: const InputDecoration(hintText: "first name"),
+          buildTextFormField(
+            onChanged: (val) => setState(() => firstName = val),
+            hintText: "first name",
           ),
-          SizedBox(height: size.height * .05),
-          TextFormField(
-            initialValue: '',
-            onChanged: (val) {
-              setState(() => lastName = val);
-            },
-            decoration: const InputDecoration(hintText: "last name"),
+          buildTextFormField(
+            onChanged: (val) => setState(() => lastName = val),
+            hintText: "last name",
           ),
-          SizedBox(height: size.height * .05),
-          TextFormField(
-            initialValue: '',
-            onChanged: (val) {
-              setState(() => email = val);
-            },
-            decoration: const InputDecoration(hintText: "email"),
+          buildTextFormField(
+            onChanged: (val) => setState(() => email = val),
+            hintText: "email",
           ),
-          SizedBox(height: size.height * .05),
-          TextFormField(
-            initialValue: '',
-            onChanged: (val) {
-              setState(() => password = val);
-            },
-            decoration: const InputDecoration(hintText: "password"),
+          buildTextFormField(
+            onChanged: (val) => setState(() => password = val),
+            hintText: "password",
           ),
-          SizedBox(height: size.height * .05),
-          TextFormField(
-            initialValue: '',
-            onChanged: (val) {
-              setState(() => confirmPassword = val);
-            },
-            decoration: const InputDecoration(hintText: "confirm password"),
+          buildTextFormField(
+            onChanged: (val) => setState(() => confirmPassword = val),
+            hintText: "confirm password",
           ),
-          SizedBox(height: size.height * .1),
-          ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color?>(Colors.blueGrey[400]),
+          Padding(
+            padding: const EdgeInsets.only(top: 30, bottom: 20),
+            child: ElevatedButton(
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Sign in',
+                  style: TextStyle(fontSize: 16.0),
+                ),
+              ),
+              onPressed: () async {
+                context.read<SignInBloc>().add(
+                    SignInEmailButtonPressed(email: email, password: password));
+              },
             ),
-            child: const Text(
-              'Submit',
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed: () async {
-              context.read<SignInBloc>().add(RegisterEmailButtonPressed(
-                  firstName: firstName,
-                  lastName: lastName,
-                  email: email,
-                  password: password,
-                  confirmPassword: confirmPassword));
-            },
           ),
           RichText(
             text: TextSpan(
               children: [
-                TextSpan(
+                const TextSpan(
                   text: "Already have an account? ",
                   style: TextStyle(
-                    color: Colors.blueGrey[900],
-                    fontSize: size.height * 0.018,
+                    fontSize: 14,
                   ),
                 ),
                 WidgetSpan(
@@ -110,8 +92,8 @@ class _RegisterState extends State<Register> {
                     child: Text(
                       "Login",
                       style: TextStyle(
-                        color: Colors.blueGrey[400],
-                        fontSize: size.height * 0.018,
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.secondaryVariant,
                       ),
                     ),
                   ),
