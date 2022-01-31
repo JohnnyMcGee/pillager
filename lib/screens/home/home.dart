@@ -46,11 +46,9 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[900],
         title: const Text('Pillager'),
         elevation: 0.0,
         actions: <Widget>[
@@ -60,15 +58,12 @@ class Home extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(Icons.person),
+                children: const [
+                  Icon(Icons.person),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       'My Account',
-                      style: TextStyle(
-                        color: Colors.blueGrey[400],
-                      ),
                     ),
                   ),
                 ],
@@ -115,7 +110,6 @@ class Home extends StatelessWidget {
                       ? "Welcome ${state.vikings[uid]!.fullName}!"
                       : "Welcome Viking Friend!",
                   style: const TextStyle(
-                    color: Colors.blueGrey,
                     fontSize: 20.0,
                   ),
                 );

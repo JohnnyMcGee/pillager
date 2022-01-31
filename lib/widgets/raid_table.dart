@@ -52,7 +52,6 @@ class RaidTable extends StatelessWidget {
       final raids = _applyFilter(state.raids, filter);
 
       return DataTable(
-        headingRowColor: MaterialStateProperty.all(Colors.blueGrey[400]),
         showCheckboxColumn: false,
         columns: [
           for (var column in _columns)
