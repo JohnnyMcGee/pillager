@@ -61,14 +61,10 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
       },
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Container(
-          color: Theme.of(context).colorScheme.surface,
-          constraints: const BoxConstraints(maxHeight: 300, maxWidth: 10000),
-          child: SingleChildScrollView(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: child,
-            ),
+        child: SingleChildScrollView(
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: child,
           ),
         ),
       ),
