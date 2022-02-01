@@ -50,7 +50,6 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
 
   ExpansionPanel _buildPanel(String title, Widget child, bool isExpanded) {
     return ExpansionPanel(
-      // backgroundColor: Theme.of(context).colorScheme.primaryVariant,
       headerBuilder: (context, isExpanded) {
         return ListTile(
           title: Text(

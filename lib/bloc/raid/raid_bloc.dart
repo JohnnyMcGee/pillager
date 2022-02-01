@@ -79,9 +79,11 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
 
   void _onSignInChange(SignInChange event, Emitter emit) async {
     if (event.data is LoggedIn) {
+      _cancelDataListeners();
       _addListeners();
     } else if (event.data is SignOutLoading && state is RaidLoaded) {
       _cancelDataListeners();
+      signInBloc.add(RaidStreamClosed());
     }
     emit(const RaidUpdating(raids: <Raid>[]));
   }
@@ -102,7 +104,6 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
     cancelSub(StreamSubscription sub) async => await sub.cancel();
     _raidListeners.forEach(cancelSub);
     _vikingBlocListener.cancel();
-    signInBloc.add(RaidStreamClosed());
   }
 
   @override
