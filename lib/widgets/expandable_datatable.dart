@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'package:pillager/widgets/widgets.dart';
@@ -57,13 +59,16 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
           ),
         );
       },
-      body: Container(
-        color: Theme.of(context).colorScheme.surface,
-        height: 300,
-        child: SingleChildScrollView(
-          child: SizedBox(
-            width: double.infinity,
-            child: child,
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          color: Theme.of(context).colorScheme.surface,
+          constraints: const BoxConstraints(maxHeight: 300, maxWidth: 10000),
+          child: SingleChildScrollView(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: child,
+            ),
           ),
         ),
       ),

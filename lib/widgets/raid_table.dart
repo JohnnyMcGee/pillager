@@ -53,6 +53,8 @@ class RaidTable extends StatelessWidget {
 
       return DataTable(
         showCheckboxColumn: false,
+        columnSpacing: 120,
+        dataRowHeight: 54,
         columns: [
           for (var column in _columns)
             DataColumn(
@@ -121,5 +123,6 @@ class RaidCell extends DataCell {
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+          
         );
 }
