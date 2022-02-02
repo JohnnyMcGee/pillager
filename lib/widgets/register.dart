@@ -21,6 +21,8 @@ class _RegisterState extends State<Register> {
   String password = '';
   String confirmPassword = '';
   final _formKey = GlobalKey<FormState>(debugLabel: "registerFormKey");
+  bool _passwordVisible = false;
+  bool _confirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +58,18 @@ class _RegisterState extends State<Register> {
           buildTextFormField(
             onChanged: (val) => setState(() => password = val),
             hintText: "password",
+            obscureText: !_passwordVisible,
+            viewPassword: () => setState(() {
+              _passwordVisible = !_passwordVisible;
+            }),
           ),
           buildTextFormField(
             onChanged: (val) => setState(() => confirmPassword = val),
             hintText: "confirm password",
+            obscureText: !_confirmPasswordVisible,
+            viewPassword: () => setState(() {
+              _confirmPasswordVisible = !_confirmPasswordVisible;
+            }),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 20),

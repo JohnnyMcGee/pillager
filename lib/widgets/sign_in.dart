@@ -17,6 +17,7 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
   final _formKey = GlobalKey<FormState>(debugLabel: "signInFormKey");
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +46,8 @@ class _SignInState extends State<SignIn> {
             onChanged: (value) =>
                 setState(() => password = value),
             hintText: "password",
+            obscureText: !_passwordVisible,
+            viewPassword: () => setState(() {_passwordVisible = !_passwordVisible;})
           ),
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 20),
