@@ -23,7 +23,6 @@ class RaidConsole extends StatelessWidget {
               flex: 1,
               child: Container(
                 padding: const EdgeInsets.all(10.0),
-                color: Colors.black12,
                 child: ListView(
                   children: [
                     RaidForm(raidId: raidId),
@@ -35,7 +34,6 @@ class RaidConsole extends StatelessWidget {
               flex: 2,
               child: Container(
                 padding: const EdgeInsets.all(10.0),
-                color: Colors.amber[50],
                 child: SizedBox(
                   child: RaidChat(raidId: raidId),
                 ),

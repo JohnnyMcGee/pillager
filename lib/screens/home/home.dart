@@ -10,6 +10,19 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
+  Future<void> openRaidConsole(context) async {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Wrap(
+            children: const [
+              RaidConsole(raidId: "AJWQQyI8eM4uqmHtPbEN"),
+            ],
+          );
+        });
+  }
+
   void _showProfileEditor(BuildContext context) async {
     final user = AuthService().currentUser;
     final vikingBloc = context.read<VikingBloc>();
@@ -95,7 +108,9 @@ class Home extends StatelessWidget {
       body: BlocBuilder<VikingBloc, VikingState>(builder: (context, state) {
         String uid = (context.read<SignInBloc>().state as LoggedIn).user.uid;
 
-          if (state is VikingLoaded) {
+        if (state is VikingLoaded) {
+          WidgetsBinding.instance?.addPostFrameCallback((_) => openRaidConsole(context));
+
           return Column(
             children: [
               Center(

@@ -111,7 +111,6 @@ class _RaidChatState extends State<RaidChat> {
                             alignment: Alignment.topCenter,
                             child: Text(
                               comment.message,
-                              style: const TextStyle(color: Colors.black54),
                             ),
                           ),
                         );
@@ -141,7 +140,6 @@ class _RaidChatState extends State<RaidChat> {
                   padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
                   // height: 50,
                   width: double.infinity,
-                  color: Colors.white,
                   child: Row(
                     children: <Widget>[
                       const SizedBox(
@@ -167,7 +165,6 @@ class _RaidChatState extends State<RaidChat> {
                             _submitComment(context);
                           },
                           child: const Icon(Icons.send),
-                          backgroundColor: Colors.blueGrey[900],
                           elevation: 0,
                         ),
                       ),

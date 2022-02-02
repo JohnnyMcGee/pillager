@@ -139,7 +139,6 @@ class _RaidFormState extends State<RaidForm> {
                   Text(
                     DateFormat.yMd().format(_arrivalDate ?? raid.arrivalDate),
                     style: TextStyle(
-                      color: Colors.blueGrey[900],
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -219,13 +218,8 @@ class _RaidFormState extends State<RaidForm> {
                 height: 30.0,
               ),
               ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color?>(Colors.blueGrey[900]),
-                ),
                 child: const Text(
                   'Save',
-                  style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () => _submitForm(context, raid),
               ),
