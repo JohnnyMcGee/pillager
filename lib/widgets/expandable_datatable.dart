@@ -61,7 +61,7 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
       },
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: SingleChildScrollView(
+          child: SingleChildScrollView(
           child: Align(
             alignment: Alignment.topLeft,
             child: child,

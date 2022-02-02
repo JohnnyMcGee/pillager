@@ -5,6 +5,7 @@ import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/services/authenticate.dart';
 import 'package:pillager/widgets/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -46,7 +47,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pillager'),
@@ -92,35 +92,38 @@ class Home extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 50.0,
-                vertical: 20.0,
-              ),
-              child: BlocBuilder<VikingBloc, VikingState>(
-                  builder: (context, state) {
-                String uid =
-                    (context.read<SignInBloc>().state as LoggedIn).user.uid;
+      body: BlocBuilder<VikingBloc, VikingState>(builder: (context, state) {
+        String uid = (context.read<SignInBloc>().state as LoggedIn).user.uid;
 
-                return Text(
-                  (state is VikingLoaded && state.vikings.containsKey(uid))
-                      ? "Welcome ${state.vikings[uid]!.fullName}!"
-                      : "Welcome Viking Friend!",
-                  style: const TextStyle(
-                    fontSize: 20.0,
+          if (state is VikingLoaded) {
+          return Column(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50.0,
+                    vertical: 20.0,
                   ),
-                );
-              }),
-            ),
-          ),
-          const Expanded(
-            child: ExpandableDataTable(),
-          ),
-        ],
-      ),
+                  child: Text(
+                    (state is VikingLoaded && state.vikings.containsKey(uid))
+                        ? "Welcome ${state.vikings[uid]!.fullName}!"
+                        : "Welcome Viking Friend!",
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ),
+              ),
+              const Expanded(
+                child: ExpandableDataTable(),
+              ),
+            ],
+          );
+        } else {
+          return SpinKitFoldingCube(
+              color: Theme.of(context).colorScheme.secondary);
+        }
+      }),
     );
   }
 }
