@@ -85,7 +85,6 @@ class _RaidFormState extends State<RaidForm> {
       "numShips": _numShips,
       "vikings": _vikings,
     }..removeWhere((k, v) => v == null);
-    print(update);
     context.read<RaidBloc>().add(EditRaid(
           raid,
           Map<String, Object>.from(update),
@@ -138,7 +137,7 @@ class _RaidFormState extends State<RaidForm> {
                 children: [
                   Text(
                     DateFormat.yMd().format(_arrivalDate ?? raid.arrivalDate),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
                     ),
@@ -161,59 +160,122 @@ class _RaidFormState extends State<RaidForm> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(
-                height: 200.0,
-                child: ListView(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  children: [
-                    ...[
-                      for (var viking in (_vikings != null)
-                          ? (_vikings as Map<String, Object>).values
-                          : raid.vikings.values)
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  (viking as Viking).fullName,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.0,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () => _removeViking(
-                                      viking, _vikings ?? raid.vikings),
-                                  icon: const Icon(
-                                    Icons.close,
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 200),
+                child: SingleChildScrollView(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                            ...[
+                              for (var viking in (_vikings != null)
+                                  ? (_vikings as Map<String, Object>).values
+                                  : raid.vikings.values)
+                                Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          (viking as Viking).fullName,
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14.0,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () => _removeViking(
+                                              viking, _vikings ?? raid.vikings),
+                                          icon: const Icon(
+                                            Icons.close,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 )
-                              ],
-                            ),
-                          ),
-                        )
-                    ],
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: TextButton(
-                        onPressed: () => _selectAssignViking(
-                            context, _vikings ?? raid.vikings),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.add),
-                            Text("Assign a Viking"),
+                            ],
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10.0),
+                              child: TextButton(
+                                onPressed: () => _selectAssignViking(
+                                    context, _vikings ?? raid.vikings),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Icon(Icons.add),
+                                    Text("Assign a Viking"),
+                                  ],
+                                ),
+                              ),
+                            )
                           ],
-                        ),
-                      ),
-                    )
-                  ],
+                    ),
+                  ),
                 ),
               ),
+              // SingleChildScrollView(
+              //   scrollDirection: Axis.horizontal,
+              //   child: ConstrainedBox(
+              //     constraints: BoxConstraints(maxHeight: 200, maxWidth: 300),
+              //     child: ListView(
+              //       padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    // children: [
+                    //   ...[
+                    //     for (var viking in (_vikings != null)
+                    //         ? (_vikings as Map<String, Object>).values
+                    //         : raid.vikings.values)
+                    //       UnconstrainedBox(
+                    //         child: Card(
+                    //           child: Padding(
+                    //             padding: const EdgeInsets.all(8.0),
+                    //             child: Row(
+                    //               mainAxisAlignment: MainAxisAlignment.center,
+                    //               crossAxisAlignment: CrossAxisAlignment.center,
+                    //               children: [
+                    //                 Text(
+                    //                   (viking as Viking).fullName,
+                    //                   textAlign: TextAlign.center,
+                    //                   style: const TextStyle(
+                    //                     fontWeight: FontWeight.bold,
+                    //                     fontSize: 14.0,
+                    //                   ),
+                    //                 ),
+                    //                 IconButton(
+                    //                   onPressed: () => _removeViking(
+                    //                       viking, _vikings ?? raid.vikings),
+                    //                   icon: const Icon(
+                    //                     Icons.close,
+                    //                   ),
+                    //                 )
+                    //               ],
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       )
+                    //   ],
+                    //   Padding(
+                    //     padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    //     child: TextButton(
+                    //       onPressed: () => _selectAssignViking(
+                    //           context, _vikings ?? raid.vikings),
+                    //       child: Row(
+                    //         mainAxisAlignment: MainAxisAlignment.center,
+                    //         children: const [
+                    //           Icon(Icons.add),
+                    //           Text("Assign a Viking"),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   )
+                    // ],
+              //     ),
+              //   ),
+              // ),
               const SizedBox(
                 height: 30.0,
               ),
