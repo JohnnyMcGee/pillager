@@ -14,15 +14,13 @@ Widget buildTextFormField({
       initialValue: initialValue,
       onChanged: onChanged,
       obscureText: obscureText,
-      decoration: InputDecoration(
+      decoration: fieldDecoration.copyWith(
         hintText: hintText,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16),
         suffix: (viewPassword != null)
             ? IconButton(
-                icon: Icon(obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined),
+                icon: Icon(obscureText
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined),
                 onPressed: viewPassword,
               )
             : null,
@@ -30,3 +28,10 @@ Widget buildTextFormField({
     ),
   );
 }
+
+const fieldDecoration = InputDecoration(
+  border: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(30.0)),
+  ),
+  contentPadding: EdgeInsets.symmetric(horizontal: 16),
+);

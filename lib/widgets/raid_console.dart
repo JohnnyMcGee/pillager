@@ -14,34 +14,39 @@ class RaidConsole extends StatelessWidget {
     return Container(
       height: size.height * .8,
       padding: const EdgeInsets.all(20.0),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Flexible(
-              flex: 1,
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                child: ListView(
-                  children: [
-                    RaidForm(raidId: raidId),
-                  ],
+      child: (size.width > 700)
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: ListView(
+                    children: [
+                      RaidForm(raidId: raidId),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-            Flexible(
-              flex: 2,
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                child: SizedBox(
-                  child: RaidChat(raidId: raidId),
+                Flexible(
+                  flex: 2,
+                  child: Container(
+                    padding: const EdgeInsets.all(10.0),
+                    child: RaidChat(raidId: raidId),
+                  ),
                 ),
-              ),
+              ],
+            )
+          : ListView(
+              children: [
+                RaidForm(raidId: raidId),
+                Container(
+                    padding: const EdgeInsets.all(10.0),
+                    constraints: BoxConstraints(maxHeight: 800),
+                    child: RaidChat(
+                      raidId: raidId,
+                    ))
+              ],
             ),
-          ],
-        ),
-      ),
     );
   }
 }
