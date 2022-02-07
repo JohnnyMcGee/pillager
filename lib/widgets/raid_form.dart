@@ -142,24 +142,23 @@ class _RaidFormState extends State<RaidForm> {
                     child:
                         Text("Number of Ships: ", style: textTheme.headline5),
                   ),
-                  Row(
-                    children: [
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 100.0),
-                        child: DropdownButtonFormField(
-                          value: _numShips ?? raid.numShips,
-                          items: List.generate(
-                              100,
-                              (i) => DropdownMenuItem(
-                                    value: i + 1,
-                                    child: Text('${i + 1}'),
-                                  )),
-                          onChanged: (value) =>
-                              setState(() => _numShips = value as int),
-                          decoration: fieldDecoration,
-                        ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 100.0),
+                      child: DropdownButtonFormField(
+                        value: _numShips ?? raid.numShips,
+                        items: List.generate(
+                            100,
+                            (i) => DropdownMenuItem(
+                                  value: i + 1,
+                                  child: Text('${i + 1}'),
+                                )),
+                        onChanged: (value) =>
+                            setState(() => _numShips = value as int),
+                        decoration: fieldDecoration,
                       ),
-                    ],
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
@@ -188,42 +187,61 @@ class _RaidFormState extends State<RaidForm> {
                     padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
                     child: Text("Vikings: ", style: textTheme.headline5),
                   ),
-                  ListView(
-                    shrinkWrap: true,
-                    children: [
-                      ...[
-                        for (var viking in (_vikings != null)
-                            ? (_vikings as Map<String, Object>).values
-                            : raid.vikings.values)
-                          Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      (viking as Viking).fullName,
-                                      style: textTheme.subtitle1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () => _removeViking(
-                                        viking, _vikings ?? raid.vikings),
-                                    icon: const Icon(
-                                      Icons.close,
+                  Container(
+                    alignment: Alignment.topLeft,
+                    constraints:
+                        const BoxConstraints(maxHeight: 600.0, maxWidth: 500.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: ListView(
+                            shrinkWrap: true,
+                            children: [
+                              ...[
+                                for (var viking in (_vikings != null)
+                                    ? (_vikings as Map<String, Object>).values
+                                    : raid.vikings.values)
+                                  Card(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0, horizontal: 12.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              (viking as Viking).fullName,
+                                              style: textTheme.subtitle1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            onPressed: () => _removeViking(
+                                                viking,
+                                                _vikings ?? raid.vikings),
+                                            icon: const Icon(
+                                              Icons.close,
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   )
-                                ],
-                              ),
-                            ),
-                          )
-                      ],
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: TextButton(
+                              ],
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(
+                                const EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 20.0)),
+                          ),
                           onPressed: () => _selectAssignViking(
                               context, _vikings ?? raid.vikings),
                           child: Row(
@@ -242,9 +260,9 @@ class _RaidFormState extends State<RaidForm> {
                               ),
                             ],
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -253,7 +271,10 @@ class _RaidFormState extends State<RaidForm> {
                 child: ElevatedButton(
                     child: Text(
                       'SAVE',
-                      style: Theme.of(context).textTheme.button?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context)
+                          .textTheme
+                          .button
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     onPressed: () => _submitForm(context, raid),
                     style: ButtonStyle(
