@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/shared.dart';
+import 'package:pillager/widgets/date_selector.dart';
 
 class RaidForm extends StatefulWidget {
   final String raidId;
@@ -22,19 +23,6 @@ class _RaidFormState extends State<RaidForm> {
   int? _numShips;
   DateTime? _arrivalDate;
   Map<String, Object>? _vikings;
-
-  Future<void> _selectDate(BuildContext context, DateTime initialDate) async {
-    final DateTime? newDate = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(793),
-      lastDate: DateTime(2025),
-    );
-
-    setState(() {
-      _arrivalDate = newDate;
-    });
-  }
 
   Future<String?> _selectAssignViking(
       BuildContext context, Map<String, Object> currentVikings) async {
@@ -160,23 +148,9 @@ class _RaidFormState extends State<RaidForm> {
                       child:
                           Text("Date of Arrival: ", style: textTheme.headline5),
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          DateFormat.yMd()
-                              .format(_arrivalDate ?? raid.arrivalDate),
-                          style: textTheme.headline6?.copyWith(
-                              fontWeight: FontWeight.bold, letterSpacing: 1.25),
-                        ),
-                        IconButton(
-                          padding: const EdgeInsets.only(left: 14.0),
-                          onPressed: () => _selectDate(
-                              context, _arrivalDate ?? raid.arrivalDate),
-                          icon: Icon(Icons.calendar_today,
-                              color:
-                                  Theme.of(context).colorScheme.primaryVariant),
-                        ),
-                      ],
+                    DateSelector(
+                      arrivalDate: _arrivalDate ?? raid.arrivalDate,
+                      setArrivalDate: (newDate) => setState(() {_arrivalDate = newDate;}),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
