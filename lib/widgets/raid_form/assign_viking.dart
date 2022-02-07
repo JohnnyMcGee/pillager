@@ -3,6 +3,7 @@ part of './raid_form.dart';
 class AssignViking extends StatelessWidget {
   final Map<String, Object> vikings;
   final void Function(Map<String, Object>) setVikings;
+  
   const AssignViking(
       {Key? key, required this.vikings, required this.setVikings})
       : super(key: key);
@@ -14,43 +15,71 @@ class AssignViking extends StatelessWidget {
     setVikings(newVikings);
   }
 
-  Future<String?> _selectAssignViking(
-      BuildContext context, Map<String, Object> currentVikings) async {
-    List<Viking> options = List<Viking>.from(context
-        .read<VikingBloc>()
-        .state
-        .vikings
-        .values
-        .where((v) => !currentVikings.keys.contains(v.uid)));
-
-    Viking? choice = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: const Text("Assign a Viking"),
-          children: [
-            for (var option in options)
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(context, option);
-                },
-                child: Text(option.fullName),
-              ),
-          ],
-        );
-      },
-    );
-    if (choice != null) {
-      final newVikings = Map<String, Object>.from(currentVikings)
-        ..putIfAbsent(choice.uid, () => choice);
-
-      setVikings(newVikings);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final textStyle = Theme.of(context).textTheme.subtitle1;
+
+    Future<Viking?> _showVikingSelector(List<Viking> options) async {
+      return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text("Assign a Viking"),
+            children: [
+              for (var option in options)
+                SimpleDialogOption(
+                  onPressed: () {
+                    Navigator.pop(context, option);
+                  },
+                  child: Text(option.fullName),
+                ),
+            ],
+          );
+        },
+      );
+    }
+
+    Future<String?> _selectAssignViking(
+        Map<String, Object> currentVikings) async {
+      List<Viking> options = List<Viking>.from(context
+          .read<VikingBloc>()
+          .state
+          .vikings
+          .values
+          .where((v) => !currentVikings.keys.contains(v.uid)));
+
+      Viking? choice = await _showVikingSelector(options);
+      if (choice != null) {
+        final newVikings = Map<String, Object>.from(currentVikings)
+          ..putIfAbsent(choice.uid, () => choice);
+
+        setVikings(newVikings);
+      }
+    }
+
+    Card _buildCardFromViking(Viking viking) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                viking.fullName,
+                style: textStyle,
+                overflow: TextOverflow.ellipsis,
+              ),
+              IconButton(
+                onPressed: () => _removeViking(viking, vikings),
+                icon: const Icon(
+                  Icons.close,
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    }
 
     return Column(
       children: [
@@ -61,29 +90,7 @@ class AssignViking extends StatelessWidget {
             children: [
               ...[
                 for (var viking in vikings.values)
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 8.0, horizontal: 12.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              (viking as Viking).fullName,
-                              style: textTheme.subtitle1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () => _removeViking(viking, vikings),
-                            icon: const Icon(
-                              Icons.close,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
+                  _buildCardFromViking(viking as Viking)
               ],
             ],
           ),
@@ -93,23 +100,18 @@ class AssignViking extends StatelessWidget {
             padding: MaterialStateProperty.all(
                 const EdgeInsets.symmetric(horizontal: 12.0, vertical: 20.0)),
           ),
-          onPressed: () => _selectAssignViking(context, vikings),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Padding(
-                padding: EdgeInsets.only(right: 10.0),
-                child: Icon(Icons.add),
-              ),
-              Expanded(
-                child: Text(
-                  "Assign a Viking",
-                  style: textTheme.subtitle1
-                      ?.copyWith(color: Theme.of(context).colorScheme.primary),
-                ),
+              const Icon(Icons.add),
+              const SizedBox(width: 10.0),
+              Text(
+                "Assign a Viking",
+                style: textStyle?.copyWith(
+                    color: Theme.of(context).colorScheme.primary),
               ),
             ],
           ),
+          onPressed: () => _selectAssignViking(vikings),
         )
       ],
     );

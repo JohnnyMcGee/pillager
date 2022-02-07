@@ -43,7 +43,6 @@ class _RaidFormState extends State<RaidForm> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
 
     return BlocBuilder<RaidBloc, RaidState>(
       builder: (context, state) {
@@ -57,7 +56,7 @@ class _RaidFormState extends State<RaidForm> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                padding: const EdgeInsets.symmetric(vertical: 10.0),
                 child: Text(
                   'Enter Raid Details',
                   style: textTheme.headline4,
@@ -129,19 +128,18 @@ class _RaidFormState extends State<RaidForm> {
               Padding(
                 padding: const EdgeInsets.only(top: 10, bottom: 30.0),
                 child: ElevatedButton(
-                    child: Text(
-                      'SAVE',
-                      style: Theme.of(context)
-                          .textTheme
-                          .button
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () => _submitForm(context, raid),
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(
-                              vertical: 20.0, horizontal: 40.0)),
-                    )),
+                  child: Text(
+                    'SAVE',
+                    style:
+                        textTheme.button?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () => _submitForm(context, raid),
+                  style: ButtonStyle(
+                    padding: MaterialStateProperty.all(
+                        const EdgeInsets.symmetric(
+                            vertical: 20.0, horizontal: 40.0)),
+                  ),
+                ),
               ),
             ],
           ),
