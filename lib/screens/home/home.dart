@@ -106,37 +106,38 @@ class Home extends StatelessWidget {
         ],
       ),
       body: BlocBuilder<VikingBloc, VikingState>(builder: (context, state) {
-        String uid = (context.read<SignInBloc>().state as LoggedIn).user.uid;
+        final textTheme = Theme.of(context).textTheme;
+        final colorScheme = Theme.of(context).colorScheme;
 
         if (state is VikingLoaded) {
-          WidgetsBinding.instance?.addPostFrameCallback((_) => openRaidConsole(context));
+          String uid = (context.read<SignInBloc>().state as LoggedIn).user.uid;
+          
+          final welcomeText = (state.vikings.containsKey(uid))
+              ? "Welcome, ${state.vikings[uid]!.fullName}!"
+              : "Welcome, Viking Friend!";
 
-          return Column(
-            children: [
-              Center(
-                child: Padding(
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              children: [
+                Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 50.0,
                     vertical: 20.0,
                   ),
                   child: Text(
-                    (state is VikingLoaded && state.vikings.containsKey(uid))
-                        ? "Welcome ${state.vikings[uid]!.fullName}!"
-                        : "Welcome Viking Friend!",
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                    ),
+                    welcomeText,
+                    style: textTheme.headline4
+                        ?.copyWith(color: colorScheme.primaryVariant),
                   ),
                 ),
-              ),
-              const Expanded(
-                child: ExpandableDataTable(),
-              ),
-            ],
+                const Expanded(
+                  child: ExpandableDataTable(),
+                ),
+              ],
+            ),
           );
         } else {
-          return SpinKitFoldingCube(
-              color: Theme.of(context).colorScheme.secondary);
+          return SpinKitFoldingCube(color: colorScheme.secondary);
         }
       }),
     );
