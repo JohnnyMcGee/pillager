@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/shared.dart';
-import 'package:pillager/widgets/date_selector.dart';
+import 'package:pillager/widgets/widgets.dart';
 
 class RaidForm extends StatefulWidget {
   final String raidId;
@@ -23,49 +22,6 @@ class _RaidFormState extends State<RaidForm> {
   int? _numShips;
   DateTime? _arrivalDate;
   Map<String, Object>? _vikings;
-
-  Future<String?> _selectAssignViking(
-      BuildContext context, Map<String, Object> currentVikings) async {
-    List<Viking> options = List<Viking>.from(context
-        .read<VikingBloc>()
-        .state
-        .vikings
-        .values
-        .where((v) => !currentVikings.keys.contains(v.uid)));
-
-    Viking? choice = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: const Text("Assign a Viking"),
-          children: [
-            for (var option in options)
-              SimpleDialogOption(
-                onPressed: () {
-                  Navigator.pop(context, option);
-                },
-                child: Text(option.fullName),
-              ),
-          ],
-        );
-      },
-    );
-    if (choice != null) {
-      final updatedVikings = Map<String, Object>.from(currentVikings)
-        ..putIfAbsent(choice.uid, () => choice);
-      setState(() {
-        _vikings = updatedVikings;
-      });
-    }
-  }
-
-  void _removeViking(Viking viking, Map<String, Object> currentVikings) {
-    final newVikings = Map<String, Object>.from(currentVikings)
-      ..removeWhere((k, v) => k == viking.uid);
-    setState(() {
-      _vikings = newVikings;
-    });
-  }
 
   void _submitForm(BuildContext context, Raid raid) {
     final update = {
@@ -150,74 +106,20 @@ class _RaidFormState extends State<RaidForm> {
                     ),
                     DateSelector(
                       arrivalDate: _arrivalDate ?? raid.arrivalDate,
-                      setArrivalDate: (newDate) => setState(() {_arrivalDate = newDate;}),
+                      setArrivalDate: (newDate) => setState(() {
+                        _arrivalDate = newDate;
+                      }),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
                       child: Text("Vikings: ", style: textTheme.headline5),
                     ),
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxHeight: 300.0),
-                      child: ListView(
-                        shrinkWrap: true,
-                        children: [
-                          ...[
-                            for (var viking in (_vikings != null)
-                                ? (_vikings as Map<String, Object>).values
-                                : raid.vikings.values)
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8.0, horizontal: 12.0),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          (viking as Viking).fullName,
-                                          style: textTheme.subtitle1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () => _removeViking(
-                                            viking, _vikings ?? raid.vikings),
-                                        icon: const Icon(
-                                          Icons.close,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                          ],
-                        ],
-                      ),
+                    AssignViking(
+                      vikings: _vikings ?? raid.vikings,
+                      setVikings: (newVikings) => setState(() {
+                        _vikings = newVikings;
+                      }),
                     ),
-                    TextButton(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                            const EdgeInsets.symmetric(
-                                horizontal: 12.0, vertical: 20.0)),
-                      ),
-                      onPressed: () => _selectAssignViking(
-                          context, _vikings ?? raid.vikings),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(Icons.add),
-                          ),
-                          Expanded(
-                            child: Text(
-                              "Assign a Viking",
-                              style: textTheme.subtitle1
-                                  ?.copyWith(color: colorScheme.primary),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
                   ],
                 ),
               ),
