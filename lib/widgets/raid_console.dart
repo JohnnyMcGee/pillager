@@ -14,7 +14,7 @@ class RaidConsole extends StatelessWidget {
     return Container(
       height: size.height * .8,
       padding: const EdgeInsets.all(20.0),
-      child: (size.width > 700)
+      child: (size.width > 850)
           ? Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -22,6 +22,7 @@ class RaidConsole extends StatelessWidget {
                 Flexible(
                   flex: 1,
                   child: ListView(
+                    shrinkWrap: true,
                     children: [
                       RaidForm(raidId: raidId),
                     ],

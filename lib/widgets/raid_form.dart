@@ -111,137 +111,152 @@ class _RaidFormState extends State<RaidForm> {
                 child: Text(
                   'Enter Raid Details',
                   style: TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                ),
-              ),
-              const Divider(height: 20.0,),
-              _buildField(
-                title: "Location: ",
-                child: buildTextFormField(
-                  onChanged: (value) => setState(() => _location = value),
-                  initialValue: _location ?? raid.location,
-                ),
-              ),
-              _buildField(
-                title: "Number of Ships: ",
-                child: DropdownButtonFormField(
-                  value: _numShips ?? raid.numShips,
-                  items: List.generate(
-                      100,
-                      (i) => DropdownMenuItem(
-                            value: i + 1,
-                            child: Text('${i + 1}'),
-                          )),
-                  onChanged: (value) =>
-                      setState(() => _numShips = value as int),
-                  decoration: fieldDecoration,
-                ),
-              ),
-              _buildField(
-                title: "Date of Arrival: ",
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        child: Text(
-                          DateFormat.yMd()
-                              .format(_arrivalDate ?? raid.arrivalDate),
-                          style: const TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => _selectDate(
-                            context, _arrivalDate ?? raid.arrivalDate),
-                        icon: const Icon(Icons.calendar_today),
-                      ),
-                    ],
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const Text(
-                "Vikings:",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0,
-                ),
-                textAlign: TextAlign.center,
+              const Divider(
+                height: 20.0,
               ),
-              Container(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 200),
-                  child: SingleChildScrollView(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ...[
-                            for (var viking in (_vikings != null)
-                                ? (_vikings as Map<String, Object>).values
-                                : raid.vikings.values)
-                              Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        (viking as Viking).fullName,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14.0,
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () => _removeViking(
-                                            viking, _vikings ?? raid.vikings),
-                                        icon: const Icon(
-                                          Icons.close,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              )
-                          ],
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: TextButton(
-                              onPressed: () => _selectAssignViking(
-                                  context, _vikings ?? raid.vikings),
+              ListView(
+                shrinkWrap: true,
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30.0),
+                children: [
+                  Text("Location: ", style: labelText),
+                  Row(
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 500.0),
+                        child: buildTextFormField(
+                          onChanged: (value) => setState(() => _location = value),
+                          initialValue: _location ?? raid.location,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0, top: 30.0),
+                    child: Text("Number of Ships: ", style: labelText),
+                  ),
+                  Row(
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 100.0),
+                        child: DropdownButtonFormField(
+                          value: _numShips ?? raid.numShips,
+                          items: List.generate(
+                              100,
+                              (i) => DropdownMenuItem(
+                                    value: i + 1,
+                                    child: Text('${i + 1}'),
+                                  )),
+                          onChanged: (value) =>
+                              setState(() => _numShips = value as int),
+                          decoration: fieldDecoration,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
+                    child: Text("Date of Arrival: ", style: labelText),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        DateFormat.yMd()
+                            .format(_arrivalDate ?? raid.arrivalDate),
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        padding: const EdgeInsets.only(left: 14.0),
+                        onPressed: () => _selectDate(
+                            context, _arrivalDate ?? raid.arrivalDate),
+                        icon: Icon(Icons.calendar_today,
+                            color:
+                                Theme.of(context).colorScheme.primaryVariant),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
+                    child: Text("Vikings: ", style: labelText),
+                  ),
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      ...[
+                        for (var viking in (_vikings != null)
+                            ? (_vikings as Map<String, Object>).values
+                            : raid.vikings.values)
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Icon(Icons.add),
-                                  Text("Assign a Viking"),
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      (viking as Viking).fullName,
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14.0,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () => _removeViking(
+                                        viking, _vikings ?? raid.vikings),
+                                    icon: const Icon(
+                                      Icons.close,
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
                           )
-                        ],
-                      ),
-                    ),
+                      ],
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: TextButton(
+                          onPressed: () => _selectAssignViking(
+                              context, _vikings ?? raid.vikings),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Padding(
+                                padding: EdgeInsets.only(right: 10.0),
+                                child: Icon(Icons.add),
+                              ),
+                              Expanded(child: Text("Assign a Viking")),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                ),
+                ],
               ),
-              const SizedBox(
-                height: 30.0,
-              ),
-              ElevatedButton(
-                child: const Text(
-                  'Save',
-                ),
-                onPressed: () => _submitForm(context, raid),
+              Padding(
+                padding: const EdgeInsets.only(top: 10, bottom: 30.0),
+                child: ElevatedButton(
+                    child: Text(
+                      'SAVE',
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                    onPressed: () => _submitForm(context, raid),
+                    style: ButtonStyle(
+                      padding:
+                          MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0)),
+                    )),
               ),
             ],
           ),
@@ -251,35 +266,7 @@ class _RaidFormState extends State<RaidForm> {
   }
 }
 
-Widget _buildField({required String title, required Widget child}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 15.0),
-    child: Row(
-      children: [
-        Expanded(
-          child: Wrap(
-            crossAxisAlignment: WrapCrossAlignment.center,
-            alignment: WrapAlignment.spaceEvenly,
-            children: [
-              Container(
-                width: 180,
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.0,
-                  ),
-                ),
-              ),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 350),
-                child: child,
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-}
+TextStyle labelText = const TextStyle(
+  fontWeight: FontWeight.bold,
+  fontSize: 18.0,
+);
