@@ -95,6 +95,9 @@ class _RaidFormState extends State<RaidForm> {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return BlocBuilder<RaidBloc, RaidState>(
       builder: (context, state) {
         Raid raid = state.raids.singleWhere(
@@ -106,14 +109,11 @@ class _RaidFormState extends State<RaidForm> {
           key: _formKey,
           child: Column(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                 child: Text(
                   'Enter Raid Details',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: textTheme.headline4,
                 ),
               ),
               const Divider(
@@ -124,13 +124,14 @@ class _RaidFormState extends State<RaidForm> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 30.0),
                 children: [
-                  Text("Location: ", style: labelText),
+                  Text("Location: ", style: textTheme.headline5),
                   Row(
                     children: [
                       ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 500.0),
                         child: buildTextFormField(
-                          onChanged: (value) => setState(() => _location = value),
+                          onChanged: (value) =>
+                              setState(() => _location = value),
                           initialValue: _location ?? raid.location,
                         ),
                       ),
@@ -138,7 +139,8 @@ class _RaidFormState extends State<RaidForm> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10.0, top: 30.0),
-                    child: Text("Number of Ships: ", style: labelText),
+                    child:
+                        Text("Number of Ships: ", style: textTheme.headline5),
                   ),
                   Row(
                     children: [
@@ -161,17 +163,16 @@ class _RaidFormState extends State<RaidForm> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
-                    child: Text("Date of Arrival: ", style: labelText),
+                    child:
+                        Text("Date of Arrival: ", style: textTheme.headline5),
                   ),
                   Row(
                     children: [
                       Text(
                         DateFormat.yMd()
                             .format(_arrivalDate ?? raid.arrivalDate),
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: textTheme.headline6?.copyWith(
+                            fontWeight: FontWeight.bold, letterSpacing: 1.25),
                       ),
                       IconButton(
                         padding: const EdgeInsets.only(left: 14.0),
@@ -185,7 +186,7 @@ class _RaidFormState extends State<RaidForm> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
-                    child: Text("Vikings: ", style: labelText),
+                    child: Text("Vikings: ", style: textTheme.headline5),
                   ),
                   ListView(
                     shrinkWrap: true,
@@ -204,11 +205,7 @@ class _RaidFormState extends State<RaidForm> {
                                   Expanded(
                                     child: Text(
                                       (viking as Viking).fullName,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14.0,
-                                      ),
+                                      style: textTheme.subtitle1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -231,12 +228,18 @@ class _RaidFormState extends State<RaidForm> {
                               context, _vikings ?? raid.vikings),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Padding(
+                            children: [
+                              const Padding(
                                 padding: EdgeInsets.only(right: 10.0),
                                 child: Icon(Icons.add),
                               ),
-                              Expanded(child: Text("Assign a Viking")),
+                              Expanded(
+                                child: Text(
+                                  "Assign a Viking",
+                                  style: textTheme.subtitle1
+                                      ?.copyWith(color: colorScheme.primary),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -250,12 +253,13 @@ class _RaidFormState extends State<RaidForm> {
                 child: ElevatedButton(
                     child: Text(
                       'SAVE',
-                      style: Theme.of(context).textTheme.button,
+                      style: Theme.of(context).textTheme.button?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     onPressed: () => _submitForm(context, raid),
                     style: ButtonStyle(
-                      padding:
-                          MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0)),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                              vertical: 20.0, horizontal: 40.0)),
                     )),
               ),
             ],
@@ -265,8 +269,3 @@ class _RaidFormState extends State<RaidForm> {
     );
   }
 }
-
-TextStyle labelText = const TextStyle(
-  fontWeight: FontWeight.bold,
-  fontSize: 18.0,
-);
