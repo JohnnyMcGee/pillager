@@ -119,152 +119,133 @@ class _RaidFormState extends State<RaidForm> {
               const Divider(
                 height: 20.0,
               ),
-              ListView(
-                shrinkWrap: true,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30.0),
-                children: [
-                  Text("Location: ", style: textTheme.headline5),
-                  Row(
-                    children: [
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 500.0),
-                        child: buildTextFormField(
+              Container(
+                constraints: const BoxConstraints(maxWidth: 560.0),
+                alignment: Alignment.topLeft,
+                child: ListView(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 20, horizontal: 30.0),
+                  children: [
+                    Text("Location: ", style: textTheme.headline5),
+                    buildTextFormField(
+                      onChanged: (value) => setState(() => _location = value),
+                      initialValue: _location ?? raid.location,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0, top: 30.0),
+                      child:
+                          Text("Number of Ships: ", style: textTheme.headline5),
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 100.0),
+                        child: DropdownButtonFormField(
+                          value: _numShips ?? raid.numShips,
+                          items: List.generate(
+                              100,
+                              (i) => DropdownMenuItem(
+                                    value: i + 1,
+                                    child: Text('${i + 1}'),
+                                  )),
                           onChanged: (value) =>
-                              setState(() => _location = value),
-                          initialValue: _location ?? raid.location,
+                              setState(() => _numShips = value as int),
+                          decoration: fieldDecoration,
                         ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0, top: 30.0),
-                    child:
-                        Text("Number of Ships: ", style: textTheme.headline5),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 100.0),
-                      child: DropdownButtonFormField(
-                        value: _numShips ?? raid.numShips,
-                        items: List.generate(
-                            100,
-                            (i) => DropdownMenuItem(
-                                  value: i + 1,
-                                  child: Text('${i + 1}'),
-                                )),
-                        onChanged: (value) =>
-                            setState(() => _numShips = value as int),
-                        decoration: fieldDecoration,
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
-                    child:
-                        Text("Date of Arrival: ", style: textTheme.headline5),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        DateFormat.yMd()
-                            .format(_arrivalDate ?? raid.arrivalDate),
-                        style: textTheme.headline6?.copyWith(
-                            fontWeight: FontWeight.bold, letterSpacing: 1.25),
-                      ),
-                      IconButton(
-                        padding: const EdgeInsets.only(left: 14.0),
-                        onPressed: () => _selectDate(
-                            context, _arrivalDate ?? raid.arrivalDate),
-                        icon: Icon(Icons.calendar_today,
-                            color:
-                                Theme.of(context).colorScheme.primaryVariant),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
-                    child: Text("Vikings: ", style: textTheme.headline5),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    constraints:
-                        const BoxConstraints(maxHeight: 600.0, maxWidth: 500.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
+                      child:
+                          Text("Date of Arrival: ", style: textTheme.headline5),
+                    ),
+                    Row(
                       children: [
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: ListView(
-                            shrinkWrap: true,
-                            children: [
-                              ...[
-                                for (var viking in (_vikings != null)
-                                    ? (_vikings as Map<String, Object>).values
-                                    : raid.vikings.values)
-                                  Card(
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0, horizontal: 12.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              (viking as Viking).fullName,
-                                              style: textTheme.subtitle1,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () => _removeViking(
-                                                viking,
-                                                _vikings ?? raid.vikings),
-                                            icon: const Icon(
-                                              Icons.close,
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                              ],
-                            ],
-                          ),
+                        Text(
+                          DateFormat.yMd()
+                              .format(_arrivalDate ?? raid.arrivalDate),
+                          style: textTheme.headline6?.copyWith(
+                              fontWeight: FontWeight.bold, letterSpacing: 1.25),
                         ),
-                        TextButton(
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(
-                                const EdgeInsets.symmetric(
-                                    horizontal: 12.0, vertical: 20.0)),
-                          ),
-                          onPressed: () => _selectAssignViking(
-                              context, _vikings ?? raid.vikings),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(right: 10.0),
-                                child: Icon(Icons.add),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "Assign a Viking",
-                                  style: textTheme.subtitle1
-                                      ?.copyWith(color: colorScheme.primary),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                        IconButton(
+                          padding: const EdgeInsets.only(left: 14.0),
+                          onPressed: () => _selectDate(
+                              context, _arrivalDate ?? raid.arrivalDate),
+                          icon: Icon(Icons.calendar_today,
+                              color:
+                                  Theme.of(context).colorScheme.primaryVariant),
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
+                      child: Text("Vikings: ", style: textTheme.headline5),
+                    ),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 300.0),
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          ...[
+                            for (var viking in (_vikings != null)
+                                ? (_vikings as Map<String, Object>).values
+                                : raid.vikings.values)
+                              Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8.0, horizontal: 12.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          (viking as Viking).fullName,
+                                          style: textTheme.subtitle1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () => _removeViking(
+                                            viking, _vikings ?? raid.vikings),
+                                        icon: const Icon(
+                                          Icons.close,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
+                          ],
+                        ],
+                      ),
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                            const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 20.0)),
+                      ),
+                      onPressed: () => _selectAssignViking(
+                          context, _vikings ?? raid.vikings),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(right: 10.0),
+                            child: Icon(Icons.add),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Assign a Viking",
+                              style: textTheme.subtitle1
+                                  ?.copyWith(color: colorScheme.primary),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 10, bottom: 30.0),
