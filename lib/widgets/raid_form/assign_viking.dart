@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:pillager/bloc/bloc.dart';
-import 'package:pillager/models/models.dart';
+part of './raid_form.dart';
 
 class AssignViking extends StatelessWidget {
   final Map<String, Object> vikings;
