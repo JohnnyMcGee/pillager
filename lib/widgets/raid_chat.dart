@@ -108,7 +108,9 @@ class _RaidChatState extends State<RaidChat> {
                       top: 54.0, left: 8.0, right: 8.0, bottom: 80.0),
                   child: Container(
                     decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
                       color: Colors.white,
                     ),
                     child: ListView.builder(
@@ -155,7 +157,8 @@ class _RaidChatState extends State<RaidChat> {
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Container(
-                  padding: const EdgeInsets.only(left: 10, bottom: 20, top: 10),
+                  padding: const EdgeInsets.only(
+                      left: 10, bottom: 20, top: 10, right: 10.0),
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[

@@ -3,7 +3,7 @@ part of './raid_form.dart';
 class AssignViking extends StatelessWidget {
   final Map<String, Object> vikings;
   final void Function(Map<String, Object>) setVikings;
-  
+
   const AssignViking(
       {Key? key, required this.vikings, required this.setVikings})
       : super(key: key);
@@ -17,21 +17,35 @@ class AssignViking extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.subtitle1;
+    final theme = Theme.of(context);
+    final textStyle = theme.textTheme.subtitle1;
 
     Future<Viking?> _showVikingSelector(List<Viking> options) async {
       return showDialog(
         context: context,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: const Text("Assign a Viking"),
+            title: Column(
+              children: const [
+                Text(
+                  "Assign a Viking",
+                  textAlign: TextAlign.center,
+                ),
+                Divider(thickness: 1.67),
+              ],
+            ),
+            backgroundColor: theme.colorScheme.primary.withOpacity(.75),
             children: [
               for (var option in options)
                 SimpleDialogOption(
                   onPressed: () {
                     Navigator.pop(context, option);
                   },
-                  child: Text(option.fullName),
+                  child: Text(
+                    option.fullName,
+                    textAlign: TextAlign.center,
+                    style: textStyle,
+                  ),
                 ),
             ],
           );
