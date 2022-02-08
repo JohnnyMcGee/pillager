@@ -20,7 +20,7 @@ class RaidChat extends StatefulWidget {
 class _RaidChatState extends State<RaidChat> {
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController =
-      ScrollController(keepScrollOffset: true);
+      ScrollController(keepScrollOffset: true, initialScrollOffset: 0.0);
   Comment? _selectedComment;
 
   void _selectComment(Comment comment) {
@@ -80,11 +80,11 @@ class _RaidChatState extends State<RaidChat> {
         store: DatabaseService(),
       ),
       child: BlocBuilder<CommentBloc, CommentState>(builder: (context, state) {
-        final comments = state.comments;
+        final commentsReversed = state.comments.reversed.toList();
         final bloc = context.read<CommentBloc>();
 
-        SchedulerBinding.instance
-            ?.addPostFrameCallback((_) => _scrollToBottom());
+        // SchedulerBinding.instance
+        //     ?.addPostFrameCallback((_) => _scrollToBottom());
 
         return GestureDetector(
           onTap: () => setState(() {
@@ -114,13 +114,14 @@ class _RaidChatState extends State<RaidChat> {
                       color: Colors.white,
                     ),
                     child: ListView.builder(
+                      reverse: true,
                       controller: _scrollController,
-                      itemCount: comments.length,
+                      itemCount: commentsReversed.length,
                       shrinkWrap: true,
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       // physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) {
-                        final Comment comment = comments[index];
+                        final Comment comment = commentsReversed[index];
 
                         if (comment.sender.isEmpty) {
                           return Container(
