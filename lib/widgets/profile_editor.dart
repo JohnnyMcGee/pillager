@@ -5,11 +5,9 @@ import 'package:pillager/models/models.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/services/services.dart';
+import 'package:pillager/shared.dart';
 
 class ProfileEditor extends StatefulWidget {
-  // final User user;
-  // final Viking viking;
-
   const ProfileEditor({Key? key}) : super(key: key);
 
   @override
@@ -82,9 +80,9 @@ class _ProfileEditorState extends State<ProfileEditor> {
     final bloc = context.read<VikingBloc>();
 
     bloc.add(UpdateViking(
-          viking: viking,
-          update: _vikingUpdate,
-        ));
+      viking: viking,
+      update: _vikingUpdate,
+    ));
 
     Navigator.pop(context);
   }
@@ -94,65 +92,104 @@ class _ProfileEditorState extends State<ProfileEditor> {
     return BlocBuilder<VikingBloc, VikingState>(
       builder: (context, state) {
         final viking = state.vikings[user?.uid];
+        final textTheme = Theme.of(context).textTheme;
 
         if (user is User && viking is Viking) {
-          return Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  "Edit Profile",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                  ),
+          return SingleChildScrollView(
+            child: SizedBox(
+              width: 300.0,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Edit Profile", style: textTheme.headline5),
+                    const Divider(
+                      thickness: 1.5,
+                    ),
+                    const FieldLabel(title: "Email: "),
+                    TextFormField(
+                      initialValue: _email ?? user!.email,
+                      onChanged: (value) => setState(() {
+                        _email = value;
+                      }),
+                      decoration: fieldDecoration.copyWith(hintText: "email"),
+                    ),
+                    const FieldLabel(title: "First Name: "),
+                    TextFormField(
+                      initialValue: _firstName ?? viking.firstName,
+                      onChanged: (value) => setState(() {
+                        _firstName = value;
+                      }),
+                      decoration: fieldDecoration.copyWith(hintText: "email"),
+                    ),
+                    const FieldLabel(title: "Last Name: "),
+                    TextFormField(
+                      initialValue: _lastName ?? viking.lastName,
+                      onChanged: (value) => setState(() {
+                        _lastName = value;
+                      }),
+                      decoration: fieldDecoration.copyWith(hintText: "email"),
+                    ),
+                    Wrap(
+                      children: [
+                        const FieldLabel(title: "Are you Berserker?"),
+                        Switch(
+                            value: _isBerserker ?? viking.isBerserker,
+                            onChanged: (value) => setState(() {
+                                  _isBerserker = value;
+                                })),
+                      ],
+                    ),
+                    Wrap(
+                      children: [
+                        const FieldLabel(title: "Are you Earl?"),
+                        Switch(
+                            value: _isEarl ?? viking.isEarl,
+                            onChanged: (value) => setState(() {
+                                  _isEarl = value;
+                                })),
+                      ],
+                    ),
+                    Divider(
+                      height: 40.0,
+                      thickness: 1.5,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextButton.icon(
+                              label: const Text(
+                                "Delete Account",
+                                textAlign: TextAlign.center,
+                              ),
+                              onPressed: () => _showDeleteDialog(context),
+                              style: ButtonStyle(
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(20.0)),
+                              ),
+                              icon: Icon(Icons.delete_outline)),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: ElevatedButton.icon(
+                              label: const Text(
+                                "Update",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () => _updateProfile(context, viking),
+                              style: ButtonStyle(
+                                padding: MaterialStateProperty.all(
+                                    const EdgeInsets.all(20.0)),
+                              ),
+                              icon: Icon(Icons.check)),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                TextFormField(
-                  initialValue: _email ?? user!.email,
-                  onChanged: (value) => setState(() {
-                    _email = value;
-                  }),
-                ),
-                TextFormField(
-                  initialValue: _firstName ?? viking.firstName,
-                  onChanged: (value) => setState(() {
-                    _firstName = value;
-                  }),
-                ),
-                TextFormField(
-                  initialValue: _lastName ?? viking.lastName,
-                  onChanged: (value) => setState(() {
-                    _lastName = value;
-                  }),
-                ),
-                Switch(
-                    value: _isBerserker ?? viking.isBerserker,
-                    onChanged: (value) => setState(() {
-                          _isBerserker = value;
-                        })),
-                Switch(
-                    value: _isEarl ?? viking.isEarl,
-                    onChanged: (value) => setState(() {
-                          _isEarl = value;
-                        })),
-                const SizedBox(height: 20),
-                TextButton(
-                  child: const Text(
-                    "Delete My Account",
-                    textAlign: TextAlign.center,
-                  ),
-                  onPressed: () => _showDeleteDialog(context),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  child: const Text(
-                    "Update Profile",
-                    textAlign: TextAlign.center,
-                  ),
-                  onPressed: () => _updateProfile(context, viking),
-                ),
-              ],
+              ),
             ),
           );
         } else {
@@ -170,6 +207,25 @@ class _ProfileEditorState extends State<ProfileEditor> {
           );
         }
       },
+    );
+  }
+}
+
+class FieldLabel extends StatelessWidget {
+  final String title;
+  const FieldLabel({Key? key, required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.only(top: 24, bottom: 6),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.subtitle1?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+      ),
     );
   }
 }
