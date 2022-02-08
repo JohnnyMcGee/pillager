@@ -62,7 +62,7 @@ class _RaidFormState extends State<RaidForm> {
                   padding: const EdgeInsets.symmetric(vertical: 10.0),
                   child: Text(
                     'Enter Raid Details',
-                    style: textTheme.headline4,
+                    style: textTheme.headline5,
                   ),
                 ),
                 const Divider(

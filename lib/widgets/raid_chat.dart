@@ -105,7 +105,7 @@ class _RaidChatState extends State<RaidChat> {
                 child: Container(
                   color: Theme.of(context).colorScheme.primary.withOpacity(.3),
                   padding: const EdgeInsets.only(
-                      top: 50.0, left: 8.0, right: 8.0, bottom: 80.0),
+                      top: 54.0, left: 8.0, right: 8.0, bottom: 80.0),
                   child: Container(
                     decoration: const ShapeDecoration(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
