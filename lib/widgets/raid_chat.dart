@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -49,14 +48,6 @@ class _RaidChatState extends State<RaidChat> {
     return confirmed ?? false;
   }
 
-  void _scrollToBottom() {
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent,
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.ease,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final String uid = AuthService().currentUser!.uid;
@@ -82,9 +73,6 @@ class _RaidChatState extends State<RaidChat> {
       child: BlocBuilder<CommentBloc, CommentState>(builder: (context, state) {
         final commentsReversed = state.comments.reversed.toList();
         final bloc = context.read<CommentBloc>();
-
-        // SchedulerBinding.instance
-        //     ?.addPostFrameCallback((_) => _scrollToBottom());
 
         return GestureDetector(
           onTap: () => setState(() {
