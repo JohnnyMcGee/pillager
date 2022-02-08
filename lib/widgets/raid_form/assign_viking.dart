@@ -64,10 +64,12 @@ class AssignViking extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                viking.fullName,
-                style: textStyle,
-                overflow: TextOverflow.ellipsis,
+              Expanded(
+                child: Text(
+                  viking.fullName,
+                  style: textStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               IconButton(
                 onPressed: () => _removeViking(viking, vikings),

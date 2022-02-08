@@ -13,7 +13,6 @@ class RaidConsole extends StatelessWidget {
 
     return Container(
       height: size.height * .8,
-      padding: const EdgeInsets.all(20.0),
       child: (size.width > 850)
           ? Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -21,27 +20,37 @@ class RaidConsole extends StatelessWidget {
               children: [
                 Flexible(
                   flex: 1,
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      RaidForm(raidId: raidId),
-                    ],
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        right: BorderSide(width: 1.0, color: Colors.black38),
+                      ),
+                    ),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        RaidForm(raidId: raidId),
+                      ],
+                    ),
                   ),
                 ),
                 Flexible(
                   flex: 2,
-                  child: Container(
-                    padding: const EdgeInsets.all(10.0),
-                    child: RaidChat(raidId: raidId),
-                  ),
+                  child: RaidChat(raidId: raidId),
                 ),
               ],
             )
           : ListView(
               children: [
-                RaidForm(raidId: raidId),
                 Container(
-                    padding: const EdgeInsets.all(10.0),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.black38),
+                    ),
+                  ),
+                  child: RaidForm(raidId: raidId),
+                ),
+                Container(
                     constraints: BoxConstraints(maxHeight: 800),
                     child: RaidChat(
                       raidId: raidId,

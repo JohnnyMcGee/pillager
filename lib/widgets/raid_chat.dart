@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/services/services.dart';
+import 'package:pillager/shared.dart';
 import 'package:pillager/widgets/widgets.dart';
 
 class RaidChat extends StatefulWidget {
@@ -48,6 +49,14 @@ class _RaidChatState extends State<RaidChat> {
     return confirmed ?? false;
   }
 
+  void _scrollToBottom() {
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 600),
+      curve: Curves.ease,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final String uid = AuthService().currentUser!.uid;
@@ -74,13 +83,8 @@ class _RaidChatState extends State<RaidChat> {
         final comments = state.comments;
         final bloc = context.read<CommentBloc>();
 
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.ease,
-          );
-        });
+        SchedulerBinding.instance
+            ?.addPostFrameCallback((_) => _scrollToBottom());
 
         return GestureDetector(
           onTap: () => setState(() {
@@ -91,54 +95,67 @@ class _RaidChatState extends State<RaidChat> {
           }),
           child: Stack(
             children: [
+              Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(top: 10.0),
+                child: Text("Comments",
+                    style: Theme.of(context).textTheme.headline5),
+              ),
               Positioned.fill(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 65.0),
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: comments.length,
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    // physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final Comment comment = comments[index];
+                child: Container(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(.3),
+                  padding: const EdgeInsets.only(
+                      top: 50.0, left: 8.0, right: 8.0, bottom: 80.0),
+                  child: Container(
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                      color: Colors.white,
+                    ),
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      itemCount: comments.length,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      // physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final Comment comment = comments[index];
 
-                      if (comment.sender.isEmpty) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(
-                              comment.message,
+                        if (comment.sender.isEmpty) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 10),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                comment.message,
+                              ),
                             ),
-                          ),
-                        );
-                      }
+                          );
+                        }
 
-                      return Message(
-                        comment: comment,
-                        received: uid != comment.sender,
-                        onDelete: () async {
-                          if (await _confirmDelete(context)) {
-                            bloc.add(DeleteComment(comment));
-                          }
-                          setState(() {
-                            _selectedComment = null;
-                          });
-                        },
-                        isSelected: _selectedComment == comment,
-                        onSelect: _selectComment,
-                      );
-                    },
+                        return Message(
+                          comment: comment,
+                          received: uid != comment.sender,
+                          onDelete: () async {
+                            if (await _confirmDelete(context)) {
+                              bloc.add(DeleteComment(comment));
+                            }
+                            setState(() {
+                              _selectedComment = null;
+                            });
+                          },
+                          isSelected: _selectedComment == comment,
+                          onSelect: _selectComment,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Container(
-                  padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                  // height: 50,
+                  padding: const EdgeInsets.only(left: 10, bottom: 20, top: 10),
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
@@ -148,11 +165,15 @@ class _RaidChatState extends State<RaidChat> {
                       Expanded(
                         child: TextField(
                           controller: _textController,
+                          onSubmitted: (_) => _submitComment(context),
+                          keyboardType: TextInputType.multiline,
                           maxLines: null,
-                          decoration: const InputDecoration(
-                              hintText: "Write a comment...",
-                              hintStyle: TextStyle(color: Colors.black54),
-                              border: InputBorder.none),
+                          decoration: fieldDecoration.copyWith(
+                            hintText: "Write a comment...",
+                            hintStyle: const TextStyle(color: Colors.black54),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
                         ),
                       ),
                       const SizedBox(
