@@ -24,7 +24,19 @@ class _EmailEditorState extends State<EmailEditor> {
 
   void _updateEmail() {
     if (_email is String) {
-      _auth.updateEmail(password: _password, newEmail: _email!);
+      _auth.updateEmail(password: _password, newEmail: _email!).then((_) {
+        if (_auth.currentEmail == _email) {
+          showDialog(
+            context: context,
+            builder: (context) =>
+                const AlertDialog(content: Text("Email Update Successful")),
+          );
+        }
+      });
+      setState(() {
+        _editing = false;
+        _password = '';
+      });
     }
   }
 

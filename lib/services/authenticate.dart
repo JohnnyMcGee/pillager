@@ -36,7 +36,7 @@ class AuthService {
       final user = await signIn(_currentEmail, password);
       if (user != null) {
         try {
-          user.updateEmail(newEmail);
+          await user.updateEmail(newEmail);
         } catch (e) {
           print(e);
         }
