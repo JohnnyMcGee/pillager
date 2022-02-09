@@ -49,42 +49,47 @@ class _EmailEditorState extends State<EmailEditor> {
           onChanged: onEmailChanged,
           decoration: fieldDecoration.copyWith(hintText: "email"),
         ),
-        Visibility(
-          visible: _editing,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                Text("Enter password to confirm changes.",
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        color: Theme.of(context).colorScheme.secondaryVariant)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: PasswordFormField(
-                          initialValue: _password,
-                          hintText: "password",
-                          onChanged: (value) => setState(() {
-                            _password = value;
-                          }),
-                          onFieldSubmitted: (_) => _updateEmail(),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeOut,
+          child: Visibility(
+            visible: _editing,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  Text("Enter password to confirm changes.",
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color:
+                              Theme.of(context).colorScheme.secondaryVariant)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: PasswordFormField(
+                            initialValue: _password,
+                            hintText: "password",
+                            onChanged: (value) => setState(() {
+                              _password = value;
+                            }),
+                            onFieldSubmitted: (_) => _updateEmail(),
+                          ),
                         ),
-                      ),
-                      Container(
-                        height: 50.0,
-                        padding: EdgeInsets.all(4.0),
-                        child: FloatingActionButton(
-                          onPressed: _updateEmail,
-                          child: const Icon(Icons.send),
-                        ),
-                      )
-                    ],
+                        Container(
+                          height: 50.0,
+                          padding: EdgeInsets.all(4.0),
+                          child: FloatingActionButton(
+                            onPressed: _updateEmail,
+                            child: const Icon(Icons.send),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         )
