@@ -17,13 +17,13 @@ class DeleteDialog extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed: () {
+            context.read<SignInBloc>().add(DeleteAccount());
             Navigator.pop(context, true);
           },
           child: const Text("Delete Account"),
         ),
         ElevatedButton(
           onPressed: () {
-            context.read<SignInBloc>().add(DeleteAccount());
             Navigator.pop(context, false);
           },
           child: const Text("Cancel"),
