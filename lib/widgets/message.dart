@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pillager/models/models.dart';
 import 'package:pillager/bloc/bloc.dart';
+import 'package:pillager/themes.dart';
 
 class Message extends StatelessWidget {
   final Comment comment;
@@ -21,11 +22,13 @@ class Message extends StatelessWidget {
   }) : super(key: key);
 
   Color _color() {
+    Color c;
     if (received) {
-      return (isSelected ? Colors.grey[600] : Colors.grey[400]) as Color;
+      c = (isSelected ? scheme.secondaryVariant : scheme.secondary);
     } else {
-      return (isSelected ? Colors.blue[600] : Colors.blue[400]) as Color;
+      c = (isSelected ? scheme.primaryVariant : scheme.primary);
     }
+    return c.withOpacity(.85);
   }
 
   @override

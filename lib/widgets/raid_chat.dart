@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/models/models.dart';
 import 'package:pillager/services/services.dart';
+import 'package:pillager/shared.dart';
 import 'package:pillager/widgets/widgets.dart';
 
 class RaidChat extends StatefulWidget {
@@ -19,7 +19,7 @@ class RaidChat extends StatefulWidget {
 class _RaidChatState extends State<RaidChat> {
   final TextEditingController _textController = TextEditingController();
   final ScrollController _scrollController =
-      ScrollController(keepScrollOffset: true);
+      ScrollController(keepScrollOffset: true, initialScrollOffset: 0.0);
   Comment? _selectedComment;
 
   void _selectComment(Comment comment) {
@@ -71,16 +71,8 @@ class _RaidChatState extends State<RaidChat> {
         store: DatabaseService(),
       ),
       child: BlocBuilder<CommentBloc, CommentState>(builder: (context, state) {
-        final comments = state.comments;
+        final commentsReversed = state.comments.reversed.toList();
         final bloc = context.read<CommentBloc>();
-
-        SchedulerBinding.instance?.addPostFrameCallback((_) {
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.ease,
-          );
-        });
 
         return GestureDetector(
           onTap: () => setState(() {
@@ -91,57 +83,72 @@ class _RaidChatState extends State<RaidChat> {
           }),
           child: Stack(
             children: [
+              Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.only(top: 10.0),
+                child: Text("Comments",
+                    style: Theme.of(context).textTheme.headline5),
+              ),
               Positioned.fill(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 65.0),
-                  child: ListView.builder(
-                    controller: _scrollController,
-                    itemCount: comments.length,
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    // physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      final Comment comment = comments[index];
+                child: Container(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(.3),
+                  padding: const EdgeInsets.only(
+                      top: 54.0, left: 8.0, right: 8.0, bottom: 80.0),
+                  child: Container(
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(10.0))),
+                      color: Colors.white,
+                    ),
+                    child: ListView.builder(
+                      reverse: true,
+                      controller: _scrollController,
+                      itemCount: commentsReversed.length,
+                      shrinkWrap: true,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      // physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        final Comment comment = commentsReversed[index];
 
-                      if (comment.sender.isEmpty) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20, horizontal: 10),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(
-                              comment.message,
-                              style: const TextStyle(color: Colors.black54),
+                        if (comment.sender.isEmpty) {
+                          return Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 10),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                comment.message,
+                              ),
                             ),
-                          ),
-                        );
-                      }
+                          );
+                        }
 
-                      return Message(
-                        comment: comment,
-                        received: uid != comment.sender,
-                        onDelete: () async {
-                          if (await _confirmDelete(context)) {
-                            bloc.add(DeleteComment(comment));
-                          }
-                          setState(() {
-                            _selectedComment = null;
-                          });
-                        },
-                        isSelected: _selectedComment == comment,
-                        onSelect: _selectComment,
-                      );
-                    },
+                        return Message(
+                          comment: comment,
+                          received: uid != comment.sender,
+                          onDelete: () async {
+                            if (await _confirmDelete(context)) {
+                              bloc.add(DeleteComment(comment));
+                            }
+                            setState(() {
+                              _selectedComment = null;
+                            });
+                          },
+                          isSelected: _selectedComment == comment,
+                          onSelect: _selectComment,
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
               Align(
                 alignment: Alignment.bottomLeft,
                 child: Container(
-                  padding: const EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                  // height: 50,
+                  padding: const EdgeInsets.only(
+                      left: 10, bottom: 20, top: 10, right: 10.0),
                   width: double.infinity,
-                  color: Colors.white,
                   child: Row(
                     children: <Widget>[
                       const SizedBox(
@@ -150,11 +157,15 @@ class _RaidChatState extends State<RaidChat> {
                       Expanded(
                         child: TextField(
                           controller: _textController,
+                          onSubmitted: (_) => _submitComment(context),
+                          keyboardType: TextInputType.multiline,
                           maxLines: null,
-                          decoration: const InputDecoration(
-                              hintText: "Write a comment...",
-                              hintStyle: TextStyle(color: Colors.black54),
-                              border: InputBorder.none),
+                          decoration: fieldDecoration.copyWith(
+                            hintText: "Write a comment...",
+                            hintStyle: const TextStyle(color: Colors.black54),
+                            fillColor: Colors.white,
+                            filled: true,
+                          ),
                         ),
                       ),
                       const SizedBox(
@@ -167,7 +178,6 @@ class _RaidChatState extends State<RaidChat> {
                             _submitComment(context);
                           },
                           child: const Icon(Icons.send),
-                          backgroundColor: Colors.blueGrey[900],
                           elevation: 0,
                         ),
                       ),

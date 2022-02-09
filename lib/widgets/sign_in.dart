@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 
+import 'package:pillager/shared.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleSignInForm;
@@ -16,89 +17,77 @@ class _SignInState extends State<SignIn> {
   String email = '';
   String password = '';
   final _formKey = GlobalKey<FormState>(debugLabel: "signInFormKey");
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: size.height * 0.05),
-          child: Align(
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 40, bottom: 30),
             child: Text(
-              'Welcome Back',
-              style: TextStyle(
-                color: Colors.blueGrey,
-                fontSize: size.height * 0.025,
-              ),
+              'Welcome back!',
+              style: Theme.of(context).textTheme.headline4,
+              textAlign: TextAlign.center,
             ),
           ),
-        ),
-        Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                initialValue: '',
-                onChanged: (val) {
-                  setState(() => email = val);
-                },
-                decoration: const InputDecoration(hintText: "email"),
-              ),
-              SizedBox(height: size.height * .05),
-              TextFormField(
-                initialValue: '',
-                onChanged: (val) {
-                  setState(() => password = val);
-                },
-                decoration: const InputDecoration(hintText: "password"),
-              ),
-              SizedBox(height: size.height * .1),
-              ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all<Color?>(Colors.blueGrey[400]),
-                ),
-                child: const Text(
-                  'Sign in',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  context.read<SignInBloc>().add(SignInEmailButtonPressed(
-                      email: email, password: password));
-                },
-              ),
-            ],
+          buildTextFormField(
+            onChanged: (val) => setState(() {
+              email = val;
+            }),
+            hintText: "email",
           ),
-        ),
-        SizedBox(height: size.height * .025),
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: "Don't have an account yet? ",
-                style: TextStyle(
-                  color: Colors.blueGrey[900],
-                  fontSize: size.height * 0.018,
+          buildTextFormField(
+              onChanged: (value) => setState(() => password = value),
+              hintText: "password",
+              obscureText: !_passwordVisible,
+              viewPassword: () => setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  })),
+          Padding(
+            padding: const EdgeInsets.only(top: 30, bottom: 20),
+            child: ElevatedButton(
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  'Sign in',
+                  style: TextStyle(fontSize: 16.0),
                 ),
               ),
-              WidgetSpan(
-                child: InkWell(
-                  onTap: () => widget.toggleSignInForm(),
-                  child: Text(
-                    "Register",
-                    style: TextStyle(
-                      color: Colors.blueGrey[400],
-                      fontSize: size.height * 0.018,
+              onPressed: () async {
+                context.read<SignInBloc>().add(
+                    SignInEmailButtonPressed(email: email, password: password));
+              },
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              children: [
+                const TextSpan(
+                  text: "Don't have an account yet? ",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                WidgetSpan(
+                  child: InkWell(
+                    onTap: () => widget.toggleSignInForm(),
+                    child: Text(
+                      "Register",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.secondaryVariant,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
