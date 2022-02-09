@@ -88,6 +88,7 @@ class _RaidFormState extends State<RaidForm> {
                         }),
                         decoration:
                             fieldDecoration.copyWith(hintText: "location"),
+                        autofocus: true,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0, top: 40.0),
