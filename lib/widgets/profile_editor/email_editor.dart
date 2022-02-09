@@ -18,19 +18,18 @@ class _EmailEditorState extends State<EmailEditor> {
       _email = value;
       _editing = (value != _auth.currentEmail);
     });
+  }
 
-    print(_editing);
+  void _showSnackbar(String message) {
+    final bar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(bar);
   }
 
   void _updateEmail() {
     if (_email is String) {
       _auth.updateEmail(password: _password, newEmail: _email!).then((_) {
         if (_auth.currentEmail == _email) {
-          showDialog(
-            context: context,
-            builder: (context) =>
-                const AlertDialog(content: Text("Email Update Successful")),
-          );
+          _showSnackbar("Email Update Successful");
         }
       });
       setState(() {
@@ -66,11 +65,13 @@ class _EmailEditorState extends State<EmailEditor> {
                     children: [
                       Expanded(
                         child: PasswordFormField(
-                            initialValue: _password,
-                            hintText: "password",
-                            onChanged: (value) => setState(() {
-                                  _password = value;
-                                })),
+                          initialValue: _password,
+                          hintText: "password",
+                          onChanged: (value) => setState(() {
+                            _password = value;
+                          }),
+                          onFieldSubmitted: (_) => _updateEmail(),
+                        ),
                       ),
                       Container(
                         height: 50.0,
@@ -96,13 +97,15 @@ class PasswordFormField extends StatefulWidget {
   final String initialValue;
   final String hintText;
   final void Function(String)? onChanged;
+  final void Function(String)? onFieldSubmitted;
 
-  const PasswordFormField(
-      {Key? key,
-      required this.initialValue,
-      this.hintText = '',
-      this.onChanged})
-      : super(key: key);
+  const PasswordFormField({
+    Key? key,
+    required this.initialValue,
+    this.hintText = '',
+    this.onChanged,
+    this.onFieldSubmitted,
+  }) : super(key: key);
 
   @override
   _PasswortFormFieldState createState() => _PasswortFormFieldState();
@@ -122,13 +125,15 @@ class _PasswortFormFieldState extends State<PasswordFormField> {
       onChanged: widget.onChanged ?? (_) {},
       obscureText: !_visible,
       decoration: fieldDecoration.copyWith(
-          hintText: widget.hintText,
-          suffix: IconButton(
-            icon: Icon(_visible
-                ? Icons.visibility_off_outlined
-                : Icons.visibility_outlined),
-            onPressed: viewPassword,
-          )),
+        hintText: widget.hintText,
+        suffix: IconButton(
+          icon: Icon(_visible
+              ? Icons.visibility_outlined
+              : Icons.visibility_off_outlined),
+          onPressed: viewPassword,
+        ),
+      ),
+      onFieldSubmitted: widget.onFieldSubmitted,
     );
   }
 }
