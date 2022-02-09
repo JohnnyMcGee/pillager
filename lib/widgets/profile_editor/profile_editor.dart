@@ -9,6 +9,7 @@ import 'package:pillager/shared.dart';
 
 part './profile_form.dart';
 part './delete_dialog.dart';
+part './email_editor.dart';
 
 class ProfileEditor extends StatelessWidget {
   final user = AuthService().currentUser;
@@ -25,7 +26,8 @@ class ProfileEditor extends StatelessWidget {
             return SingleChildScrollView(
               child: SizedBox(
                 width: 300.0,
-                child: ProfileForm(profile: viking, user: user as User),
+                // child: ProfileForm(profile: viking, user: user as User),
+                child: ProfileForm(profile: viking),
               ),
             );
           } else {
@@ -47,4 +49,3 @@ class ProfileEditor extends StatelessWidget {
     );
   }
 }
-

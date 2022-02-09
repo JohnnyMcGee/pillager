@@ -2,10 +2,10 @@ part of './profile_editor.dart';
 
 class ProfileForm extends StatefulWidget {
   final Viking profile;
-  final User user;
+  // final User user;
 
-  const ProfileForm({Key? key, required this.profile, required this.user})
-      : super(key: key);
+  // const ProfileForm({Key? key, required this.profile, required this.user})
+  const ProfileForm({Key? key, required this.profile}) : super(key: key);
 
   @override
   _ProfileFormState createState() => _ProfileFormState();
@@ -13,7 +13,7 @@ class ProfileForm extends StatefulWidget {
 
 class _ProfileFormState extends State<ProfileForm> {
   final _formKey = GlobalKey<FormState>();
-  String? _email;
+  // String? _email;
   String? _firstName;
   String? _lastName;
   bool? _isBerserker;
@@ -41,9 +41,11 @@ class _ProfileFormState extends State<ProfileForm> {
   }
 
   void _updateProfile(BuildContext context, Viking viking) {
-    if (_email is String) {
-      widget.user.updateEmail(_email!);
-    }
+    // if (_email is String) {
+    //   print(_email);
+    //   widget.user.updateEmail(_email!);
+    // }
+
 
     final bloc = context.read<VikingBloc>();
 
@@ -84,13 +86,7 @@ class _ProfileFormState extends State<ProfileForm> {
             thickness: 1.5,
           ),
           _buildFieldLabel("Email: "),
-          TextFormField(
-            initialValue: _email ?? widget.user.email,
-            onChanged: (value) => setState(() {
-              _email = value;
-            }),
-            decoration: fieldDecoration.copyWith(hintText: "email"),
-          ),
+          EmailEditor(),
           _buildFieldLabel("First Name: "),
           TextFormField(
             initialValue: _firstName ?? widget.profile.firstName,

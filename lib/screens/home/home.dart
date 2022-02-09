@@ -87,6 +87,8 @@ class Home extends StatelessWidget {
               ? "Welcome, ${state.vikings[uid]!.fullName}!"
               : "Welcome, Viking Friend!";
 
+          WidgetsBinding.instance?.addPostFrameCallback((_) => _showProfileEditor(context));
+
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Column(

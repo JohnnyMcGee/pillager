@@ -9,6 +9,13 @@ class AuthService {
 
   User? get currentUser => _auth.currentUser;
 
+  String? get currentEmail {
+    final _currentUser = currentUser;
+    if (_currentUser is User) {
+      return _currentUser.email;
+    }
+  }
+
   Future<User?> signIn(String email, String password) async {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
@@ -18,6 +25,21 @@ class AuthService {
     } catch (e) {
       print(e.toString());
       return null;
+    }
+  }
+
+  Future<void> updateEmail(
+      {required String password, required String newEmail}) async {
+    final _currentEmail = currentEmail;
+    if (_currentEmail is String) {
+      final user = await signIn(_currentEmail, password);
+      if (user != null) {
+        try {
+          user.updateEmail(newEmail);
+        } catch (e) {
+          print(e);
+        }
+      }
     }
   }
 
