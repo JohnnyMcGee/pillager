@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pillager/models/models.dart';
 
 class DatabaseService {
@@ -71,14 +70,18 @@ class DatabaseService {
     }
   }
 
-  void createNewRaid(Map<String, Object> data) {
+  void createNewRaid(Raid raid, Map<String, Object> data) {
     try {
-      raidsCollection.add({
-        "location": data["location"],
-        "numShips": data["numShips"],
-        "arrivalDate": data["arrivalDate"],
-        "vikings": List.from((data["vikings"] as Map<String, Object>).keys),
-      });
+      final newRaid = {
+        "location": data["location"] ?? raid.location,
+        "numShips": data["numShips"] ?? raid.numShips,
+        "arrivalDate": data["arrivalDate"] ?? raid.arrivalDate,
+        "vikings": data["vikings"] ?? raid.vikings,
+      };
+      // convert vikings map to a list
+      newRaid["vikings"] =
+          List.from((newRaid["vikings"] as Map<String, Object>).keys);
+      raidsCollection.add(newRaid);
     } catch (e) {
       print(e);
     }

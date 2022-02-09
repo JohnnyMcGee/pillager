@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -34,6 +33,7 @@ class _RaidFormState extends State<RaidForm> {
       "numShips": _numShips,
       "vikings": _vikings,
     }..removeWhere((k, v) => v == null);
+
     context.read<RaidBloc>().add(EditRaid(
           raid,
           Map<String, Object>.from(update),
@@ -83,13 +83,16 @@ class _RaidFormState extends State<RaidForm> {
                       TextFormField(
                         key: UniqueKey(),
                         initialValue: _location ?? raid.location,
+                        onChanged: (value) => setState(() {
+                          _location = value;
+                        }),
                         decoration:
                             fieldDecoration.copyWith(hintText: "location"),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10.0, top: 40.0),
-                        child:
-                            Text("Number of Ships: ", style: textTheme.headline5),
+                        child: Text("Number of Ships: ",
+                            style: textTheme.headline5),
                       ),
                       Align(
                         alignment: Alignment.topLeft,
@@ -111,8 +114,8 @@ class _RaidFormState extends State<RaidForm> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 40.0, bottom: 10.0),
-                        child:
-                            Text("Date of Arrival: ", style: textTheme.headline5),
+                        child: Text("Date of Arrival: ",
+                            style: textTheme.headline5),
                       ),
                       DateSelector(
                         arrivalDate: _arrivalDate ?? raid.arrivalDate,
@@ -138,8 +141,8 @@ class _RaidFormState extends State<RaidForm> {
                   child: ElevatedButton(
                     child: Text(
                       'SAVE',
-                      style:
-                          textTheme.button?.copyWith(fontWeight: FontWeight.bold),
+                      style: textTheme.button
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     onPressed: () => _submitForm(context, raid),
                     style: ButtonStyle(

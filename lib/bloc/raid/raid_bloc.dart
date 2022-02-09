@@ -52,7 +52,7 @@ class RaidBloc extends Bloc<RaidEvent, RaidState> {
   void _onEditRaid(EditRaid event, Emitter emit) {
     if (event.update.isNotEmpty) {
       if (event.raid.docId.isEmpty) {
-        store.createNewRaid(event.update);
+        store.createNewRaid(event.raid, event.update);
       } else {
         store.updateRaid(event.raid, event.update);
       }
