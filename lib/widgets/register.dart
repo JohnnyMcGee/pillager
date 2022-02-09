@@ -32,14 +32,11 @@ class _RegisterState extends State<Register> {
       key: _formKey,
       child: Column(
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 40, bottom: 30),
             child: Text(
               'Create an Account',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.headline4,
               textAlign: TextAlign.center,
             ),
           ),

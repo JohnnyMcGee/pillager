@@ -19,8 +19,8 @@ Widget buildTextFormField({
         suffix: (viewPassword != null)
             ? IconButton(
                 icon: Icon(obscureText
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined),
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined),
                 onPressed: viewPassword,
               )
             : null,

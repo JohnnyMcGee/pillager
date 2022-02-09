@@ -25,14 +25,11 @@ class _SignInState extends State<SignIn> {
       key: _formKey,
       child: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.only(top: 40, bottom: 30),
+          Padding(
+            padding: const EdgeInsets.only(top: 40, bottom: 30),
             child: Text(
               'Welcome back!',
-              style: TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.headline4,
               textAlign: TextAlign.center,
             ),
           ),
@@ -43,12 +40,12 @@ class _SignInState extends State<SignIn> {
             hintText: "email",
           ),
           buildTextFormField(
-            onChanged: (value) =>
-                setState(() => password = value),
-            hintText: "password",
-            obscureText: !_passwordVisible,
-            viewPassword: () => setState(() {_passwordVisible = !_passwordVisible;})
-          ),
+              onChanged: (value) => setState(() => password = value),
+              hintText: "password",
+              obscureText: !_passwordVisible,
+              viewPassword: () => setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  })),
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 20),
             child: ElevatedButton(
@@ -61,8 +58,7 @@ class _SignInState extends State<SignIn> {
               ),
               onPressed: () async {
                 context.read<SignInBloc>().add(
-                    SignInEmailButtonPressed(
-                        email: email, password: password));
+                    SignInEmailButtonPressed(email: email, password: password));
               },
             ),
           ),
@@ -82,9 +78,7 @@ class _SignInState extends State<SignIn> {
                       "Register",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .secondaryVariant,
+                        color: Theme.of(context).colorScheme.secondaryVariant,
                       ),
                     ),
                   ),
