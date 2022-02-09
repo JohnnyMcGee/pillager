@@ -2,7 +2,7 @@ export './sign_in.dart';
 export './register.dart';
 export './app_wrapper.dart';
 export './expandable_datatable.dart';
-export 'profile_editor.dart';
+export 'profile_editor/profile_editor.dart';
 export 'raid_form/raid_form.dart';
 export './raid_table.dart';
 export './raid_console.dart';

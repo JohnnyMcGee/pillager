@@ -1,49 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:pillager/models/models.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pillager/bloc/bloc.dart';
-import 'package:pillager/services/services.dart';
-import 'package:pillager/shared.dart';
-
-class ProfileEditor extends StatelessWidget {
-  final user = AuthService().currentUser;
-  ProfileEditor({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      content: BlocBuilder<VikingBloc, VikingState>(
-        builder: (context, state) {
-          final viking = state.vikings[user?.uid];
-
-          if (user is User && viking is Viking) {
-            return SingleChildScrollView(
-              child: SizedBox(
-                width: 300.0,
-                child: ProfileForm(profile: viking, user: user as User),
-              ),
-            );
-          } else {
-            return SizedBox(
-              height: 225,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text("Loading Profile...",
-                      style: Theme.of(context).textTheme.headline5),
-                  SpinKitFoldingCube(
-                      color: Theme.of(context).colorScheme.secondary),
-                ],
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-}
+part of './profile_editor.dart';
 
 class ProfileForm extends StatefulWidget {
   final Viking profile;
@@ -66,37 +21,10 @@ class _ProfileFormState extends State<ProfileForm> {
 
   Future<void> _showDeleteDialog(BuildContext context) async {
     final bool? confirm = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text(
-            "Delete My Account",
-            textAlign: TextAlign.center,
-          ),
-          content: const Text(
-            """Are you sure you want to delete this account?
-            You will not be able to recover it.""",
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context, true);
-              },
-              child: const Text("Delete Account"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context, false);
-              },
-              child: const Text("Cancel"),
-            ),
-          ],
-        );
-      },
-    );
+        context: context,
+        builder: (BuildContext context) => const DeleteDialog());
 
     if (confirm == true) {
-      context.read<SignInBloc>().add(DeleteAccount());
       Navigator.pop(context);
     }
   }
@@ -114,7 +42,7 @@ class _ProfileFormState extends State<ProfileForm> {
 
   void _updateProfile(BuildContext context, Viking viking) {
     if (_email is String) {
-      widget.user?.updateEmail(_email!);
+      widget.user.updateEmail(_email!);
     }
 
     final bloc = context.read<VikingBloc>();
@@ -130,6 +58,8 @@ class _ProfileFormState extends State<ProfileForm> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final buttonStyle = ButtonStyle(
+        padding: MaterialStateProperty.all(const EdgeInsets.all(20.0)));
 
     Widget _buildFieldLabel(String title) {
       return Container(
@@ -181,26 +111,25 @@ class _ProfileFormState extends State<ProfileForm> {
             children: [
               _buildFieldLabel("Are you Berserker?"),
               Switch(
-                  value: _isBerserker ?? widget.profile.isBerserker,
-                  onChanged: (value) => setState(() {
-                        _isBerserker = value;
-                      })),
+                value: _isBerserker ?? widget.profile.isBerserker,
+                onChanged: (value) => setState(() {
+                  _isBerserker = value;
+                }),
+              ),
             ],
           ),
           Wrap(
             children: [
               _buildFieldLabel("Are you Earl?"),
               Switch(
-                  value: _isEarl ?? widget.profile.isEarl,
-                  onChanged: (value) => setState(() {
-                        _isEarl = value;
-                      })),
+                value: _isEarl ?? widget.profile.isEarl,
+                onChanged: (value) => setState(() {
+                  _isEarl = value;
+                }),
+              ),
             ],
           ),
-          const Divider(
-            height: 40.0,
-            thickness: 1.5,
-          ),
+          const Divider(height: 40.0, thickness: 1.5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -211,11 +140,8 @@ class _ProfileFormState extends State<ProfileForm> {
                       textAlign: TextAlign.center,
                     ),
                     onPressed: () => _showDeleteDialog(context),
-                    style: ButtonStyle(
-                      padding:
-                          MaterialStateProperty.all(const EdgeInsets.all(20.0)),
-                    ),
-                    icon: Icon(Icons.delete_outline)),
+                    style: buttonStyle,
+                    icon: const Icon(Icons.delete_outline)),
               ),
               const SizedBox(width: 20),
               Expanded(
@@ -226,11 +152,8 @@ class _ProfileFormState extends State<ProfileForm> {
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     onPressed: () => _updateProfile(context, widget.profile),
-                    style: ButtonStyle(
-                      padding:
-                          MaterialStateProperty.all(const EdgeInsets.all(20.0)),
-                    ),
-                    icon: Icon(Icons.check)),
+                    style: buttonStyle,
+                    icon: const Icon(Icons.check)),
               ),
             ],
           ),
