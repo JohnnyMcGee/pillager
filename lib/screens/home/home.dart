@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
-import 'package:pillager/models/models.dart';
-import 'package:pillager/services/authenticate.dart';
 import 'package:pillager/widgets/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -24,42 +21,16 @@ class Home extends StatelessWidget {
   }
 
   void _showProfileEditor(BuildContext context) async {
-    final user = AuthService().currentUser;
-    final vikingBloc = context.read<VikingBloc>();
-    final profile = vikingBloc.state.vikings[user?.uid];
-
-    if (profile is Viking && user is User) {
-      Map<String, Object>? profileUpdate = await showDialog(
-          context: context,
-          builder: (context) {
-            return SimpleDialog(
-              children: [
-                ProfileEditor(
-                  user: user,
-                  viking: profile,
-                ),
-              ],
-            );
-          });
-
-      if (profileUpdate != null) {
-        final email = profileUpdate["email"];
-
-        vikingBloc.add(UpdateViking(
-            viking: profile,
-            update: profileUpdate..removeWhere((k, v) => k == "email")));
-
-        if (email is String) {
-          user.updateEmail(email);
-        }
-      }
-    } else {
-      return;
-    }
+    showDialog(
+        context: context,
+        builder: (context) {
+            return ProfileEditor();
+        }); 
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pillager'),
@@ -111,7 +82,7 @@ class Home extends StatelessWidget {
 
         if (state is VikingLoaded) {
           String uid = (context.read<SignInBloc>().state as LoggedIn).user.uid;
-          
+
           final welcomeText = (state.vikings.containsKey(uid))
               ? "Welcome, ${state.vikings[uid]!.fullName}!"
               : "Welcome, Viking Friend!";
