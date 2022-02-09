@@ -18,11 +18,19 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignOutButtonPressed>(_onSignOutButtonPressed);
     on<RaidStreamClosed>(_onRaidStreamClosed);
     on<VikingStreamClosed>(_onVikingStreamClosed);
+    on<SignInSuccess>((event, emit) => emit(LoggedIn(user: event.user)));
+    on<SignInFailure>((event, emit) => emit(LoggedOut()));
   }
 
   void _onSignInEmailButtonPressed(
       SignInEmailButtonPressed event, Emitter<SignInState> emit) async {
-    auth.signIn(event.email, event.password);
+    auth.signIn(event.email, event.password).then((user) {
+      if (user is User) {
+        add(SignInSuccess(user: user));
+      } else {
+        add(SignInFailure(message: "Couldn't sign in."));
+      }
+    });
     emit(SignInLoading());
   }
 
