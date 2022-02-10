@@ -36,6 +36,9 @@
 .firebaserc
 .github
 firebase.json
+firestore.rules
+firestore.indexes.json
+public/
 
 # Web related
 lib/generated_plugin_registrant.dart
