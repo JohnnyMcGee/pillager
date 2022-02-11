@@ -33,10 +33,12 @@ class RaidTable extends StatelessWidget {
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return Wrap(
-            children: [
-              RaidForm(raidId: raidId),
-            ],
+          return SingleChildScrollView(
+            child: Wrap(
+              children: [
+                RaidForm(raidId: raidId),
+              ],
+            ),
           );
         });
   }
@@ -123,6 +125,5 @@ class RaidCell extends DataCell {
             textAlign: TextAlign.center,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          
         );
 }
