@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
 
 import 'package:pillager/shared.dart';
+import 'package:pillager/widgets/widgets.dart';
 
 class SignIn extends StatefulWidget {
   final Function toggleSignInForm;
@@ -19,6 +20,12 @@ class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>(debugLabel: "signInFormKey");
   bool _passwordVisible = false;
 
+  void _submitForm() {
+    context
+        .read<SignInBloc>()
+        .add(SignInEmailButtonPressed(email: email, password: password));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -33,19 +40,26 @@ class _SignInState extends State<SignIn> {
               textAlign: TextAlign.center,
             ),
           ),
-          buildTextFormField(
-            onChanged: (val) => setState(() {
-              email = val;
-            }),
-            hintText: "email",
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: TextFormField(
+              onChanged: (value) => setState(() {
+                email = value;
+              }),
+              decoration: fieldDecoration.copyWith(hintText: "email"),
+              onFieldSubmitted: (_) => _submitForm(),
+            ),
           ),
-          buildTextFormField(
-              onChanged: (value) => setState(() => password = value),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: PasswordFormField(
+              onChanged: (value) => setState(() {
+                password = value;
+              }),
               hintText: "password",
-              obscureText: !_passwordVisible,
-              viewPassword: () => setState(() {
-                    _passwordVisible = !_passwordVisible;
-                  })),
+              onFieldSubmitted: (_) => _submitForm(),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 20),
             child: ElevatedButton(
@@ -56,10 +70,7 @@ class _SignInState extends State<SignIn> {
                   style: TextStyle(fontSize: 16.0),
                 ),
               ),
-              onPressed: () async {
-                context.read<SignInBloc>().add(
-                    SignInEmailButtonPressed(email: email, password: password));
-              },
+              onPressed: _submitForm,
             ),
           ),
           RichText(
