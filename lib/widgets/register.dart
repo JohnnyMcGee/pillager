@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pillager/bloc/bloc.dart';
 import 'package:pillager/shared.dart';
+import 'package:pillager/widgets/widgets.dart';
 
 class Register extends StatefulWidget {
   final Function toggleSignInForm;
@@ -21,8 +22,16 @@ class _RegisterState extends State<Register> {
   String password = '';
   String confirmPassword = '';
   final _formKey = GlobalKey<FormState>(debugLabel: "registerFormKey");
-  bool _passwordVisible = false;
-  bool _confirmPasswordVisible = false;
+
+  void _submitForm() {
+    context.read<SignInBloc>().add(RegisterEmailButtonPressed(
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+          confirmPassword: confirmPassword,
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,33 +49,45 @@ class _RegisterState extends State<Register> {
               textAlign: TextAlign.center,
             ),
           ),
-          buildTextFormField(
-            onChanged: (val) => setState(() => firstName = val),
-            hintText: "first name",
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: TextFormField(
+              onChanged: (val) => setState(() => firstName = val),
+              onFieldSubmitted: (_) => _submitForm(),
+              decoration: fieldDecoration.copyWith(hintText: "first name"),
+            ),
           ),
-          buildTextFormField(
-            onChanged: (val) => setState(() => lastName = val),
-            hintText: "last name",
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: TextFormField(
+              onChanged: (val) => setState(() => lastName = val),
+              onFieldSubmitted: (_) => _submitForm(),
+              decoration: fieldDecoration.copyWith(hintText: "last name"),
+            ),
           ),
-          buildTextFormField(
-            onChanged: (val) => setState(() => email = val),
-            hintText: "email",
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: TextFormField(
+              onChanged: (val) => setState(() => email = val),
+              onFieldSubmitted: (_) => _submitForm(),
+              decoration: fieldDecoration.copyWith(hintText: "email"),
+            ),
           ),
-          buildTextFormField(
-            onChanged: (val) => setState(() => password = val),
-            hintText: "password",
-            obscureText: !_passwordVisible,
-            viewPassword: () => setState(() {
-              _passwordVisible = !_passwordVisible;
-            }),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: PasswordFormField(
+              onChanged: (val) => setState(() => password = val),
+              hintText: "password",
+              onFieldSubmitted: (_) => _submitForm(),
+            ),
           ),
-          buildTextFormField(
-            onChanged: (val) => setState(() => confirmPassword = val),
-            hintText: "confirm password",
-            obscureText: !_confirmPasswordVisible,
-            viewPassword: () => setState(() {
-              _confirmPasswordVisible = !_confirmPasswordVisible;
-            }),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: PasswordFormField(
+              onChanged: (val) => setState(() => confirmPassword = val),
+              hintText: "confirm password",
+              onFieldSubmitted: (_) => _submitForm(),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 30, bottom: 20),
@@ -78,15 +99,7 @@ class _RegisterState extends State<Register> {
                   style: TextStyle(fontSize: 16.0),
                 ),
               ),
-              onPressed: () async {
-                context.read<SignInBloc>().add(RegisterEmailButtonPressed(
-                      firstName: firstName,
-                      lastName: lastName,
-                      email: email,
-                      password: password,
-                      confirmPassword: confirmPassword,
-                    ));
-              },
+              onPressed: _submitForm,
             ),
           ),
           RichText(
