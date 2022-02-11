@@ -34,7 +34,7 @@ class AssignViking extends StatelessWidget {
                 Divider(thickness: 1.67),
               ],
             ),
-            backgroundColor: theme.colorScheme.primary.withOpacity(.75),
+            backgroundColor: theme.colorScheme.primary,
             children: [
               for (var option in options)
                 SimpleDialogOption(
