@@ -39,8 +39,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     String capitalize(String s) =>
         (s.isNotEmpty) ? s[0].toUpperCase() + s.substring(1) : s;
 
-    final String first = capitalize(event.firstName);
-    final String last = capitalize(event.lastName);
+    String titleCase(String input) {
+      final List subStrings = input.split(" ");
+      final List capStrings = [for (var str in subStrings) capitalize(str)];
+      return capStrings.join(" ");
+    }
+
+    final String first = titleCase(event.firstName);
+    final String last = titleCase(event.lastName);
 
     auth
         .registerWithEmailAndPassword(event.email, event.password, first, last)
