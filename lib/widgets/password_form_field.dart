@@ -10,7 +10,7 @@ class PasswordFormField extends StatefulWidget {
 
   const PasswordFormField({
     Key? key,
-    this.initialValue='',
+    this.initialValue = '',
     this.hintText = '',
     this.onChanged,
     this.onFieldSubmitted,
@@ -35,7 +35,7 @@ class _PasswortFormFieldState extends State<PasswordFormField> {
       obscureText: !_visible,
       decoration: fieldDecoration.copyWith(
         hintText: widget.hintText,
-        suffix: IconButton(
+        suffixIcon: IconButton(
           icon: Icon(_visible
               ? Icons.visibility_outlined
               : Icons.visibility_off_outlined),
