@@ -44,6 +44,21 @@ class AuthService {
     }
   }
 
+  Future<void> deleteUser(
+      {required String password}) async {
+    final _currentEmail = currentEmail;
+    if (_currentEmail is String) {
+      final user = await signIn(_currentEmail, password);
+      if (user != null) {
+        try {
+          await user.delete();
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+  }
+  
   Future<User?> userUpdateDisplayName(
       User? user, String firstName, String lastName) async {
     String displayName = "$firstName $lastName";

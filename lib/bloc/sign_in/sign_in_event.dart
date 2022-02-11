@@ -51,7 +51,13 @@ class UserStateChange extends SignInEvent {
   UserStateChange(this.user);
 }
 
-class DeleteAccount extends SignInEvent {}
+class DeleteAccount extends SignInEvent {
+  final String password;
+  DeleteAccount(String this.password);
+
+  @override
+  List<Object> get props => [password];
+}
 
 class RaidStreamClosed extends SignInEvent {}
 

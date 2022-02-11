@@ -91,10 +91,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   void _onDeleteAccount(DeleteAccount event, Emitter emit) {
-    final user = auth.currentUser;
-    if (user is User) {
-      user.delete();
-      emit(LoggedOut());
-    }
+      emit(SignOutLoading());
+      auth.deleteUser(password: event.password);
   }
 }
