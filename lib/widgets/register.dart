@@ -74,13 +74,18 @@ class _RegisterState extends State<Register> {
               child: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Text(
-                  'Sign in',
+                  'Register',
                   style: TextStyle(fontSize: 16.0),
                 ),
               ),
               onPressed: () async {
-                context.read<SignInBloc>().add(
-                    SignInEmailButtonPressed(email: email, password: password));
+                context.read<SignInBloc>().add(RegisterEmailButtonPressed(
+                      firstName: firstName,
+                      lastName: lastName,
+                      email: email,
+                      password: password,
+                      confirmPassword: confirmPassword,
+                    ));
               },
             ),
           ),
