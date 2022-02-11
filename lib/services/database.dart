@@ -37,26 +37,6 @@ class DatabaseService {
     ];
   }
 
-  // Map<String, Object> _compareRaids(raid, update) {
-  //   var changes = <String, Object>{};
-  //   if (raid.location != update.location) {
-  //     changes["location"] = update.location;
-  //   }
-  //   if (raid.numShips != update.numShips) {
-  //     changes["numShips"] = update.numShips;
-  //   }
-  //   if (raid.arrivalDate != update.arrivalDate) {
-  //     changes["arrivalDate"] = update.arrivalDate;
-  //   }
-  //   if (raid.vikings != update.vikings) {
-  //     changes["vikings"] = List.from(update.vikings.keys);
-  //   }
-  //   if (raid.comments != update.comments) {
-  //     changes["comments"] = [for (var c in update.comments) c.toMap()];
-  //   }
-  //   return changes;
-  // }
-
   void updateRaid(Raid raid, Map<String, Object> update) {
     final DocumentReference raidDoc = raidsCollection.doc(raid.docId);
     try {
