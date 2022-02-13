@@ -105,11 +105,9 @@ class _RegisterState extends State<Register> {
           RichText(
             text: TextSpan(
               children: [
-                const TextSpan(
+                TextSpan(
                   text: "Already have an account? ",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
                 WidgetSpan(
                   child: InkWell(

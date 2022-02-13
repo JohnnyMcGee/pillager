@@ -76,11 +76,9 @@ class _SignInState extends State<SignIn> {
           RichText(
             text: TextSpan(
               children: [
-                const TextSpan(
+                TextSpan(
                   text: "Don't have an account yet? ",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
+                  style: Theme.of(context).textTheme.bodyText2,
                 ),
                 WidgetSpan(
                   child: InkWell(
