@@ -73,6 +73,7 @@ class _RaidFormState extends State<RaidForm> {
                   alignment: Alignment.topLeft,
                   child: ListView(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.symmetric(
                         vertical: 20, horizontal: 30.0),
                     children: [
