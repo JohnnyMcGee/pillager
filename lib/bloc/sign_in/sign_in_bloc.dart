@@ -18,11 +18,19 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<SignOutButtonPressed>(_onSignOutButtonPressed);
     on<RaidStreamClosed>(_onRaidStreamClosed);
     on<VikingStreamClosed>(_onVikingStreamClosed);
+    on<SignInSuccess>((event, emit) => emit(LoggedIn(user: event.user)));
+    on<SignInFailure>((event, emit) => emit(LoggedOut()));
   }
 
   void _onSignInEmailButtonPressed(
       SignInEmailButtonPressed event, Emitter<SignInState> emit) async {
-    auth.signIn(event.email, event.password);
+    auth.signIn(event.email, event.password).then((user) {
+      if (user is User) {
+        add(SignInSuccess(user: user));
+      } else {
+        add(SignInFailure(message: "Couldn't sign in."));
+      }
+    });
     emit(SignInLoading());
   }
 
@@ -31,8 +39,14 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     String capitalize(String s) =>
         (s.isNotEmpty) ? s[0].toUpperCase() + s.substring(1) : s;
 
-    final String first = capitalize(event.firstName);
-    final String last = capitalize(event.lastName);
+    String titleCase(String input) {
+      final List subStrings = input.split(" ");
+      final List capStrings = [for (var str in subStrings) capitalize(str)];
+      return capStrings.join(" ");
+    }
+
+    final String first = titleCase(event.firstName);
+    final String last = titleCase(event.lastName);
 
     auth
         .registerWithEmailAndPassword(event.email, event.password, first, last)
@@ -77,10 +91,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
   }
 
   void _onDeleteAccount(DeleteAccount event, Emitter emit) {
-    final user = auth.currentUser;
-    if (user is User) {
-      user.delete();
-      emit(LoggedOut());
-    }
+      emit(SignOutLoading());
+      auth.deleteUser(password: event.password);
   }
 }

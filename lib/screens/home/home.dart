@@ -1,56 +1,38 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pillager/bloc/bloc.dart';
-import 'package:pillager/models/models.dart';
-import 'package:pillager/services/authenticate.dart';
 import 'package:pillager/widgets/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
+  Future<void> openRaidConsole(context) async {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return Wrap(
+            children: const [
+              RaidConsole(raidId: "AJWQQyI8eM4uqmHtPbEN"),
+            ],
+          );
+        });
+  }
+
   void _showProfileEditor(BuildContext context) async {
-    final user = AuthService().currentUser;
-    final vikingBloc = context.read<VikingBloc>();
-    final profile = vikingBloc.state.vikings[user?.uid];
-
-    if (profile is Viking && user is User) {
-      Map<String, Object>? profileUpdate = await showDialog(
-          context: context,
-          builder: (context) {
-            return SimpleDialog(
-              children: [
-                ProfileEditor(
-                  user: user,
-                  viking: profile,
-                ),
-              ],
-            );
-          });
-
-      if (profileUpdate != null) {
-        final email = profileUpdate["email"];
-
-        vikingBloc.add(UpdateViking(
-            viking: profile,
-            update: profileUpdate..removeWhere((k, v) => k == "email")));
-
-        if (email is String) {
-          user.updateEmail(email);
-        }
-      }
-    } else {
-      return;
-    }
+    showDialog(
+        context: context,
+        builder: (context) {
+            return ProfileEditor();
+        }); 
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueGrey[900],
         title: const Text('Pillager'),
         elevation: 0.0,
         actions: <Widget>[
@@ -60,15 +42,12 @@ class Home extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Icon(Icons.person),
+                children: const [
+                  Icon(Icons.person),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
                       'My Account',
-                      style: TextStyle(
-                        color: Colors.blueGrey[400],
-                      ),
                     ),
                   ),
                 ],
@@ -97,36 +76,41 @@ class Home extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 50.0,
-                vertical: 20.0,
-              ),
-              child: BlocBuilder<VikingBloc, VikingState>(
-                  builder: (context, state) {
-                String uid =
-                    (context.read<SignInBloc>().state as LoggedIn).user.uid;
+      body: BlocBuilder<VikingBloc, VikingState>(builder: (context, state) {
+        final textTheme = Theme.of(context).textTheme;
+        final colorScheme = Theme.of(context).colorScheme;
 
-                return Text(
-                  (state is VikingLoaded && state.vikings.containsKey(uid))
-                      ? "Welcome ${state.vikings[uid]!.fullName}!"
-                      : "Welcome Viking Friend!",
-                  style: const TextStyle(
-                    color: Colors.blueGrey,
-                    fontSize: 20.0,
+        if (state is VikingLoaded) {
+          String uid = (context.read<SignInBloc>().state as LoggedIn).user.uid;
+
+          final welcomeText = (state.vikings.containsKey(uid))
+              ? "Welcome, ${state.vikings[uid]!.fullName}!"
+              : "Welcome, Viking Friend!";
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20.0,
                   ),
-                );
-              }),
+                  child: Text(
+                    welcomeText,
+                    style: textTheme.headline4
+                        ?.copyWith(color: colorScheme.primaryVariant),
+                  ),
+                ),
+                const Expanded(
+                  child: ExpandableDataTable(),
+                ),
+              ],
             ),
-          ),
-          const Expanded(
-            child: ExpandableDataTable(),
-          ),
-        ],
-      ),
+          );
+        } else {
+          return SpinKitFoldingCube(color: colorScheme.secondary);
+        }
+      }),
     );
   }
 }

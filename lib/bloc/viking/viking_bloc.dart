@@ -41,9 +41,11 @@ class VikingBloc extends Bloc<VikingEvent, VikingState> {
 
   void _onSignInChange(SignInChange event, Emitter emit) async {
     if (event.data is LoggedIn) {
+      _cancelDataListeners();
       _addDataListeners();
     } else if (event.data is SignOutLoading && state is VikingLoaded) {
       _cancelDataListeners();
+      signInBloc.add(VikingStreamClosed());
     }
     emit(const VikingUpdating(vikings: <String, Viking>{}));
   }
@@ -57,15 +59,12 @@ class VikingBloc extends Bloc<VikingEvent, VikingState> {
   void _cancelDataListeners() {
     cancelSub(StreamSubscription sub) async => await sub.cancel();
     _vikingListeners.forEach(cancelSub);
-    signInBloc.add(VikingStreamClosed());
   }
 
   @override
   Future<void> close() async {
     _signInListener.cancel();
-    _vikingListeners.forEach((sub) {
-      sub.cancel();
-    });
+    _cancelDataListeners();
     super.close();
   }
 }

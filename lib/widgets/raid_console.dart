@@ -13,37 +13,50 @@ class RaidConsole extends StatelessWidget {
 
     return Container(
       height: size.height * .8,
-      padding: const EdgeInsets.all(20.0),
-      child: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Flexible(
-              flex: 1,
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                color: Colors.black12,
-                child: ListView(
-                  children: [
-                    RaidForm(raidId: raidId),
-                  ],
+      child: (size.width > 850)
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        right: BorderSide(width: 1.0, color: Colors.black38),
+                      ),
+                    ),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        RaidForm(raidId: raidId),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            Flexible(
-              flex: 2,
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                color: Colors.amber[50],
-                child: SizedBox(
+                Flexible(
+                  flex: 2,
                   child: RaidChat(raidId: raidId),
                 ),
-              ),
+              ],
+            )
+          : ListView(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.black38),
+                    ),
+                  ),
+                  child: RaidForm(raidId: raidId),
+                ),
+                Container(
+                    constraints: BoxConstraints(maxHeight: 800),
+                    child: RaidChat(
+                      raidId: raidId,
+                    ))
+              ],
             ),
-          ],
-        ),
-      ),
     );
   }
 }

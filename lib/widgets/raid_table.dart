@@ -33,10 +33,12 @@ class RaidTable extends StatelessWidget {
         isScrollControlled: true,
         context: context,
         builder: (context) {
-          return Wrap(
-            children: [
-              RaidForm(raidId: raidId),
-            ],
+          return SingleChildScrollView(
+            child: Wrap(
+              children: [
+                RaidForm(raidId: raidId),
+              ],
+            ),
           );
         });
   }
@@ -52,8 +54,9 @@ class RaidTable extends StatelessWidget {
       final raids = _applyFilter(state.raids, filter);
 
       return DataTable(
-        headingRowColor: MaterialStateProperty.all(Colors.blueGrey[400]),
         showCheckboxColumn: false,
+        columnSpacing: 120,
+        dataRowHeight: 54,
         columns: [
           for (var column in _columns)
             DataColumn(

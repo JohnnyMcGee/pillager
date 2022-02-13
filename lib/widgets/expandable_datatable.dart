@@ -37,7 +37,6 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
             children: [
               for (var t in _tables) _buildPanel(t.title, t.table, t.isExpanded)
             ],
-            dividerColor: Colors.blueGrey[400],
             expansionCallback: (index, isExpanded) {
               setState(() {
                 _tables[index].isExpanded = !isExpanded;
@@ -51,22 +50,18 @@ class _ExpandableDataTableState extends State<ExpandableDataTable> {
 
   ExpansionPanel _buildPanel(String title, Widget child, bool isExpanded) {
     return ExpansionPanel(
-      backgroundColor: Colors.blueGrey,
       headerBuilder: (context, isExpanded) {
         return ListTile(
           title: Text(
             title,
-            style: TextStyle(
-              color: Colors.blueGrey[900],
-            ),
           ),
         );
       },
-      body: SizedBox(
-        height: 300,
-        child: SingleChildScrollView(
-          child: SizedBox(
-            width: double.infinity,
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+          child: SingleChildScrollView(
+          child: Align(
+            alignment: Alignment.topLeft,
             child: child,
           ),
         ),

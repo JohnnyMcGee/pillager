@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pillager/models/models.dart';
 
 class DatabaseService {
@@ -38,26 +37,6 @@ class DatabaseService {
     ];
   }
 
-  // Map<String, Object> _compareRaids(raid, update) {
-  //   var changes = <String, Object>{};
-  //   if (raid.location != update.location) {
-  //     changes["location"] = update.location;
-  //   }
-  //   if (raid.numShips != update.numShips) {
-  //     changes["numShips"] = update.numShips;
-  //   }
-  //   if (raid.arrivalDate != update.arrivalDate) {
-  //     changes["arrivalDate"] = update.arrivalDate;
-  //   }
-  //   if (raid.vikings != update.vikings) {
-  //     changes["vikings"] = List.from(update.vikings.keys);
-  //   }
-  //   if (raid.comments != update.comments) {
-  //     changes["comments"] = [for (var c in update.comments) c.toMap()];
-  //   }
-  //   return changes;
-  // }
-
   void updateRaid(Raid raid, Map<String, Object> update) {
     final DocumentReference raidDoc = raidsCollection.doc(raid.docId);
     try {
@@ -71,14 +50,18 @@ class DatabaseService {
     }
   }
 
-  void createNewRaid(Map<String, Object> data) {
+  void createNewRaid(Raid raid, Map<String, Object> data) {
     try {
-      raidsCollection.add({
-        "location": data["location"],
-        "numShips": data["numShips"],
-        "arrivalDate": data["arrivalDate"],
-        "vikings": List.from((data["vikings"] as Map<String, Object>).keys),
-      });
+      final newRaid = {
+        "location": data["location"] ?? raid.location,
+        "numShips": data["numShips"] ?? raid.numShips,
+        "arrivalDate": data["arrivalDate"] ?? raid.arrivalDate,
+        "vikings": data["vikings"] ?? raid.vikings,
+      };
+      // convert vikings map to a list
+      newRaid["vikings"] =
+          List.from((newRaid["vikings"] as Map<String, Object>).keys);
+      raidsCollection.add(newRaid);
     } catch (e) {
       print(e);
     }

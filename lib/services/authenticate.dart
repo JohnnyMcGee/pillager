@@ -4,10 +4,18 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<User?> get user {
+    // return _auth.userChanges();
     return _auth.authStateChanges();
   }
 
   User? get currentUser => _auth.currentUser;
+
+  String? get currentEmail {
+    final _currentUser = currentUser;
+    if (_currentUser is User) {
+      return _currentUser.email;
+    }
+  }
 
   Future<User?> signIn(String email, String password) async {
     try {
@@ -21,6 +29,36 @@ class AuthService {
     }
   }
 
+  Future<void> updateEmail(
+      {required String password, required String newEmail}) async {
+    final _currentEmail = currentEmail;
+    if (_currentEmail is String) {
+      final user = await signIn(_currentEmail, password);
+      if (user != null) {
+        try {
+          await user.updateEmail(newEmail);
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+  }
+
+  Future<void> deleteUser(
+      {required String password}) async {
+    final _currentEmail = currentEmail;
+    if (_currentEmail is String) {
+      final user = await signIn(_currentEmail, password);
+      if (user != null) {
+        try {
+          await user.delete();
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+  }
+  
   Future<User?> userUpdateDisplayName(
       User? user, String firstName, String lastName) async {
     String displayName = "$firstName $lastName";
