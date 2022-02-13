@@ -81,7 +81,6 @@ class _RaidFormState extends State<RaidForm> {
                         child: Text("Location: ", style: textTheme.headline5),
                       ),
                       TextFormField(
-                        key: UniqueKey(),
                         initialValue: _location ?? raid.location,
                         onChanged: (value) => setState(() {
                           _location = value;
