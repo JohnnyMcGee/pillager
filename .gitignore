@@ -36,7 +36,6 @@
 .firebaserc
 .github
 firebase.json
-firestore.rules
 firestore.indexes.json
 public/
 
