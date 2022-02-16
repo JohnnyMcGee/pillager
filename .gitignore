@@ -31,6 +31,9 @@
 .pub/
 /build/
 
+# Npm related
+**/node_modules
+
 # Firebase related
 .firebase
 .firebaserc

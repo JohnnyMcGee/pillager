@@ -18,7 +18,7 @@ void main() async {
     options: options,
   );
 
-  FirebaseFirestore.instance.settings = const Settings(host: "localhost:8082");
+  FirebaseFirestore.instance.settings = const Settings(host: "localhost:8080");
   FirebaseAuth.instance.useAuthEmulator("localhost", 9099);
 
   BlocOverrides.runZoned(
