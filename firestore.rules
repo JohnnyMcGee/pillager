@@ -8,5 +8,13 @@ service cloud.firestore {
       allow read, delete: if request.auth.uid != null;
       allow write: if request.auth.uid != null;
     }
+    match /vikings {
+      allow read:  if request.auth.uid != null;
+      allow write, delete: if request.auth.uid == resource.uid;
+    }
+    match /comments {
+      allow read: if request.auth.uid != null;
+      allow create: if request.auth.uid != null && request.auth.uid == resource.sender;
+    }
   }
 }
