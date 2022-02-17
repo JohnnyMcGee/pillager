@@ -32,7 +32,7 @@ describe("Pillager app", () => {
   it("Can read raids collection if authenticated", async () => {
     const db = getFirestore(myAuth);
     const testDoc = db.collection("raids").doc("testDoc");
-    await firebase.assertFails(testDoc.get());
+    await firebase.assertSucceeds(testDoc.get());
   });
 
   it("Can't write raids collection if not authenticated", async () => {
@@ -44,7 +44,7 @@ describe("Pillager app", () => {
   it("Can write raids collection if authenticated", async () => {
     const db = getFirestore(myAuth);
     const testDoc = db.collection("raids").doc("testDoc1");
-    await firebase.assertFails(testDoc.set({ data: "someData" }));
+    await firebase.assertSucceeds(testDoc.set({ data: "someData" }));
   });
 
   it("Cannot read vikings collection if not authenticated", async () => {
@@ -56,19 +56,19 @@ describe("Pillager app", () => {
   it("Can read vikings collection if not authenticated", async () => {
     const db = getFirestore(myAuth);
     const testDoc = db.collection("vikings").doc("vikingDoc");
-    await firebase.assertFails(testDoc.get());
+    await firebase.assertSucceeds(testDoc.get());
   });
 
   it("Cannot write to viking doc if not authenticated as that user", async () => {
     const db = getFirestore(myAuth);
     const testDoc = db.collection("vikings").doc(theirId);
-    await firebase.assertFails(testDoc.get());
+    await firebase.assertFails(testDoc.set({ data: "some_data" }));
   });
 
   it("Can write to viking doc if authenticated as that user", async () => {
     const db = getFirestore(myAuth);
     const testDoc = db.collection("vikings").doc(myId);
-    await firebase.assertFails(testDoc.get());
+    await firebase.assertSucceeds(testDoc.set({ data: "some_data" }));
   });
 
   it("Cannot read comments collection if not authenticated", async () => {
@@ -80,7 +80,7 @@ describe("Pillager app", () => {
   it("Can read comments collection if authenticated", async () => {
     const db = getFirestore(myAuth);
     const testDoc = db.collection("comments").doc("commentId");
-    await firebase.assertFails(testDoc.get());
+    await firebase.assertSucceeds(testDoc.get());
   });
 
   it("Cannot create comment if user is not the sender", async () => {
@@ -92,7 +92,7 @@ describe("Pillager app", () => {
   it("Can create comment if user is the sender", async () => {
     const db = getFirestore(myAuth);
     const testDoc = db.collection("comments").doc("commentDEF");
-    await firebase.assertFails(testDoc.set(myComment));
+    await firebase.assertSucceeds(testDoc.set(myComment));
   });
 
   it("Cannot update comment if user is not the sender", async () => {
@@ -114,7 +114,9 @@ describe("Pillager app", () => {
 
     const db = getFirestore(myAuth);
     const testDoc = db.collection("comments").doc(commentId);
-    await firebase.assertSucceeds(testDoc.update({ message: "another message" }));
+    await firebase.assertSucceeds(
+      testDoc.set({ sender: myId, message: "another message" })
+    );
   });
 
   after(async () => {
