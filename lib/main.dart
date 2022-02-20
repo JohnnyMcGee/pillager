@@ -18,8 +18,15 @@ void main() async {
     options: options,
   );
 
-  FirebaseFirestore.instance.settings = const Settings(host: "localhost:8080");
-  FirebaseAuth.instance.useAuthEmulator("localhost", 9099);
+  const USE_EMULATOR = true;
+
+  if (USE_EMULATOR) {
+    FirebaseFirestore.instance.settings = const Settings(
+        host: "http://localhost:8080",
+        sslEnabled: false,
+        persistenceEnabled: true);
+    FirebaseAuth.instance.useAuthEmulator("localhost", 9099);
+  }
 
   BlocOverrides.runZoned(
     () {
