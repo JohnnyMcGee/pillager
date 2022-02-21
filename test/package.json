@@ -1,0 +1,16 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "unit tests for pillager app",
+  "main": "test.js",
+  "scripts": {
+    "test": "mocha --exit"
+  },
+  "author": "JBM",
+  "license": "ISC",
+  "dependencies": {
+    "@firebase/rules-unit-testing": "^2.0.2",
+    "firebase": "^9.6.7",
+    "mocha": "^9.2.1"
+  }
+}
