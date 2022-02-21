@@ -4,20 +4,21 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
-
-    match /readonly/{docId} {
-      allow read: if true;
-      allow write: if false;
+    match /raids/{raidId} {
+      allow read, delete: if request.auth.uid != null;
+      allow write: if request.auth.uid != null;
     }
-
-    match /users/{userId} {
-      allow write: if (request.auth.uid == userId);
+    match /vikings/{vikingId} {
+      allow read:  if request.auth.uid != null;
+      allow write, delete: if request.auth.uid == vikingId;
     }
-
-    match /posts/{postId} {
-      allow read: if (resource.data.visibility == "public") ||
-      (resource.data.authorId == request.auth.uid);
+    match /comments/{commentsId} {
+      allow read: if request.auth.uid != null;
+      allow create: if request.auth.uid != null 
+      && request.auth.uid == request.resource.data.sender;
+      allow update, delete: if request.auth.uid != null 
+      && request.auth.uid == request.resource.data.sender
+      && request.auth.uid == resource.data.sender;
     }
-    
   }
 }
