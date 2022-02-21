@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -15,6 +17,9 @@ void main() async {
   await Firebase.initializeApp(
     options: options,
   );
+
+  FirebaseFirestore.instance.settings = const Settings(host: "localhost:8080", sslEnabled: false);
+  await FirebaseAuth.instance.useAuthEmulator("localhost", 9099);
 
   BlocOverrides.runZoned(
     () {
